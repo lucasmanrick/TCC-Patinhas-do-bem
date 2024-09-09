@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "App-PatinhasDoBem",
-    "slug": "App-PatinhasDoBem",
+    "name": "PatinhasDoBem",
+    "slug": "PatinhasDoBem",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
