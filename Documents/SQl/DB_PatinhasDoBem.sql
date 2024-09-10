@@ -6,6 +6,7 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
+
 -- -----------------------------------------------------
 -- Schema DB_PatinhasDoBem
 -- -----------------------------------------------------
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
   `Login` VARCHAR(300) NOT NULL,
   `Senha` VARCHAR(300) NOT NULL,
   `Pais` VARCHAR(45) NOT NULL,
+  `Administrador` TINYINT NOT NULL DEFAULT 0, -- Atributo para indicar se o usuário é administrador
   PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;
 
@@ -100,6 +102,7 @@ CREATE TABLE IF NOT EXISTS `Notificacao` (
   `IDDestinatario` INT NOT NULL,
   `IDComentario` INT,
   `IDPostagem` INT,
+  `Recebimento` TINYINT NOT NULL DEFAULT 0, -- Atributo para indicar se o usuário viu a notificação
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`IDDestinatario`) REFERENCES `Usuario` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (`IDComentario`) REFERENCES `Comentario` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -113,11 +116,11 @@ CREATE TABLE IF NOT EXISTS `Pet` (
   `dataRegistro` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `TipoAnimal` VARCHAR(45) NOT NULL,
   `Linhagem` VARCHAR(45) NOT NULL,
-  `AdotadoPelaRede` TINYINT NOT NULL,
   `Status` TINYINT NOT NULL,
   `Idade` VARCHAR(3) NOT NULL,
   `Sexo` VARCHAR(1) NOT NULL,
   `Cor` VARCHAR(45) NOT NULL,
+  `Descricao` VARCHAR(500), -- Atributo para a descrição do pet
   `IDDoador` INT NOT NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`IDDoador`) REFERENCES `Usuario` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -217,10 +220,10 @@ VALUES ('Você recebeu um novo comentário', 1, 1, 1),
        ('Sua postagem recebeu uma nova avaliação', 2, NULL, 2),
        ('Você foi mencionado em um comentário', 3, 3, NULL);
 
-INSERT INTO `Pet` (`dataRegistro`, `TipoAnimal`, `Linhagem`, `AdotadoPelaRede`, `Status`, `Idade`, `Sexo`, `Cor`, `IDDoador`)
-VALUES (NOW(), 'Cachorro', 'SRD', 0, 1, '3', 'M', 'Preto', 1),
-       (NOW(), 'Gato', 'Angorá', 1, 1, '2', 'F', 'Branco', 2),
-       (NOW(), 'Cachorro', 'Pitbull', 0, 0, '1', 'M', 'Marrom', 3);
+INSERT INTO `Pet` (`dataRegistro`, `TipoAnimal`, `Linhagem`, `Status`, `Idade`, `Sexo`, `Cor`, `IDDoador`)
+VALUES (NOW(), 'Cachorro', 'SRD', 0, '3', 'M', 'Preto', 1),
+       (NOW(), 'Gato', 'Angorá', 1, '2', 'F', 'Branco', 2),
+       (NOW(), 'Cachorro', 'Pitbull', 0, '1', 'M', 'Marrom', 3);
 
 INSERT INTO `Interesse` (`Status`, `IDInteressado`, `IDPet`)
 VALUES (1, 1, 1),
