@@ -1,0 +1,8 @@
+
+
+
+const AccountManagementQueries = {
+  cadastraUsuarioQuery: (dataUser) => {
+  
+  } 
+}
