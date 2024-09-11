@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
   `Numero` INT NOT NULL,
   `Bairro` VARCHAR(145) NOT NULL,
   `Estado` VARCHAR(45) NOT NULL,
-  `Login` VARCHAR(300) NOT NULL,
+  `DataNasc` DATE NOT NULL,
+  `Email` VARCHAR(300) NOT NULL,
   `Senha` VARCHAR(300) NOT NULL,
   `Pais` VARCHAR(45) NOT NULL,
   `Administrador` TINYINT NOT NULL DEFAULT 0, -- Atributo para indicar se o usuário é administrador
@@ -186,11 +187,14 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
 
-INSERT INTO `Usuario` (`Nome`, `CEP`, `Rua`, `Numero`, `Bairro`, `Estado`, `Login`, `Senha`, `Pais`)
-VALUES ('João Silva', '12345-678', 'Rua A', 123, 'Centro', 'SP', 'joao_silva', 'senha123', 'Brasil'),
-       ('Maria Souza', '87654-321', 'Rua B', 456, 'Jardim', 'RJ', 'maria_souza', 'senha456', 'Brasil'),
-       ('Carlos Pereira', '45678-123', 'Rua C', 789, 'Vila', 'MG', 'carlos_pereira', 'senha789', 'Brasil');
-       
+INSERT INTO `Usuario` (`Nome`, `CEP`, `Rua`, `Numero`, `Bairro`, `Estado`, `DataNasc`, `Email`, `Senha`, `Pais`, `Administrador`) 
+VALUES 
+('João Silva', '12345-678', 'Rua A', 123, 'Centro', 'SP', '1990-05-15', 'joao.silva@gmail.com', 'senha123', 'Brasil', 0),
+('Maria Souza', '87654-321', 'Rua B', 456, 'Jardim', 'RJ', '1985-08-20', 'maria.souza@gmail.com', 'senha456', 'Brasil', 0),
+('Carlos Pereira', '45678-123', 'Rua C', 789, 'Norte', 'MG', '1992-11-30', 'carlos.pereira@gmail.com', 'senha789', 'Brasil', 0),
+('Ana Oliveira', '98765-432', 'Rua D', 101, 'Sul', 'SP', '1988-02-17', 'ana.oliveira@gmail.com', 'senha101', 'Brasil', 1);
+
+
 INSERT INTO `Postagem` (`Descricao`, `dataPublicacao`)
 VALUES ('Postagem sobre adoção de cães', NOW()),
        ('Postagem sobre resgate de gatos', NOW()),
