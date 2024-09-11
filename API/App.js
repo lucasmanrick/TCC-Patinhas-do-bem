@@ -1,6 +1,7 @@
 const express = require("express");
-const router = require('./src/routes/routesapp')
-const bcrypt = require('bcrypt')
+const router = require('./src/routes/routesapp');
+const bcrypt = require('bcrypt');
+require("dotenv-safe").config();
 
 const app = express();
 const port= 5000;
@@ -14,6 +15,8 @@ app.get('/users', (req,res) => {
   res.json(users)
 })
 
+
+app.use('/', router)
 
 app.post ('/users', async (req,res) => { //CRIPTOGRAFANDO ANTES DE CADASTRAR NO BANCO DE DADOS.
   try{
@@ -42,7 +45,6 @@ app.post("/login", async(req,res)=> { // COMPARATIVO DE SENHAS (AUTENTICAÇÃO)
   }
 })
 
-// app.use('/', router);
 
 app.listen(port, () => {
     console.log(`Servidor respondendo na porta ${port}`);
