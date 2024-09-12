@@ -1,7 +1,7 @@
 
 
 class Usuario {
-  constructor(Nome,DataNasc,Email,Senha,Cep,Rua,Numero, Bairro,Estado,Pais) {
+  constructor(Nome,DataNasc,Email,Senha,Cep,Rua,Numero, Bairro,Estado,Cidade) {
     this.Nome = Nome,
     this.DataNasc = DataNasc,
     this.Email = Email,
@@ -11,7 +11,7 @@ class Usuario {
     this.Numero = Numero, 
     this.Bairro = Bairro,
     this.Estado = Estado,
-    this.Pais = Pais
+    this.Cidade = Cidade
   }
 }
 
