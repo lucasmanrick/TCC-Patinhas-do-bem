@@ -1,5 +1,5 @@
 const express = require("express");
-const router = require('./src/routes/routesapp');
+const router = require('./src/Routes/routesapp');
 const bcrypt = require('bcrypt');
 require("dotenv-safe").config();
 
