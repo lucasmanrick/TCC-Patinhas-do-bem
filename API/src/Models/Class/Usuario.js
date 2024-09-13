@@ -1,8 +1,8 @@
 
 
 class Usuario {
-  constructor(Nome,DataNasc,Email,Senha,Cep,Rua,Numero, Bairro,Estado,Cidade) {
-    this.Nome = Nome,
+  constructor(NomeUsuario,DataNasc,Email,Senha,Cep,Rua,Numero, Bairro,Estado,Cidade) {
+    this.NomeUsuario = NomeUsuario,
     this.DataNasc = DataNasc,
     this.Email = Email,
     this.Senha = Senha,
