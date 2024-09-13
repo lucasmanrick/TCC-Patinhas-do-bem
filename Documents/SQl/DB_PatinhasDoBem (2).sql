@@ -37,8 +37,8 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
   `DataNasc` DATE NOT NULL,
   `Email` VARCHAR(300) NOT NULL,
   `Senha` VARCHAR(300) NOT NULL,
-  `Pais` VARCHAR(45) NOT NULL,
   `Administrador` TINYINT NOT NULL DEFAULT 0, -- Atributo para indicar se o usuário é administrador
+  `Cidade` varchar(70),
   PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;
 
