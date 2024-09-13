@@ -29,17 +29,22 @@ const accountManagement = {
             res.json ({error:"O Campo Cidade está com tipo diferente do esperado"})
           }
 
+          const validaCadastroAnterior = await AccountQueries.AccountManagementQueries.verificaExistenciaUsuarioQuery(Email)
 
-          const hashedPassword = await bcrypt.hash(Senha,10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
-          
-          const newUser = new Usuario(NomeUsuario,DataNasc,Email,hashedPassword,Cep,Rua,Numero,Bairro,Estado,Cidade)
-          //verificar se o Email passado já não existe no nosso banco de dados.
-  
-          const sendingData = await AccountQueries.AccountManagementQueries.cadastraUsuarioQuery(newUser)
-          
-
-
-          res.json(sendingData)
+          if(validaCadastroAnterior.error) {
+            console.log("error")
+            res.json(validaCadastroAnterior)
+          }else {
+            const hashedPassword = await bcrypt.hash(Senha,10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
+            console.log("sucess")
+            console.log(validaCadastroAnterior)
+            const newUser = new Usuario(NomeUsuario,DataNasc,Email,hashedPassword,Cep,Rua,Numero,Bairro,Estado,Cidade)
+            //verificar se o Email passado já não existe no nosso banco de dados.
+    
+            const sendingData = await AccountQueries.AccountManagementQueries.cadastraUsuarioQuery(newUser)
+            
+            res.json(sendingData)
+          }         
   
       }
     }
