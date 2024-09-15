@@ -1,10 +1,9 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, LayoutAnimation } from "react-native";
 import { getAuth, signOut } from "firebase/auth"; // Adicione a importação correta do Firebase Auth
 
-export default class TelaDeApresentacao extends React.Component {
+export default class TelaApresentacao extends React.Component {
   state = {
-    
     email: "",
     displayName: "",
   };
@@ -15,8 +14,11 @@ export default class TelaDeApresentacao extends React.Component {
 
     if (user) {
       const { email, displayName } = user;
-      this.setState({email, displayName });
+      this.setState({ email, displayName });
     }
+
+    // Configura a animação
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }
 
   signOutUser = () => {

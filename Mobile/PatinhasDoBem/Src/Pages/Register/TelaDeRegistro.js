@@ -1,8 +1,17 @@
 // TelaDeRegistro.js
 import React from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { auth } from '../../Firebase/FirebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth'; // Adicione esta linha
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  Image,
+} from "react-native";
+import { auth } from "../../Firebase/FirebaseConfig";
+import { FontAwesome } from "react-native-vector-icons";
+import { createUserWithEmailAndPassword } from "firebase/auth"; // Adicione esta linha
 
 export default class TelaRegistro extends React.Component {
   state = {
@@ -31,7 +40,24 @@ export default class TelaRegistro extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar barStyle="light-content"></StatusBar>
+        <Image
+          source={require("../../../assets/ImagenLogin.jpg")}
+          style={{ marginTop: -10, width: 460, height: 150 }}
+        />
+
+        <TouchableOpacity
+          style={styles.back}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <FontAwesome name="arrow-left" size={20} color="#fff" />
+        </TouchableOpacity>
+
+        <View style={{position: "absolute", top: 64, alignItems: "center", width:"100%"}}>
         <Text style={styles.greeting}>{`Bem-vindo!\nCadastre-se`}</Text>
+        </View>
+
+        
 
         <View style={styles.errorMessage}>
           {this.state.errorMessage && (
@@ -88,16 +114,16 @@ export default class TelaRegistro extends React.Component {
   }
 }
 
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   greeting: {
-    marginTop: 32,
-    fontSize: 18,
+    marginTop: -2,
+    fontSize: 28,
     fontWeight: "400",
     textAlign: "center",
+    color:"#FFF"
   },
   errorMessage: {
     height: 72,
@@ -131,6 +157,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#3DAAD9",
     borderRadius: 4,
     height: 52,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  back: {
+    top: -120,
+    left: 32,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "rgba(21, 22, 48, 0.1)",
     alignItems: "center",
     justifyContent: "center",
   },
