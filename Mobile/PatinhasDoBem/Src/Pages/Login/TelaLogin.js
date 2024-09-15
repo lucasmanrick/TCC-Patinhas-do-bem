@@ -1,9 +1,21 @@
 import React from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import { auth } from '../../Firebase/FirebaseConfig'; // Certifique-se de importar corretamente
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  ImageBackground,
+  Image,
+} from "react-native";
+import { auth } from "../../Firebase/FirebaseConfig"; // Certifique-se de importar corretamente
 import { signInWithEmailAndPassword } from "firebase/auth"; // Adicione esta linha para a função correta
 
 export default class TelaLogin extends React.Component {
+  static navigationOptions = {
+    header: null,
+  };
   state = {
     email: "",
     senha: "",
@@ -24,6 +36,12 @@ export default class TelaLogin extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar barStyle="light-content"></StatusBar>
+        <Image
+          source={require("../../../assets/ImagenLogin.jpg")}
+          style={{marginTop: -10, width: 460, height: 150 }}
+        />
+
         <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
 
         <View style={styles.errorMessage}>
@@ -78,8 +96,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   greeting: {
-    marginTop: 32,
-    fontSize: 18,
+    marginTop: -2,
+    fontSize: 28,
     fontWeight: "400",
     textAlign: "center",
   },
