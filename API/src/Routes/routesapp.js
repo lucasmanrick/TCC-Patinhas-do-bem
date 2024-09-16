@@ -5,11 +5,14 @@ const accountManagement = require ('../Controllers/accountController')
 
 const users = []; //esse users representa o banco de dados, ou seja a tabela onde receberá o dado criptografado, ou melhor, o local onde ficará armazenado a senha no nosso banco de dados.
 
-
+// rota para o usuário fazer um cadastro no site.
 router.post("/Cadastro",accountManagement.cadastraUsuario)
 
-// // rota para o usuário fazer um cadastro no site.
-// router.get('/Cadastro')
+
+router.get("/",(req,res) => {
+  res.json({testeCors:"hail"})
+})
+
 
 // // rota para o usuário logar no site (será retornado um token ao mesmo)
 // router.get('/Login',verifyJWT, pessoaControllers.retornaTodasEspecialidades) 

@@ -26,16 +26,18 @@ Content-Type: application/json
 
 POST http://localhost:5000/Cadastro
 Content-Type: application/json
+
 {
-  "Nome": "Gabriel",
-  "DataNasc": "03/07/2003",
-  "Email": "lucasmanrick.ipms@gmail.com",
-  "Senha": "lucasteste321123",
-  "Cep": "13178300",
-  "Rua": "maria aparecida nascimento",
-  "Numero": "252",
-  "Bairro": "sumaré",
-  "Estado": "sp",
+	"NomeUsuario":"Lucas Manrick",
+	"DataNasc":"2003-07-03",
+	"Email":"manrick@gmail.com",
+	"Senha":"testelucas123",
+	"Cep":"13178300",
+	"Rua":"maria aparecida nascimento",
+	"Numero":252,
+	"Bairro":"Cidade Nova",
+	"Estado": "SP",
+	"Cidade": "Sumaré"
 }
 
  
