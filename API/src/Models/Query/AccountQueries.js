@@ -27,8 +27,22 @@ const AccountManagementQueries = {
     }catch(e) {
       console.error(e)
     }
+  },
+  async autenticaUsuarioQuery (Email,Senha) {
+    const conn = await connection();
+
+    try {
+      const authResponse = await conn.query("Select ID from Usuario where Email = ? AND Senha = ?",[Email,Senha])
+      if(authResponse[0].length > 0) {
+        console.log(authResponse[0])
+        return (authResponse[0])
+      }
+    }
+    catch (e) {
+      console.error(e)
+    }
   }
 }
 
 
-module.exports = {AccountManagementQueries}
+module.exports = AccountManagementQueries
