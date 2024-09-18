@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 
 
 
+
 const accountManagement = {
   cadastraUsuario: async (req, res) => {
 
@@ -62,7 +63,7 @@ const accountManagement = {
   },
   autenticaUsuario: async(req,res) => {
     const {Email,Senha} = req.body;
-
+  
     try {
       if(Email,Senha) {
         if(typeof(Email) === 'string' && typeof (Senha) === 'string') {
@@ -73,19 +74,19 @@ const accountManagement = {
           const verifyExistence = await AccountManagementQueries.autenticaUsuarioQuery (Email,Senha);
           res.json (verifyExistence)
         }else{
-          res.json("o valor inserido no campo Email, não corresponde a um Email valido")
+          res.json({error:"o valor inserido no campo Email, não corresponde a um Email valido",auth:false})
         }
 
         }else {
-          res.json({error:"O Email e a senha estão sendo enviados com tipos de dados divergentes do necessário. Contate um Suporte para correção do problema"})
+          res.json({error:"O Email e a senha estão sendo enviados com tipos de dados divergentes do necessário. Contate um Suporte para correção do problema", auth:false})
         }
       } else {
-        res.json({error:"Não foram encaminhados Email e Senha"})
+        res.json({error:"Não foram encaminhados Email e Senha",auth:false})
       }
       
     }
     catch (e) {
-
+      res.json ({error:e, auth:false})
     }
     
   }
