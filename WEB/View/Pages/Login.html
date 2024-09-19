@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8"> <!-- Define o conjunto de caracteres usado, neste caso UTF-8 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Para tornar o site responsivo -->
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> <!-- Garante a compatibilidade com o modo IE=edge em navegadores antigos -->
+    <title>Login</title> <!-- Título da página que aparecerá na aba do navegador -->
+
+    <!-- Link para o arquivo CSS personalizado (Login.css) -->
+    <link rel="stylesheet" href="Login.css">
+    <!-- Link para o uso dos ícones da Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
+</head>
+
+<body>
+    <!-- FORMULÁRIO -->
+    <div class="container-1">
+        <div class="content first-content">
+            <!-- Primeira coluna (login ou entrar no sistema) -->
+            <div class="first-column">
+                <h2 class="title title-primary">Patinhas do bem!</h2> <!-- Título da coluna -->
+                <p class="description description-primary"></p>
+                <p class="description description-primary">por favor faça login com suas informações pessoais</p>
+                <!-- Botão para redirecionar ao formulário de login -->
+                <button id="signin" class="btn btn-primary">entrar</button>
+            </div>
+
+            <!-- Segunda coluna (formulário de cadastro) -->
+            <div class="second-column">
+                <h2 class="title title-second">criar uma conta</h2> <!-- Título da seção de cadastro -->
+                <p class="description description-second">ou use seu e-mail para inscrição:</p>
+
+                <!-- Formulário de cadastro de usuário -->
+                <form class="form">
+                    <!-- Campo para o nome -->
+                    <label class="label-input" for="">
+                        <i class="fa-regular fa-user"></i> <!-- Ícone de usuário -->
+                        <input type="text" placeholder=" Name"> <!-- Campo para inserir o nome -->
+                    </label>
+
+                    <!-- Campo para o email -->
+                    <label class="label-input" for="">
+                        <i class="fa-regular fa-envelope"></i> <!-- Ícone de envelope (email) -->
+                        <input type="email" placeholder=" Email"> <!-- Campo para inserir o email -->
+                    </label>
+
+                    <!-- Campo para a senha -->
+                    <label class="label-input" for="">
+                        <i class="fa-solid fa-lock"></i> <!-- Ícone de cadeado (senha) -->
+                        <input type="password" placeholder=" Senha"> <!-- Campo para inserir a senha -->
+                    </label>
+
+                    <!-- Campo para confirmar a senha -->
+                    <label class="label-input" for="">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="Confirmar Senha" placeholder=" Confirmar Senha" required> <!-- Campo obrigatório -->
+                    </label>
+
+                    <!-- Campo para a data de nascimento -->
+                    <label class="label-input" for="">
+                        <i class="fa-solid fa-calendar-days"></i> <!-- Ícone de calendário -->
+                        <input type="date" placeholder=" Data Nascimento"> <!-- Campo para inserir a data de nascimento -->
+                    </label>
+                </form>
+
+                <!-- Formulário para o endereço -->
+                <form class="form-1">
+                    <label class="label-input inputbox" for="">
+                        <i class="fa-solid fa-location-dot"></i> <!-- Ícone de localização -->
+                        <input type="text" placeholder=" CEP" id="cep" required> <!-- Campo obrigatório para inserir o CEP -->
+                    </label>
+
+                    <!-- Outros campos para o endereço -->
+                    <label class="label-input inputbox" for="">
+                        <i class="fa-regular fa-flag"></i>
+                        <input type="text" placeholder=" Cidade" id="cidade" required>
+                    </label>
+
+                    <label class="label-input inputbox" for="">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <input type="text" placeholder=" Estado" id="estado" required>
+                    </label>
+
+                    <label class="label-input inputbox" for="">
+                        <i class="fa-regular fa-flag"></i>
+                        <input type="text" placeholder=" Bairro" id="bairro" required>
+                    </label>
+
+                    <label class="label-input inputbox" for="">
+                        <i class="fa-solid fa-road"></i>
+                        <input type="text" placeholder=" Endereço" id="endereco" required>
+                    </label>
+
+                    <!-- Campo para inserir o número de telefone -->
+                    <label class="label-input" for="">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="number" placeholder=" Numero">
+                    </label>
+                </form>
+
+                <!-- Mensagem de validação -->
+                <div class="inputValido">
+                    <p class="valido" id="valido"></p> <!-- Parágrafo que exibe a validação -->
+                </div>
+
+                <!-- Botão para finalizar o cadastro -->
+                <button class="btn btn-second">FINALIZAR</button>
+            </div><!-- second column -->
+        </div><!-- first content -->
+
+        <!-- Segunda seção (Login de usuário já existente) -->
+        <div class="content second-content">
+            <!-- Primeira coluna de boas-vindas -->
+            <div class="first-column">
+                <h2 class="title title-primary-1">olá amigo!</h2> <!-- Título da coluna -->
+                <p class="description description-primary">Insira seus dados pessoais</p>
+                <p class="description description-primary">e comece a jornada conosco</p>
+                <!-- Botão para cadastrar novo usuário -->
+                <button id="signup" class="btn btn-primary">Cadastrar</button>
+            </div>
+
+            <!-- Segunda coluna com formulário de login -->
+            <div class="second-column-1">
+                <h2 class="title title-second-1">faça login</h2> <!-- Título da seção de login -->
+
+                <!-- Formulário de login -->
+                <form class="form-2">
+                    <!-- Campo para o email no login -->
+                    <label class="label-input" for="">
+                        <i class="far fa-envelope icon-modify"></i> <!-- Ícone de envelope (email) -->
+                        <input type="email" placeholder="Email"> <!-- Campo para inserir o email -->
+                    </label>
+
+                    <!-- Campo para a senha no login -->
+                    <label class="label-input" for="">
+                        <i class="fas fa-lock icon-modify"></i> <!-- Ícone de cadeado (senha) -->
+                        <input type="password" placeholder="Password"> <!-- Campo para inserir a senha -->
+                    </label>
+
+                    <!-- Link para recuperação de senha -->
+                    <a class="password" href="#">esqueceu sua senha?</a>
+                    <!-- Botão para efetuar o login -->
+                    <button class="btn btn-second">entrar</button>
+                </form>
+            </div><!-- second column -->
+        </div><!-- second-content -->
+
+    </div>
+
+    <!-- IMAGEM DE FUNDO DA PÁGINA -->
+    <div>
+        <img src="Design sem nome.jpg" class="img" width="100%" style="margin-left: -0%; margin-top: -250%; display:flexbox;"
+            srcset="">
+    </div>
+
+    <!-- RODAPÉ DA PÁGINA -->
+    <footer class="footer">
+        <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p> <!-- Direitos autorais -->
+    </footer>
+
+    <!-- Importa o arquivo JavaScript personalizado -->
+    <script src="Login.js"></script>
+</body>
+
+</html>
