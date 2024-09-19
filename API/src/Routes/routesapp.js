@@ -2,7 +2,8 @@ require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
-const accountManagement = require ('../Controllers/accountController')
+const accountManagement = require ('../Controllers/accountController');
+const petManagement = require("../Controllers/petController")
 
 const users = []; //esse users representa o banco de dados, ou seja a tabela onde receberá o dado criptografado, ou melhor, o local onde ficará armazenado a senha no nosso banco de dados.
 
@@ -14,7 +15,14 @@ function verificadorDoToken(req, res, next){
     if (err) return res.status(500).json({ auth: false, message: 'Falha ao tentar autenticar o token.' });
     
     // se tudo estiver ok, salva no request para uso posterior
-    req.userId = decoded.ID;
+    req.dataUser = [{ID:decoded.ID,Nome:decoded.Nome, CEP:decoded.CEP,Rua: decoded.Rua,
+      Numero: decoded.Numero,
+      Bairro: decoded.Bairro,
+      Estado: decoded.Estado,
+      DataNasc: decoded.DataNasc,
+      Email: decoded.Email,
+      Administrador: decoded.Administrador,
+      Cidade: decoded.Cidade}];
     next();
   });
 }
@@ -29,9 +37,7 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
 
 
-// app.get('/users', (req,res) => { 
-//   res.json(users)
-// })
+ router.get ("/CadastraPet",verificadorDoToken,petManagement.cadastraPet )
 
 
 // app.post ('/users', async (req,res) => { //CRIPTOGRAFANDO ANTES DE CADASTRAR NO BANCO DE DADOS.
