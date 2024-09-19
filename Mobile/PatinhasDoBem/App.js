@@ -25,32 +25,59 @@ function HomeTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => {
+        tabBarIcon: ({ color, size, focused }) => {
           let iconName;
+          let iconStyle = {}; // Estilo para aplicar o sombreamento
+
           if (route.name === 'Home') {
             iconName = 'home';
+            size = '24'
           } else if (route.name === 'Mensagem') {
             iconName = 'comments';
+            size = '24'
+          } else if (route.name === 'Post') {
+            iconName = 'plus-circle';
+            size = focused ? 50 : 40; // Maior quando focado
+            color = '#3DAAD9'; // Cor personalizada
+            iconStyle = {
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 10 },
+              shadowOpacity: 0.3,
+              shadowRadius: 5,
+              elevation: 10, // Para Android
+            }; // Efeito de sombra
           } else if (route.name === 'Notificação') {
             iconName = 'bell';
+            size = '24'
           } else if (route.name === 'Perfil') {
             iconName = 'user';
+            size = '24'
           }
 
-          // Retornando o ícone de FontAwesome com o nome configurado
-          return <FontAwesome name={iconName} size={size} color={color} />;
+          return (
+            <FontAwesome
+              name={iconName}
+              size={size}
+              color={color}
+              style={route.name === 'Post' ? { ...iconStyle, marginBottom: 0 } : {}}
+            />
+          );
         },
+        tabBarShowLabel: false, // Remove os nomes
       })}
       tabBarOptions={{
         activeTintColor: '#3DAAD9',
         inactiveTintColor: 'gray',
+        style: { height: 70 }, // Aumenta a altura da barra para dar mais espaço ao ícone
       }}
     >
       <Tab.Screen name="Home" component={TelaInicial} />
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
+      <Tab.Screen name="Post" component={TelaDePost} />
       <Tab.Screen name="Notificação" component={TelaDeNotificacao} />
       <Tab.Screen name="Perfil" component={TelaDePerfil} />
     </Tab.Navigator>
+
   );
 }
 
