@@ -40,4 +40,13 @@ Content-Type: application/json
 	"Cidade": "Sumaré"
 }
 
+###
+
+GET http://localhost:5000/Login
+Content-Type: application/json
+
+{
+	"Email":"manrick@gmail.com",
+	"Senha":"testelucas123"
+}
  

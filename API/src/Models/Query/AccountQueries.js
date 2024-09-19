@@ -1,6 +1,6 @@
 const { connection } = require(`../../Config/db`);
 const jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcrypt');
 
 const AccountManagementQueries = {
   async cadastraUsuarioQuery (dataUser) {
@@ -27,8 +27,33 @@ const AccountManagementQueries = {
     }catch(e) {
       console.error(e)
     }
+  },
+  async autenticaUsuarioQuery (Email,Senha) {
+    const conn = await connection();
+
+    try {
+      const authResponse = await conn.query("Select * from Usuario where Email = ?",[Email])
+      if(authResponse[0].length > 0) {
+        const authVerify = await bcrypt.compare(Senha,authResponse[0][0].Senha)
+        if(authVerify === true) {
+          
+          const token = jwt.sign({ ID: authResponse[0][0].ID, Nome:authResponse[0][0].Nome,CEP:authResponse[0][0].CEP,Rua:authResponse[0][0].Rua,Numero:authResponse[0][0].Numero,Bairro:authResponse[0][0].Bairro,Estado:authResponse[0][0].Estado,DataNasc:authResponse[0][0].DataNasc,Email:authResponse[0][0].Email,Administrador:authResponse[0][0].Administrador,Cidade:authResponse[0][0].Cidade}, process.env.SECRET, {
+            expiresIn: 1000 // tempo em que o token irá expirar em segundos
+          });
+
+          return ({sucess:"Usuário logado com sucesso",auth:true,token:token})
+          
+        } else {
+          return ({error:"Email ou senha incorreta.",auth:false})
+        }
+   
+      }
+    }
+    catch (e) {
+      console.error(e)
+    }
   }
 }
 
 
-module.exports = {AccountManagementQueries}
+module.exports = AccountManagementQueries
