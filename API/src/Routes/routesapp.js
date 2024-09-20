@@ -37,7 +37,7 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
 
 
- router.get ("/CadastraPet",verificadorDoToken,petManagement.cadastraPet )
+ router.post ("/CadastraPet",verificadorDoToken,petManagement.cadastraPet)
 
 
 // app.post ('/users', async (req,res) => { //CRIPTOGRAFANDO ANTES DE CADASTRAR NO BANCO DE DADOS.
