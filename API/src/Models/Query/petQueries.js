@@ -16,6 +16,17 @@ const petQueries = {
     catch(e) {
       return ({error:e})
     }
+  },
+  async editPetInfoQuery (petForm) {
+    const conn = await connection();
+    try {
+     console.log(petForm)
+     const responseForEditRequest = await conn.query ("UPDATE pet SET TipoAnimal=?, Linhagem=?, Idade=?,Sexo=?,Cor=?,Descricao =? WHERE ID = ? && IDDoador = ?", [petForm.TipoAnimal,petForm.Linhagem,petForm.Idade,petForm.Sexo,petForm.Cor,petForm.Descricao,petForm.PetID,petForm.IDDoador])
+     return {sucess:responseForEditRequest}
+    }
+    catch(e) {
+      return {error:e}
+    }
   }
 }
 
