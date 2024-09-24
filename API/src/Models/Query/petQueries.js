@@ -27,6 +27,31 @@ const petQueries = {
     catch(e) {
       return {error:e}
     }
+  },
+  async removePetDaAdocaoQuery (IDDoador,PetID,VerifyForm) {
+    const conn = await connection();
+
+    try {
+      if(VerifyForm.weHelp == true && VerifyForm.wallCheck == true) {
+        const inactivatePet = await conn.query("UPDATE pet SET status = ? WHERE ID = ? AND IDDoador = ?", [0,PetID,IDDoador])
+        if(inactivatePet[0].affectedRows >= 1) {
+          return {sucess:"O pet foi inativado e vai para nosso mural de pets adotados graças a rede social"}
+        }else {
+          return {error:"não foi modificado nenhum registro verifique as informações e tente novamente"}
+        }
+      }else {
+        const removePet = await conn.query("DELETE FROM pet WHERE ID=? AND IDDoador = ?",[PetID,IDDoador])
+        if(removePet[0].affectedRows >= 1) {
+          return {sucess:"Todos dados a respeito do pet foram removidos de nosso sistema."}
+        }else {
+          return {error:"não foi identificado um registro com os dados especificados"}
+        }
+      }
+
+    } catch(e) {
+      return {error:e}
+    }
+   
   }
 }
 

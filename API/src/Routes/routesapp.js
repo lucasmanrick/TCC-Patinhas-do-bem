@@ -40,8 +40,12 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
  router.post ("/CadastraPet",verificadorDoToken,petManagement.cadastraPet)
 
 
+  //Rota para Editar informações de um pet já cadastrado.
+ router.put("/EditaPetInfo", verificadorDoToken,petManagement.editaPetInfo);
 
- router.put("/EditaPetInfo", verificadorDoToken,petManagement.editaPetInfo)
+
+ //remove um pet da adoção ou inativa (obs: todos registros com status 1 está para adoção, todos registros com status 0 é por que foram doados graças a rede e só inativamos o registro).
+ router.delete ("/RetiraPetAdocao",verificadorDoToken,petManagement.removePetDaAdocao)
 
 
 module.exports = router;

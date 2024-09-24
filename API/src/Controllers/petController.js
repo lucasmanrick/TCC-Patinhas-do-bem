@@ -39,7 +39,20 @@ const petManagement = {
   },
 
   removePetDaAdocao: async(req,res) => {
-    
+    try {
+      const IDDoador = req.dataUser[0].ID
+      const {PetID,VerifyForm} = req.body
+
+      if(IDDoador,PetID,VerifyForm) {
+        const sendValidations = await petQueries.removePetDaAdocaoQuery(IDDoador,PetID,VerifyForm)
+        res.json(sendValidations)
+      } else {
+        res.json({error:"está faltando informações para a remoção do pet da adoção."})
+      }
+    }
+    catch(e) {
+      res.json({error:e})
+    }
   }
 }
 
