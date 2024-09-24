@@ -1,5 +1,5 @@
 class Pet {
-  constructor(dataRegistro,TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador) {
+  constructor(dataRegistro,TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador,PetID) {
     this.dataRegistro = dataRegistro;
     this.TipoAnimal = TipoAnimal;
     this.Linhagem = Linhagem;
@@ -9,6 +9,7 @@ class Pet {
     this.Cor = Cor;
     this.Descricao = Descricao;
     this.IDDoador = IDDoador;
+    this.PetID = PetID;
   }
 }
 
