@@ -5,7 +5,6 @@ const router = express.Router();
 const accountManagement = require ('../Controllers/accountController');
 const petManagement = require("../Controllers/petController")
 
-const users = []; //esse users representa o banco de dados, ou seja a tabela onde receberá o dado criptografado, ou melhor, o local onde ficará armazenado a senha no nosso banco de dados.
 
 function verificadorDoToken(req, res, next){
   const token = req.headers['authorization'];
@@ -47,5 +46,8 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
  //remove um pet da adoção ou inativa (obs: todos registros com status 1 está para adoção, todos registros com status 0 é por que foram doados graças a rede e só inativamos o registro).
  router.delete ("/RetiraPetAdocao",verificadorDoToken,petManagement.removePetDaAdocao)
 
+
+
+  //puxa todos animais que estão para adoção com base na localização do usuário logado.
 
 module.exports = router;
