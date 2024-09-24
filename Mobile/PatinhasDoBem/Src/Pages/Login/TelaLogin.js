@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from "react";
 import {
   View,
@@ -6,31 +7,46 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  ImageBackground,
   Image,
 } from "react-native";
-import { auth } from "../../Firebase/FirebaseConfig"; // Certifique-se de importar corretamente
-import { signInWithEmailAndPassword } from "firebase/auth"; // Adicione esta linha para a função correta
+import { storeToken } from '../../Service/tokenService'; // Importa o serviço de armazenamento do token
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Certifique-se de que o AsyncStorage está importado
 
 export default class TelaLogin extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
   state = {
     email: "",
     senha: "",
     errorMessage: null,
   };
 
-  handleLogin = () => {
+  handleLogin = async () => {
     const { email, senha } = this.state;
 
-    // Utilize a função signInWithEmailAndPassword corretamente
-    signInWithEmailAndPassword(auth, email, senha)
-      .then(() => {
+    try {
+      // Fazendo a requisição GET para a API de login com query params
+      const response = await axios.get('http://192.168.2.253:5000/Login', {
+        params: {
+          Email: email,
+          Senha: senha,
+        },
+      });
+
+      if (response.data.auth) {
+        const token = response.data.token;
+        
+        // Salva o token no AsyncStorage
+        await storeToken(token); 
+        console.log('Token JWT recebido e salvo:', token);
+
+        // Redirecionando para a tela Home após o login
         this.props.navigation.navigate("Home");
-      })
-      .catch((error) => this.setState({ errorMessage: error.message }));
+      } else {
+        this.setState({ errorMessage: response.data.message || "Login falhou" });
+      }
+    } catch (error) {
+      console.error("Erro de login:", error.response || error.message);
+      this.setState({ errorMessage: "Erro na conexão com a API." });
+    }
   };
 
   render() {
@@ -39,7 +55,7 @@ export default class TelaLogin extends React.Component {
         <StatusBar barStyle="light-content"></StatusBar>
         <Image
           source={require("../../../assets/ImagenLogin.jpg")}
-          style={{marginTop: -10, width: 460, height: 150 }}
+          style={{ marginTop: -10, width: 460, height: 150 }}
         />
 
         <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
