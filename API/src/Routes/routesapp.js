@@ -5,7 +5,6 @@ const router = express.Router();
 const accountManagement = require ('../Controllers/accountController');
 const petManagement = require("../Controllers/petController")
 
-const users = []; //esse users representa o banco de dados, ou seja a tabela onde receberá o dado criptografado, ou melhor, o local onde ficará armazenado a senha no nosso banco de dados.
 
 function verificadorDoToken(req, res, next){
   const token = req.headers['authorization'];
@@ -15,14 +14,14 @@ function verificadorDoToken(req, res, next){
     if (err) return res.status(500).json({ auth: false, message: 'Falha ao tentar autenticar o token.' });
     
     // se tudo estiver ok, salva no request para uso posterior
-    req.dataUser = [{ID:decoded.ID,Nome:decoded.Nome, CEP:decoded.CEP,Rua: decoded.Rua,
+    req.dataUser = {ID:decoded.ID,Nome:decoded.Nome, CEP:decoded.CEP,Rua: decoded.Rua,
       Numero: decoded.Numero,
       Bairro: decoded.Bairro,
       Estado: decoded.Estado,
       DataNasc: decoded.DataNasc,
       Email: decoded.Email,
       Administrador: decoded.Administrador,
-      Cidade: decoded.Cidade}];
+      Cidade: decoded.Cidade};
     next();
   });
 }
@@ -47,5 +46,17 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
  //remove um pet da adoção ou inativa (obs: todos registros com status 1 está para adoção, todos registros com status 0 é por que foram doados graças a rede e só inativamos o registro).
  router.delete ("/RetiraPetAdocao",verificadorDoToken,petManagement.removePetDaAdocao)
 
+
+
+  //puxa todos animais de um usuário especifico.
+  router.get("/PetsUser", verificadorDoToken, petManagement.petsDeUmUsuario)
+
+
+  //puxa todos animais que estão para adoção no mesmo estado da pessoa.
+  router.get("/PetsAdocao", verificadorDoToken, petManagement.petsParaAdocao)
+
+
+
+  router.post ("/DemonstrarInteressePet", verificadorDoToken, petManagement.DemonstrarInteresseEmPet)
 
 module.exports = router;
