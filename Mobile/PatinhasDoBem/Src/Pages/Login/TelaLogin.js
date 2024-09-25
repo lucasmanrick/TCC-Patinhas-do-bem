@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React from "react";
+import React, { Component } from "react";
 import {
   View,
   Text,
@@ -9,43 +9,75 @@ import {
   StatusBar,
   Image,
 } from "react-native";
-import { storeToken } from '../../Service/tokenService'; // Importa o serviço de armazenamento do token
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Certifique-se de que o AsyncStorage está importado
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../Service/tokenService'; // Importa o Axios já configurado
 
-export default class TelaLogin extends React.Component {
+class LoginScreen extends Component {
   state = {
-    email: "",
-    senha: "",
+    Email: '',
+    Senha: '',
     errorMessage: null,
   };
 
-  handleLogin = async () => {
-    const { email, senha } = this.state;
-
+  // Função para armazenar o token no AsyncStorage
+  storeToken = async (token) => {
     try {
-      // Fazendo a requisição GET para a API de login com query params
-      const response = await axios.get('http://192.168.2.253:5000/Login', {
-        params: {
-          Email: email,
-          Senha: senha,
-        },
-      });
+      await AsyncStorage.setItem('jwtToken', token);
+      console.log("Token salvo com sucesso!");
+    } catch (error) {
+      console.error('Erro ao salvar o token:', error);
+    }
+  };
 
-      if (response.data.auth) {
-        const token = response.data.token;
-        
-        // Salva o token no AsyncStorage
-        await storeToken(token); 
-        console.log('Token JWT recebido e salvo:', token);
-
-        // Redirecionando para a tela Home após o login
+  handleLogin = async () => {
+    const { Email, Senha } = this.state;
+  
+    try {
+      const response = await api.post('/Login', { Email, Senha });
+      console.log(response.data);
+      const { token } = response.data;
+  
+      if (token) {
+        await AsyncStorage.setItem('jwtToken', token); // Salvar o token
+        // Redirecionar para a próxima tela
         this.props.navigation.navigate("Home");
-      } else {
-        this.setState({ errorMessage: response.data.message || "Login falhou" });
       }
     } catch (error) {
-      console.error("Erro de login:", error.response || error.message);
-      this.setState({ errorMessage: "Erro na conexão com a API." });
+      console.error('Erro de login:', error.response || error.message);
+      this.setState({ errorMessage: "Erro ao fazer login." });
+    }
+  };
+
+  // Função para recuperar o token do AsyncStorage
+  getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('jwtToken');
+      return token;
+    } catch (error) {
+      console.error('Erro ao recuperar o token:', error);
+      return null;
+    }
+  };
+
+  // Exemplo de requisição autenticada usando o token JWT
+  fetchData = async () => {
+    const token = await this.getToken(); // Recupera o token
+
+    if (token) {
+      try {
+        // Fazendo uma requisição GET com o token JWT no cabeçalho
+        const response = await api.get('/protectedRoute', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
+          },
+        });
+
+        console.log('Dados recebidos:', response.data);
+      } catch (error) {
+        console.error('Erro na requisição autenticada:', error.response || error.message);
+      }
+    } else {
+      console.error('Token não encontrado. Usuário não autenticado.');
     }
   };
 
@@ -153,3 +185,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default LoginScreen;

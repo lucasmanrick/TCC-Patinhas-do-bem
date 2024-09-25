@@ -1,7 +1,11 @@
-import axios from 'axios';
+import api from './tokenService';
 
-const api = axios.create({
-  baseURL: 'http://192.168.2.253:5500', // Insira aqui o endereço base da sua API
-});
-
-export default api;
+// Exemplo de requisição já autenticada
+fetchData = async () => {
+  try {
+    const response = await api.get('/protectedRoute'); // O token será automaticamente adicionado
+    console.log('Dados recebidos:', response.data);
+  } catch (error) {
+    console.error('Erro na requisição autenticada:', error.response || error.message);
+  }
+};
