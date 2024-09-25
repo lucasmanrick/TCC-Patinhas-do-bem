@@ -1,4 +1,5 @@
-import React from "react";
+import axios from 'axios';
+import React, { Component } from "react";
 import {
   View,
   Text,
@@ -6,31 +7,78 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
-  ImageBackground,
   Image,
 } from "react-native";
-import { auth } from "../../Firebase/FirebaseConfig"; // Certifique-se de importar corretamente
-import { signInWithEmailAndPassword } from "firebase/auth"; // Adicione esta linha para a função correta
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../../Service/tokenService'; // Importa o Axios já configurado
 
-export default class TelaLogin extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
+class LoginScreen extends Component {
   state = {
-    email: "",
-    senha: "",
+    Email: '',
+    Senha: '',
     errorMessage: null,
   };
 
-  handleLogin = () => {
-    const { email, senha } = this.state;
+  // Função para armazenar o token no AsyncStorage
+  storeToken = async (token) => {
+    try {
+      await AsyncStorage.setItem('jwtToken', token);
+      console.log("Token salvo com sucesso!");
+    } catch (error) {
+      console.error('Erro ao salvar o token:', error);
+    }
+  };
 
-    // Utilize a função signInWithEmailAndPassword corretamente
-    signInWithEmailAndPassword(auth, email, senha)
-      .then(() => {
+  handleLogin = async () => {
+    const { Email, Senha } = this.state;
+  
+    try {
+      const response = await api.post('/Login', { Email, Senha });
+      console.log(response.data);
+      const { token } = response.data;
+  
+      if (token) {
+        await AsyncStorage.setItem('jwtToken', token); // Salvar o token
+        // Redirecionar para a próxima tela
         this.props.navigation.navigate("Home");
-      })
-      .catch((error) => this.setState({ errorMessage: error.message }));
+      }
+    } catch (error) {
+      console.error('Erro de login:', error.response || error.message);
+      this.setState({ errorMessage: "Erro ao fazer login." });
+    }
+  };
+
+  // Função para recuperar o token do AsyncStorage
+  getToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem('jwtToken');
+      return token;
+    } catch (error) {
+      console.error('Erro ao recuperar o token:', error);
+      return null;
+    }
+  };
+
+  // Exemplo de requisição autenticada usando o token JWT
+  fetchData = async () => {
+    const token = await this.getToken(); // Recupera o token
+
+    if (token) {
+      try {
+        // Fazendo uma requisição GET com o token JWT no cabeçalho
+        const response = await api.get('/protectedRoute', {
+          headers: {
+            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
+          },
+        });
+
+        console.log('Dados recebidos:', response.data);
+      } catch (error) {
+        console.error('Erro na requisição autenticada:', error.response || error.message);
+      }
+    } else {
+      console.error('Token não encontrado. Usuário não autenticado.');
+    }
   };
 
   render() {
@@ -39,7 +87,7 @@ export default class TelaLogin extends React.Component {
         <StatusBar barStyle="light-content"></StatusBar>
         <Image
           source={require("../../../assets/ImagenLogin.jpg")}
-          style={{marginTop: -10, width: 460, height: 150 }}
+          style={{ marginTop: -10, width: 460, height: 150 }}
         />
 
         <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
@@ -137,3 +185,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default LoginScreen;

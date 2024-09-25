@@ -10,15 +10,15 @@ const port= 5000;
 app.use(express.json());
 
 
-const corsOptions = {
-  origin: 'http://127.0.0.1:5500',
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}
+// const corsOptions = {
+//   origin: 'http://192.168.2.253:5000',
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204
+// }
 
 
- app.use('/', cors(corsOptions), router)
+ app.use('/', router)
 
 
 
