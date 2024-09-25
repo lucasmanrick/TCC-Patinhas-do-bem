@@ -20,9 +20,12 @@ const petQueries = {
   async editPetInfoQuery (petForm) {
     const conn = await connection();
     try {
-     console.log(petForm)
      const responseForEditRequest = await conn.query ("UPDATE pet SET TipoAnimal=?, Linhagem=?, Idade=?,Sexo=?,Cor=?,Descricao =? WHERE ID = ? && IDDoador = ?", [petForm.TipoAnimal,petForm.Linhagem,petForm.Idade,petForm.Sexo,petForm.Cor,petForm.Descricao,petForm.PetID,petForm.IDDoador])
-     return {sucess:responseForEditRequest}
+     if(responseForEditRequest[0].affectedRows >= 1) {
+      return {sucess:"Editado informações do pet solicitado"}
+     }else {
+      return {sucess:"Não foi identificado o pet especificado portanto não foi alterado informações do pet"}
+     }
     }
     catch(e) {
       return {error:e}
@@ -52,7 +55,66 @@ const petQueries = {
       return {error:e}
     }
    
+  },
+
+  async petsDeUmUsuarioQuery (UserID) {
+    const conn = await connection();
+    try {
+      const getUserPets = await conn.query("SELECT * FROM PET where IDDoador = ?", [UserID]);
+      if(getUserPets[0].length >= 1) {
+        
+        getUserPets[0].forEach ((e) => {
+         delete e.IDDoador
+        })
+
+       return {sucess:"Retornando todos pets do usuário especificado", dataResponse: getUserPets[0]}
+      }else {
+        return {error:"O usuário especificado não possui nenhum pet cadastrado."}
+      }
+    }
+    catch(e) {
+      return {error:e}
+    }
+  },
+
+
+  async petsParaAdocaoQuery (Estado) {
+    const conn = await connection();
+    try {
+     const verifyUsersClose = await conn.query ("select p.* from pet as p join usuario as u WHERE u.estado = ?", [Estado]);
+      console.log(verifyUsersClose)
+     return {sucess:"retornando todos pets da proximidade do usuário", dataResponse:verifyUsersClose[0]}
+    }
+    catch (e) {
+      return {error:e}
+    }
+  },
+
+
+  async DemonstrarInteresseEmPetQuery (UserID,PetID) {
+    const conn = await connection();
+    try{
+      const verifyExistencePet = await conn.query ("SELECT * FROM PET WHERE ID = ?",[PetID])
+      const verifyExistenceUser = await conn.query ("SELECT * FROM Usuario WHERE ID = ?",[UserID])
+
+      if(verifyExistencePet[0].length >=1 && verifyExistenceUser[0].length >= 1) {
+        const intrestSendRequest = await conn.query("Insert into interesse (Status,IDInteressado,IDPet) values (?,?,?)",[1,UserID,PetID])
+        if(intrestSendRequest[0].affectedRows >= 1) {
+          return {sucess:"Usuário demonstrou interesse em um pet novo com sucesso"}
+        }else {
+          return {error:"não foi demonstrado interesse em nenhum pet pois houve um problema no sistema, tente novamente!"}
+        }
+      }else {
+        return {error:"usuário informado ou pet não existem, portanto não foi possivel demonstrar interesse neste pet informado."}
+      }
+
+      
+    }
+    catch(e) {
+      return {error:e}
+    }
   }
+  
 }
 
 module.exports = petQueries;

@@ -4,7 +4,7 @@ const petQueries = require ("../Models/Query/petQueries.js")
 const petManagement = {
   cadastraPet: async (req,res)=> {
     try {
-      const IDDoador = req.dataUser[0].ID
+      const IDDoador = req.dataUser.ID
       const {TipoAnimal,Linhagem,Idade,Sexo,Cor,Descricao} = req.body      
       if(TipoAnimal,Linhagem,Idade,Sexo,Cor,Descricao) {
         const createPetForm = new Pet(new Date(),TipoAnimal,Linhagem,null ,Idade,Sexo,Cor,Descricao,IDDoador)
@@ -22,7 +22,7 @@ const petManagement = {
 
   editaPetInfo: async(req,res) => {
     try{
-      const IDDoador = req.dataUser[0].ID
+      const IDDoador = req.dataUser.ID
       const {TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,PetID} = req.body;
       if(TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador,PetID) {
         const petFormDataEdit = new Pet (new Date(),TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador,PetID);
@@ -40,7 +40,7 @@ const petManagement = {
 
   removePetDaAdocao: async(req,res) => {
     try {
-      const IDDoador = req.dataUser[0].ID
+      const IDDoador = req.dataUser.ID
       const {PetID,VerifyForm} = req.body
 
       if(IDDoador,PetID,VerifyForm) {
@@ -53,7 +53,60 @@ const petManagement = {
     catch(e) {
       res.json({error:e})
     }
-  }
+  },
+
+  petsDeUmUsuario: async (req,res) => {
+    try {
+      const {UserID} = req.body
+      if(UserID && typeof(UserID) !== 'string') {
+        const callBackRequisition = await petQueries.petsDeUmUsuarioQuery(UserID)
+        res.json(callBackRequisition)
+      }
+    }
+    catch (e) {
+      res.json({error:e})
+    }
+  },
+
+  petsParaAdocao: async (req,res) => {
+    try {
+      const {Estado} = req.dataUser;
+
+      if(Estado) {
+        const receivePets = await petQueries.petsParaAdocaoQuery(Estado);
+        res.json(receivePets)
+      }
+      else {
+        res.json({error:"não foi possivel identificar a localidade do usuário para puxar pets da proximidade"})
+      }
+
+    }
+    catch (e) {
+      res.json({error:e})
+    }
+  },
+
+  DemonstrarInteresseEmPet: async (req,res) => {
+    try {
+      const {ID} = req.dataUser;
+      const {PetID} = req.body;
+
+      if(ID,PetID) {
+        const intrest = await petQueries.DemonstrarInteresseEmPetQuery(ID,PetID)
+        res.json(intrest)
+      }else{
+        res.json({error:"não foi informado todos dados necessários para demonstrar interesse em um pet"})
+      }
+
+  
+
+    }
+    catch(e) {
+      res.json({error:e})
+    }
+  },
+
+  
 }
 
 
