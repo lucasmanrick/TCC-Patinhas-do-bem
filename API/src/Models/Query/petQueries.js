@@ -157,8 +157,9 @@ const petQueries = {
   },
 
   async removerInteressePetQuery (PetID,UserID) {
+    const conn = await connection();
     try{
-      
+      const analyzeToRemove = await conn.query("UPDATE interesse SET Status = ? WHERE IDInteressado=? AND IDPet = ?", [])
     }
     catch(e) {
       return {error:e}

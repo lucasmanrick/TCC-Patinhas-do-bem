@@ -143,7 +143,7 @@ const petManagement = {
     try {
       const {ID} = req.dataUser;
       const {PetID} = req.body;
-      petQueries.removerInteressePetQuery()
+      const removeInterest = await petQueries.removerInteressePetQuery(UserID,PetID);
     }
     catch (e) {
       res.json({error:e})
