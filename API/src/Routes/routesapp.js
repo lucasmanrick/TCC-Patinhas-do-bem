@@ -32,7 +32,7 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
 
 //Rota para o usuário logar no site (será retornado um token ao mesmo)
- router.get('/Login' ,accountManagement.autenticaUsuario) 
+ router.post('/Login' ,accountManagement.autenticaUsuario) 
 
 
 //Rota para cadastrar os dados de um novo pet 

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { Component } from "react";
 import {
   View,
@@ -8,77 +7,63 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
+  Alert,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../../Service/tokenService'; // Importa o Axios já configurado
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 class LoginScreen extends Component {
   state = {
     Email: '',
     Senha: '',
+    loggedInUser: null,
     errorMessage: null,
-  };
-
-  // Função para armazenar o token no AsyncStorage
-  storeToken = async (token) => {
-    try {
-      await AsyncStorage.setItem('jwtToken', token);
-      console.log("Token salvo com sucesso!");
-    } catch (error) {
-      console.error('Erro ao salvar o token:', error);
-    }
   };
 
   handleLogin = async () => {
     const { Email, Senha } = this.state;
   
     try {
-      const response = await api.post('/Login', { Email, Senha });
-      console.log(response.data);
-      const { token } = response.data;
+      const response = await api.post('/Login', {
+        Email,
+        Senha,
+      });
   
-      if (token) {
-        await AsyncStorage.setItem('jwtToken', token); // Salvar o token
-        // Redirecionar para a próxima tela
-        this.props.navigation.navigate("Home");
+      console.log('Resposta do backend:', response.data); // Verifique a resposta do backend aqui
+  
+      if (response.data.auth) {
+        const { token } = response.data;
+  
+        if (token) { // Agora verificamos apenas o token
+          await AsyncStorage.multiSet([
+            ['@CodeApi:token', token],
+            // Remova o user do AsyncStorage, se não for necessário
+          ]);
+  
+          Alert.alert('Login realizado com sucesso!');
+          this.props.navigation.navigate('Home');
+        } else {
+          this.setState({ errorMessage: 'Token inválido.' });
+          console.log('Token inválido:', token);
+        }
+      } else {
+        this.setState({ errorMessage: response.data.error });
       }
     } catch (error) {
-      console.error('Erro de login:', error.response || error.message);
-      this.setState({ errorMessage: "Erro ao fazer login." });
+      console.log('Erro ao fazer login:', error);
+      this.setState({ errorMessage: 'Erro ao conectar ao servidor. Tente novamente.' });
     }
   };
+  
 
-  // Função para recuperar o token do AsyncStorage
-  getToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem('jwtToken');
-      return token;
-    } catch (error) {
-      console.error('Erro ao recuperar o token:', error);
-      return null;
-    }
-  };
 
-  // Exemplo de requisição autenticada usando o token JWT
-  fetchData = async () => {
-    const token = await this.getToken(); // Recupera o token
 
-    if (token) {
-      try {
-        // Fazendo uma requisição GET com o token JWT no cabeçalho
-        const response = await api.get('/protectedRoute', {
-          headers: {
-            Authorization: `Bearer ${token}`, // Adiciona o token no cabeçalho
-          },
-        });
+  async componentDidMount() {
+    const token = await AsyncStorage.getItem('@codeApi:token');
 
-        console.log('Dados recebidos:', response.data);
-      } catch (error) {
-        console.error('Erro na requisição autenticada:', error.response || error.message);
-      }
-    } else {
-      console.error('Token não encontrado. Usuário não autenticado.');
-    }
+
+    if (token && user)
+      this.setState({ loggedInUser: user });
+
   };
 
   render() {
@@ -93,8 +78,11 @@ class LoginScreen extends Component {
         <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
 
         <View style={styles.errorMessage}>
-          {this.state.errorMessage && (
+          {!!this.state.errorMessage && (
             <Text style={styles.error}>{this.state.errorMessage}</Text>
+          )}
+          {!!this.state.loggedInUser && (
+            <Text style={styles.error}>{this.state.loggedInUser}</Text>
           )}
         </View>
 
@@ -103,8 +91,8 @@ class LoginScreen extends Component {
           <TextInput
             style={styles.input}
             autoCapitalize="none"
-            onChangeText={(email) => this.setState({ email })}
-            value={this.state.email}
+            onChangeText={(Email) => this.setState({ Email })} // Atualize o estado corretamente
+            value={this.state.Email}
           />
         </View>
 
@@ -114,8 +102,8 @@ class LoginScreen extends Component {
             style={styles.input}
             secureTextEntry
             autoCapitalize="none"
-            onChangeText={(senha) => this.setState({ senha })}
-            value={this.state.senha}
+            onChangeText={(Senha) => this.setState({ Senha })} // Atualize o estado corretamente
+            value={this.state.Senha}
           />
         </View>
 
