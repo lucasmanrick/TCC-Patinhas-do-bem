@@ -57,7 +57,7 @@ const petManagement = {
 
   petsDeUmUsuario: async (req,res) => {
     try {
-      const {UserID} = req.body
+      const {UserID} = req.body  //ATENTE-SE O USERID ESTÁ SENDO PASSADO NO BODY NESSA REQUISIÇÃO
       if(UserID && typeof(UserID) !== 'string') {
         const callBackRequisition = await petQueries.petsDeUmUsuarioQuery(UserID)
         res.json(callBackRequisition)
@@ -70,10 +70,11 @@ const petManagement = {
 
   petsParaAdocao: async (req,res) => {
     try {
-      const {Estado} = req.dataUser;
+      const {ID,Estado} = req.dataUser;
 
-      if(Estado) {
-        const receivePets = await petQueries.petsParaAdocaoQuery(Estado);
+      console.log(Estado,ID)
+      if(Estado,ID) {
+        const receivePets = await petQueries.petsParaAdocaoQuery(Estado,ID);
         res.json(receivePets)
       }
       else {
@@ -86,13 +87,14 @@ const petManagement = {
     }
   },
 
-  DemonstrarInteresseEmPet: async (req,res) => {
+  demonstrarInteresseEmPet: async (req,res) => {
     try {
       const {ID} = req.dataUser;
       const {PetID} = req.body;
 
       if(ID,PetID) {
-        const intrest = await petQueries.DemonstrarInteresseEmPetQuery(ID,PetID)
+        console.log(ID)
+        const intrest = await petQueries.demonstrarInteresseEmPetQuery(ID,PetID)
         res.json(intrest)
       }else{
         res.json({error:"não foi informado todos dados necessários para demonstrar interesse em um pet"})
@@ -106,7 +108,47 @@ const petManagement = {
     }
   },
 
-  
+  interessadosMeuPet: async (req,res) => {
+    try{
+     const {MeuPetID} = req.body;
+
+     if(MeuPetID) {
+      const analyzeIntrest = await petQueries.interessadosMeuPetQuery(MeuPetID);
+      res.json(analyzeIntrest)
+
+     }else {
+      res.json({error:"não foi informado o id do pet para identificar os interessados no mesmo."})
+     }
+
+     
+
+    }
+    catch(e) {
+      res.json ({error:e})
+    }
+  },
+
+  meusInteresses: async(req,res) => {
+    try {
+      const {ID} = req.dataUser;
+      const myInterests = await petQueries.meusInteressesQuery(ID)
+      res.json(myInterests)
+    }
+    catch (e) {
+      res.json({error:e})
+    }
+  },
+
+  removerInteressePet: async (req,res) => {
+    try {
+      const {ID} = req.dataUser;
+      const {PetID} = req.body;
+      petQueries.removerInteressePetQuery()
+    }
+    catch (e) {
+      res.json({error:e})
+    }
+  }
 }
 
 
