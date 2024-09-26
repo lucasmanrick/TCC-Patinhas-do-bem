@@ -32,7 +32,7 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
 
 //Rota para o usuário logar no site (será retornado um token ao mesmo)
- router.get('/Login' ,accountManagement.autenticaUsuario) 
+ router.post('/Login' ,accountManagement.autenticaUsuario) 
 
 
 //Rota para cadastrar os dados de um novo pet 
@@ -56,7 +56,19 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
   router.get("/PetsAdocao", verificadorDoToken, petManagement.petsParaAdocao)
 
 
+  //Rota que pode-se demonstrar interesse em um pet
+  router.post ("/DemonstrarInteressePet", verificadorDoToken, petManagement.demonstrarInteresseEmPet)
 
-  router.post ("/DemonstrarInteressePet", verificadorDoToken, petManagement.DemonstrarInteresseEmPet)
+
+  //Rota para ver todos animais que eu demonstrei interesse
+  router.get ("/InteressadosMeuPet", verificadorDoToken, petManagement.interessadosMeuPet)
+
+
+  //Rota para ver os pets no qual eu demonstrei interesse
+  router.get ("/MeusInteresses", verificadorDoToken, petManagement.meusInteresses)
+
+
+  //Rota para tirar interesse em algum pet
+  router.put ("/RemoverInteressePet", verificadorDoToken, petManagement.removerInteressePet)
 
 module.exports = router;
