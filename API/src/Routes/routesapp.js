@@ -69,6 +69,6 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
 
   //Rota para tirar interesse em algum pet
-  router.put ("/RemoverInteressePet", verificadorDoToken, petManagement.removerInteressePet)
+  router.delete ("/RemoverInteressePet", verificadorDoToken, petManagement.removerInteressePet)
 
 module.exports = router;
