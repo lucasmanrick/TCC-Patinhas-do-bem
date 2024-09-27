@@ -2,7 +2,7 @@ import { create } from 'apisauce'
 
 // Cria uma instância do Axios
 const api = create({
-  baseURL: 'http://192.168.2.252:5000',
+  baseURL: 'http://192.168.0.109:5000',
   
 });
 

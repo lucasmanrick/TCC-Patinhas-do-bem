@@ -1,0 +1,546 @@
+esse é o meu controller: const Usuario = require("../Models/Class/Usuario")
+const AccountManagementQueries = require("../Models/Query/AccountQueries")
+const bcrypt = require('bcrypt');
+
+
+
+
+
+
+
+const accountManagement = {
+  cadastraUsuario: async (req, res) => {
+
+    try {
+      const { NomeUsuario, DataNasc, Email, Senha, Cep, Rua, Numero, Bairro, Estado, Cidade } = req.body
+
+      if (NomeUsuario, DataNasc, Email, Senha, Cep, Rua, Numero, Bairro, Estado, Cidade) {
+        if (typeof (Email) == 'number') {
+          res.json({ error: "O Campo Email não pode ser numero" })
+        } else if (typeof (NomeUsuario) !== 'string') {
+          res.json({ error: "O Campo Nome não pode ser diferente de texto" })
+        } else if (typeof (Senha) !== 'string') {
+          res.json({ error: "O Campo Senha está com tipo diferente do esperado" })
+        } else if (typeof (Cep) !== 'string') {
+          res.json({ error: "O Campo CEP está com tipo diferente do esperado" })
+        } else if (typeof (Rua) !== 'string') {
+          res.json({ error: "O Campo Rua está com tipo diferente do esperado" })
+        } else if (typeof (Numero) !== 'number') {
+          res.json({ error: "O Campo Numero está com tipo diferente do esperado" })
+        } else if (typeof (Bairro) !== 'string') {
+          res.json({ error: "O Campo Bairro está com tipo diferente do esperado" })
+        } else if (typeof (Estado) !== 'string') {
+          res.json({ error: "O Campo Estado está com tipo diferente do esperado" })
+        } else if (typeof (Cidade) !== 'string') {
+          res.json({ error: "O Campo Cidade está com tipo diferente do esperado" })
+        }
+
+        const validaCadastroAnterior = await AccountManagementQueries.verificaExistenciaUsuarioQuery(Email)
+
+        if (validaCadastroAnterior.error) {
+          res.json(validaCadastroAnterior)
+        } else {
+          const hashedPassword = await bcrypt.hash(Senha, 10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
+          console.log("sucess")
+          console.log(validaCadastroAnterior)
+          const newUser = new Usuario(NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
+          //verificar se o Email passado já não existe no nosso banco de dados.
+
+          const sendingData = await AccountManagementQueries.cadastraUsuarioQuery(newUser)
+
+          res.json(sendingData)
+        }
+
+      }else{
+        res.json({error:"Não foi enviado todos campos necessários para fazer o cadastro"})
+      }
+    }
+
+    catch (e) {
+      res.json({ error: "houve um problema no tratamento de seus dados: " })
+    }
+
+  },
+  autenticaUsuario: async(req,res) => {
+    const {Email,Senha} = req.body;
+  
+    try {
+      if(Email,Senha) {
+        if(typeof(Email) === 'string' && typeof (Senha) === 'string') {
+        const re = /\S+@\S+\.\S+/;
+        const testRegex = re.test(Email);
+
+        if(testRegex === true) {
+          const verifyExistence = await AccountManagementQueries.autenticaUsuarioQuery (Email,Senha);
+          res.json (verifyExistence)
+        }else{
+          res.json({error:"o valor inserido no campo Email, não corresponde a um Email valido",auth:false})
+        }
+
+        }else {
+          res.json({error:"O Email e a senha estão sendo enviados com tipos de dados divergentes do necessário. Contate um Suporte para correção do problema", auth:false})
+        }
+      } else {
+        res.json({error:"Não foram encaminhados Email e Senha",auth:false})
+      }
+      
+    }
+    catch (e) {
+      res.json ({error:e, auth:false})
+    }
+    
+  }
+}
+
+
+module.exports = accountManagement
+
+essa é a minha classe:
+
+
+class Usuario {
+    constructor(NomeUsuario,DataNasc,Email,Senha,Cep,Rua,Numero, Bairro,Estado,Cidade) {
+      this.NomeUsuario = NomeUsuario,
+      this.DataNasc = DataNasc,
+      this.Email = Email,
+      this.Senha = Senha,
+      this.Cep = Cep,
+      this.Rua = Rua,
+      this.Numero = Numero, 
+      this.Bairro = Bairro,
+      this.Estado = Estado,
+      this.Cidade = Cidade
+    }
+  }
+  
+  module.exports = Usuario
+
+  essa é minha query: 
+  const { connection } = require(`../../Config/db`);
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+const AccountManagementQueries = {
+  async cadastraUsuarioQuery (dataUser) {
+    const conn = await connection();
+      try {
+        console.log('chegou')                                                                                                                                                                                         
+        const uRes = await conn.query("INSERT INTO `Usuario` (`Nome`, `CEP`, `Rua`, `Numero`, `Bairro`, `Estado`, `DataNasc`, `Email`, `Senha`, `Administrador`,`Cidade`) VALUES (?,?,?,?,?,?,?,?,?,?,?)",[dataUser.NomeUsuario,dataUser.Cep,dataUser.Rua,dataUser.Numero,dataUser.Bairro,dataUser.Estado,dataUser.DataNasc,dataUser.Email,dataUser.Senha,0,dataUser.Cidade]);
+        return {sucess:"você conseguiu se cadastrar com sucesso!!"}
+      }
+      catch (e) {
+        return {error:"houve um erro ao tentar completar o envio de dados: " & e }
+      }
+  },
+  async verificaExistenciaUsuarioQuery (Email) {
+    const conn = await connection();
+    try{
+      const existenceReturn = await conn.query("Select Email from Usuario Where Email = ?", [Email])
+
+      if(existenceReturn[0].length > 0) {
+        return {error:"Um usuário com esse Email já está registrado em nosso sistema, tente utilizar outro!"}
+      }else {
+        return {sucess:"Usuário apto a prosseguir com cadastro."}
+      }
+    }catch(e) {
+      console.error(e)
+    }
+  },
+  async autenticaUsuarioQuery (Email,Senha) {
+    const conn = await connection();
+
+    try {
+      const authResponse = await conn.query("Select * from Usuario where Email = ?",[Email])
+      if(authResponse[0].length > 0) {
+        const authVerify = await bcrypt.compare(Senha,authResponse[0][0].Senha)
+        if(authVerify === true) {
+          
+          const token = jwt.sign({ ID: authResponse[0][0].ID, Nome:authResponse[0][0].Nome,CEP:authResponse[0][0].CEP,Rua:authResponse[0][0].Rua,Numero:authResponse[0][0].Numero,Bairro:authResponse[0][0].Bairro,Estado:authResponse[0][0].Estado,DataNasc:authResponse[0][0].DataNasc,Email:authResponse[0][0].Email,Administrador:authResponse[0][0].Administrador,Cidade:authResponse[0][0].Cidade}, process.env.SECRET, {
+            expiresIn: 1000 // tempo em que o token irá expirar em segundos
+          });
+
+          return ({sucess:"Usuário logado com sucesso",auth:true,token:token})
+          
+        } else {
+          return ({error:"Email ou senha incorreta.",auth:false})
+        }
+   
+      }
+    }
+    catch (e) {
+      console.error(e)
+    }
+  }
+}
+
+
+module.exports = AccountManagementQueries
+
+essa é rota para se cadstrar: require("dotenv-safe").config();
+const jwt = require('jsonwebtoken');
+const express = require('express');
+const router = express.Router();
+const accountManagement = require ('../Controllers/accountController');
+const petManagement = require("../Controllers/petController")
+
+
+function verificadorDoToken(req, res, next){
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ auth: false, message: 'Não foi informado nenhum token.' });
+  
+  jwt.verify(token, process.env.SECRET, function(err, decoded) {
+    if (err) return res.status(500).json({ auth: false, message: 'Falha ao tentar autenticar o token.' });
+    
+    // se tudo estiver ok, salva no request para uso posterior
+    req.dataUser = {ID:decoded.ID,Nome:decoded.Nome, CEP:decoded.CEP,Rua: decoded.Rua,
+      Numero: decoded.Numero,
+      Bairro: decoded.Bairro,
+      Estado: decoded.Estado,
+      DataNasc: decoded.DataNasc,
+      Email: decoded.Email,
+      Administrador: decoded.Administrador,
+      Cidade: decoded.Cidade};
+    next();
+  });
+}
+
+
+// rota para o usuário fazer um cadastro no site.
+router.post("/Cadastro",accountManagement.cadastraUsuario)
+
+
+//Rota para o usuário logar no site (será retornado um token ao mesmo)
+ router.post('/Login' ,accountManagement.autenticaUsuario) 
+
+
+//Rota para cadastrar os dados de um novo pet 
+ router.post ("/CadastraPet",verificadorDoToken,petManagement.cadastraPet)
+
+
+  //Rota para Editar informações de um pet já cadastrado.
+ router.put("/EditaPetInfo", verificadorDoToken,petManagement.editaPetInfo);
+
+
+ //remove um pet da adoção ou inativa (obs: todos registros com status 1 está para adoção, todos registros com status 0 é por que foram doados graças a rede e só inativamos o registro).
+ router.delete ("/RetiraPetAdocao",verificadorDoToken,petManagement.removePetDaAdocao)
+
+
+
+  //puxa todos animais de um usuário especifico.
+  router.get("/PetsUser", verificadorDoToken, petManagement.petsDeUmUsuario)
+
+
+  //puxa todos animais que estão para adoção no mesmo estado da pessoa.
+  router.get("/PetsAdocao", verificadorDoToken, petManagement.petsParaAdocao)
+
+
+  //Rota que pode-se demonstrar interesse em um pet
+  router.post ("/DemonstrarInteressePet", verificadorDoToken, petManagement.demonstrarInteresseEmPet)
+
+
+  //Rota para ver todos animais que eu demonstrei interesse
+  router.get ("/InteressadosMeuPet", verificadorDoToken, petManagement.interessadosMeuPet)
+
+
+  //Rota para ver os pets no qual eu demonstrei interesse
+  router.get ("/MeusInteresses", verificadorDoToken, petManagement.meusInteresses)
+
+
+  //Rota para tirar interesse em algum pet
+  router.put ("/RemoverInteressePet", verificadorDoToken, petManagement.removerInteressePet)
+
+module.exports = router;
+
+como que eu faço para que o meu mobile envie o cadastro para o backend?
+essa é minha tela de cadastro do mobile: import React, { Component } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  Image,
+  Alert,
+  ScrollView,
+} from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import * as Font from 'expo-font';
+
+class TelaRegistro extends Component {
+  state = {
+    nome: '',
+    email: '',
+    senha: '',
+    confirmarSenha: '',
+    cep: '',
+    rua: '',
+    numero: '',
+    bairro: '',
+    estado: '',
+    dataNascimento: '',
+    fontLoaded: false,
+  };
+
+  async componentDidMount() {
+    await this.loadFonts();
+  }
+
+  loadFonts = async () => {
+    await Font.loadAsync({
+      'Kavoon': require('../../../assets/font/Kavoon-Regular.ttf'),
+    });
+    this.setState({ fontLoaded: true });
+  };
+
+  handleRegister = () => {
+    const { nome, email, senha, confirmarSenha } = this.state;
+
+    // Verifica se as senhas são iguais antes de enviar para o backend
+    if (senha !== confirmarSenha) {
+      Alert.alert("Erro", "As senhas não coincidem.");
+      return;
+    }
+
+    if (!nome || !email || !senha) {
+      Alert.alert("Erro", "Todos os campos são obrigatórios.");
+      return;
+    }
+
+    // Aqui você deve adicionar a lógica para registrar o usuário, como fazer uma chamada de API
+    console.log('Registrando usuário:', { nome, email, senha });
+    
+    // Exemplo de chamada para o backend (descomente e ajuste conforme necessário)
+    /*
+    fetch('https://sua-api.com/registrar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ nome, email, senha }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        Alert.alert("Sucesso", "Usuário registrado com sucesso!");
+        // Navegar para a tela de login ou outra ação
+      })
+      .catch(error => {
+        Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário.");
+      });
+    */
+  };
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Image
+          source={require("../../../assets/image/ImagenLogin.jpg")}
+          style={{ marginTop: -10, width: 460, height: 150 }}
+        />
+        {this.state.fontLoaded && (
+          <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
+        )}
+
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Nome</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="person-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                autoCapitalize="words"
+                onChangeText={(nome) => this.setState({ nome })}
+                value={this.state.nome}
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>CEP</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="pin" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                onChangeText={(cep) => this.setState({ cep })}
+                value={this.state.cep}
+                keyboardType="numeric"
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Rua</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="home-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                onChangeText={(rua) => this.setState({ rua })}
+                value={this.state.rua}
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Número</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="pin" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                onChangeText={(numero) => this.setState({ numero })}
+                value={this.state.numero}
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Bairro</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="home" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                onChangeText={(bairro) => this.setState({ bairro })}
+                value={this.state.bairro}
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Estado</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="flag" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                onChangeText={(estado) => this.setState({ estado })}
+                value={this.state.estado}
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Data de Nascimento</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="calendar-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                onChangeText={(dataNascimento) => this.setState({ dataNascimento })}
+                value={this.state.dataNascimento}
+                placeholder="DD/MM/AAAA"
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Endereço de E-mail</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="mail-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                onChangeText={(email) => this.setState({ email })}
+                value={this.state.email}
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Senha</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="lock-closed-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                autoCapitalize="none"
+                onChangeText={(senha) => this.setState({ senha })}
+                value={this.state.senha}
+              />
+            </View>
+          </View>
+
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Confirmar Senha</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="lock-closed-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                autoCapitalize="none"
+                onChangeText={(confirmarSenha) => this.setState({ confirmarSenha })}
+                value={this.state.confirmarSenha}
+              />
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
+            <Text style={{ color: "#fff", fontWeight: "500" }}>Cadastrar</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={{ alignSelf: "center", margin: 32 }}
+            onPress={() => this.props.navigation.navigate("Login")}
+          >
+            <Text style={{ color: "#414959", fontSize: 13 }}>
+              Já tem conta?{" "}
+              <Text style={{ fontWeight: "500", color: "#134973" }}>
+                Faça login
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContainer: {
+    paddingBottom: 30,
+  },
+  greeting: {
+    marginTop: -2,
+    fontSize: 28,
+    fontWeight: "400",
+    textAlign: "center",
+    color: "#000",
+    fontFamily: 'Kavoon',
+  },
+  form: {
+    marginBottom: 48,
+    marginHorizontal: 30,
+  },
+  inputTitle: {
+    color: "#8A8F9E",
+    textTransform: "uppercase",
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomColor: "#134973",
+    borderBottomWidth: 1,
+    height: 40,
+  },
+  input: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 15,
+    color: "#161F3D",
+  },
+  button: {
+    marginHorizontal: 30,
+    backgroundColor: "#134973",
+    borderRadius: 4,
+    height: 52,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
+export default TelaRegistro;
+ 
+
+quando o usuario for cadastrado quero que retoner uma mensagem agradavel para o 
+usuario e que ele seja direcionado para tela de LoginScreen. pode fazer essa modificação para mim nesse codigo do mobile?
