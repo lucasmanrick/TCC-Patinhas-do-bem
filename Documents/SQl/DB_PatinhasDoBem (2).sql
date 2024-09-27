@@ -16,13 +16,17 @@ USE `DB_PatinhasDoBem`;
 -- -----------------------------------------------------
 -- Table `DB_PatinhasDoBem`.`Postagem`
 -- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Table `DB_PatinhasDoBem`.`Postagem`
+-- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Postagem` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `Descricao` VARCHAR(500) NOT NULL,
   `dataPublicacao` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`ID`)
-) ENGINE = InnoDB;
-
+  `IDUsuario` INT NOT NULL, -- Chave estrangeira para o usuário
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`IDUsuario`) REFERENCES `Usuario`(`ID`) ON DELETE CASCADE ON UPDATE CASCADE -- Relacionamento com Usuario
+) ENGINE  = InnoDB;
 -- -----------------------------------------------------
 -- Table `DB_PatinhasDoBem`.`Usuario`
 -- -----------------------------------------------------

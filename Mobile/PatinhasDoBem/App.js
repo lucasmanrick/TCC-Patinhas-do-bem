@@ -31,10 +31,10 @@ function HomeTabs() {
 
           if (route.name === 'Home') {
             iconName = 'home';
-            size = '24'
+            size = 24;
           } else if (route.name === 'Mensagem') {
             iconName = 'comments';
-            size = '24'
+            size = 24;
           } else if (route.name === 'Post') {
             iconName = 'plus-circle';
             size = focused ? 50 : 40; // Maior quando focado
@@ -48,10 +48,10 @@ function HomeTabs() {
             }; // Efeito de sombra
           } else if (route.name === 'Notificação') {
             iconName = 'bell';
-            size = '24'
+            size = 24;
           } else if (route.name === 'Perfil') {
             iconName = 'user';
-            size = '24'
+            size = 24;
           }
 
           return (
@@ -64,12 +64,10 @@ function HomeTabs() {
           );
         },
         tabBarShowLabel: false, // Remove os nomes
+        tabBarActiveTintColor: "#3DAAD9",
+        tabBarInactiveTintColor: "gray",
+        tabBarStyle: { display: "flex" }, // Estilo da barra de navegação
       })}
-      tabBarOptions={{
-        activeTintColor: '#3DAAD9',
-        inactiveTintColor: 'gray',
-        style: { height: 70 }, // Aumenta a altura da barra para dar mais espaço ao ícone
-      }}
     >
       <Tab.Screen name="Home" component={TelaInicial} />
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
@@ -77,10 +75,8 @@ function HomeTabs() {
       <Tab.Screen name="Notificação" component={TelaDeNotificacao} />
       <Tab.Screen name="Perfil" component={TelaDePerfil} />
     </Tab.Navigator>
-
   );
 }
-
 // Configuração do App com Stack Navigator
 export default function App() {
   return (
