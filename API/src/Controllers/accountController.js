@@ -5,9 +5,6 @@ const bcrypt = require('bcrypt');
 
 
 
-
-
-
 const accountManagement = {
   cadastraUsuario: async (req, res) => {
 
@@ -41,12 +38,11 @@ const accountManagement = {
           res.json(validaCadastroAnterior)
         } else {
           const hashedPassword = await bcrypt.hash(Senha, 10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
-          console.log("sucess")
-          console.log(validaCadastroAnterior)
+
           const newUser = new Usuario(NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
           //verificar se o Email passado já não existe no nosso banco de dados.
 
-          const sendingData = await AccountManagementQueries.cadastraUsuarioQuery(newUser)
+          const sendingData = await AccountManagementQueries.cadastraUsuarioQuery(newUser);
 
           res.json(sendingData)
         }
@@ -57,12 +53,13 @@ const accountManagement = {
     }
 
     catch (e) {
-      res.json({ error: "houve um problema no tratamento de seus dados: " })
+      // res.json({ error: "houve um problema no tratamento de seus dados: " })
     }
 
   },
   autenticaUsuario: async(req,res) => {
     const {Email,Senha} = req.body;
+
   
     try {
       if(Email,Senha) {

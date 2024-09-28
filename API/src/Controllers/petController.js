@@ -92,16 +92,14 @@ const petManagement = {
       const {ID} = req.dataUser;
       const {PetID} = req.body;
 
+      console.log(req.dataUser)
+
       if(ID,PetID) {
-        console.log(ID)
         const intrest = await petQueries.demonstrarInteresseEmPetQuery(ID,PetID)
         res.json(intrest)
       }else{
         res.json({error:"não foi informado todos dados necessários para demonstrar interesse em um pet"})
       }
-
-  
-
     }
     catch(e) {
       res.json({error:e})
@@ -115,7 +113,6 @@ const petManagement = {
      if(MeuPetID) {
       const analyzeIntrest = await petQueries.interessadosMeuPetQuery(MeuPetID);
       res.json(analyzeIntrest)
-
      }else {
       res.json({error:"não foi informado o id do pet para identificar os interessados no mesmo."})
      }
@@ -147,6 +144,22 @@ const petManagement = {
       res.json({removeInterest})
     }
     catch (e) {
+      res.json({error:e})
+    }
+  },
+
+  enviarSolicitacaoDeAmizade: async (req,res) => {
+    try{
+      const {ID} = req.dataUser;
+      const {IDDestinatario} = req.body;
+
+      if(ID,IDDestinatario && typeof(IDDestinatario) === 'number') {
+        const requestInvite = await petQueries.enviarSolicitacaoDeAmizadeQuery(ID,IDDestinatario);
+        res.json(requestInvite)
+      }
+
+    }
+    catch(e) {
       res.json({error:e})
     }
   }
