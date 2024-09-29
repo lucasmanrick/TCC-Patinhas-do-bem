@@ -18,16 +18,17 @@ import api from '../../Service/tokenService';
 
 class TelaRegistro extends Component {
   state = {
-    nome: '',
-    email: '',
-    senha: '',
+    NomeUsuario: '',
+    DataNasc: '',
+    Email: '',
+    Senha: '',
+    Cep: '',
+    Rua: '',
+    Numero: '',
+    Bairro: '',
+    Cidade: '',
+    Estado: '',
     confirmarSenha: '',
-    cep: '',
-    rua: '',
-    numero: '',
-    bairro: '',
-    cidade: '', // Adicionando o campo cidade
-    estado: '',
     dataNascimento: new Date(),
     showDatePicker: false,
     fontLoaded: false,
@@ -47,14 +48,14 @@ class TelaRegistro extends Component {
   fetchAddressByCep = async (cep) => {
     try {
       const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-      const { logradouro, bairro, localidade, uf } = response.data; // Adicionando localidade (cidade)
+      const { logradouro, bairro, localidade, uf } = response.data;
 
       if (logradouro) {
         this.setState({
-          rua: logradouro,
-          bairro: bairro,
-          cidade: localidade, // Definindo cidade
-          estado: uf,
+          Rua: logradouro,
+          Bairro: bairro,
+          Cidade: localidade,
+          Estado: uf,
         });
       } else {
         Alert.alert("Erro", "CEP não encontrado.");
@@ -65,61 +66,78 @@ class TelaRegistro extends Component {
   };
 
   handleCepChange = (cep) => {
-    this.setState({ cep });
-    if (cep.length === 8) { // Valida se o CEP tem 8 dígitos
+    this.setState({ Cep: cep });
+    if (cep.length === 8) {
       this.fetchAddressByCep(cep);
     }
   };
 
   handleRegister = async () => {
-    const { nome, email, senha, confirmarSenha, cep, rua, numero, bairro, cidade, estado, dataNascimento } = this.state; // Adicionando cidade
+    const { NomeUsuario, Email, Senha, confirmarSenha, Cep, Rua, Numero, Bairro, Cidade, Estado, dataNascimento } = this.state;
 
-    if (senha !== confirmarSenha) {
+    if (Senha !== confirmarSenha) {
       Alert.alert("Erro", "As senhas não coincidem.");
       return;
     }
 
-    if (!nome || !email || !senha || !cep || !rua || !numero || !bairro || !cidade || !estado) { // Validando cidade
+    if (!NomeUsuario || !Email || !Senha || !Cep || !Rua || !Numero || !Bairro || !Cidade || !Estado) {
       Alert.alert("Erro", "Todos os campos são obrigatórios.");
       return;
     }
 
-    // Validação simples do formato de email
     const emailRegex = /\S+@\S+\.\S+/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(Email)) {
       Alert.alert("Erro", "Insira um endereço de e-mail válido.");
       return;
     }
 
-    // Formatar a data de nascimento
     const formattedDate = dataNascimento.toISOString().split('T')[0];
+
+    // Log dos dados que serão enviados
+    console.log("Dados a serem enviados:", {
+      NomeUsuario,
+      DataNasc: formattedDate,
+      Email,
+      Senha,
+      Cep,
+      Rua,
+      Numero,
+      Bairro,
+      Cidade,
+      Estado,
+    });
+
+    
 
     try {
       const response = await api.post('/Cadastro', {
-        NomeUsuario: nome,
+        NomeUsuario,
         DataNasc: formattedDate,
-        Email: email,
-        Senha: senha,
-        Cep: cep,
-        Rua: rua,
-        Numero: numero,
-        Bairro: bairro,
-        Cidade: cidade, // Enviando cidade
-        Estado: estado,
-      });
+        Email,
+        Senha,
+        Cep,
+        Rua,
+        Numero,
+        Bairro,
+        Cidade,
+        Estado,
+      }).then(e => (
+        Alert.alert("Sucesso", "Cadastro realizado com sucesso!")
+      ));
 
-      if (response.data.success) {
-        Alert.alert("Sucesso", "Usuário registrado com sucesso!");
-        this.props.navigation.navigate("Login");
-      } else {
-        Alert.alert("Erro", response.data.message || "Ocorreu um erro ao registrar o usuário.");
-      }
+     
     } catch (error) {
-      console.error(error);
-      Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
+      if (error.response) {
+        console.error("Response Error:", error.response.data);
+        Alert.alert("Erro", error.response.data.message || "Ocorreu um erro ao registrar o usuário.");
+      } else {
+        console.error("Network Error:", error.message);
+        Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
+      }
     }
   };
 
+  
   showDatepicker = () => {
     this.setState({ showDatePicker: true });
   };
@@ -129,7 +147,7 @@ class TelaRegistro extends Component {
     this.setState({ showDatePicker: false, dataNascimento: currentDate });
   };
 
-  renderInput(title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false) {
+  renderInput(title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) {
     return (
       <View style={styles.form}>
         <Text style={styles.inputTitle}>{title}</Text>
@@ -141,14 +159,14 @@ class TelaRegistro extends Component {
             secureTextEntry={secureTextEntry}
             placeholder={placeholder}
             onChangeText={(value) => {
-              // Atualiza o campo de CEP e busca o endereço
-              if (stateKey === "cep") {
+              if (stateKey === "Cep") {
                 this.handleCepChange(value);
               } else {
                 this.setState({ [stateKey]: value });
               }
             }}
             value={this.state[stateKey]}
+            editable={editable}
           />
         </View>
       </View>
@@ -170,13 +188,13 @@ class TelaRegistro extends Component {
         )}
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {this.renderInput("Nome", "person-outline", "nome")}
-          {this.renderInput("CEP", "pin", "cep", "numeric")}
-          {this.renderInput("Rua", "home-outline", "rua")}
-          {this.renderInput("Número", "pin", "numero", "numeric")}
-          {this.renderInput("Bairro", "home", "bairro")}
-          {this.renderInput("Cidade", "location-outline", "cidade")}
-          {this.renderInput("Estado", "flag", "estado")}
+          {this.renderInput("Nome", "person-outline", "NomeUsuario")}
+          {this.renderInput("CEP", "pin", "Cep", "numeric")}
+          {this.renderInput("Rua", "home-outline", "Rua", "default", "", false, false)}
+          {this.renderInput("Número", "pin", "Numero", "numeric")}
+          {this.renderInput("Bairro", "home", "Bairro", "default", "", false, false)}
+          {this.renderInput("Cidade", "location-outline", "Cidade", "default", "", false, false)}
+          {this.renderInput("Estado", "flag", "Estado", "default", "", false, false)}
 
           {/* Campo de Data de Nascimento */}
           <View style={styles.form}>
@@ -198,8 +216,8 @@ class TelaRegistro extends Component {
             )}
           </View>
 
-          {this.renderInput("Endereço de E-mail", "mail-outline", "email", "none")}
-          {this.renderInput("Senha", "lock-closed-outline", "senha", "none", null, true)}
+          {this.renderInput("Endereço de E-mail", "mail-outline", "Email", "none")}
+          {this.renderInput("Senha", "lock-closed-outline", "Senha", "none", null, true)}
           {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "none", null, true)}
 
           <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
@@ -251,13 +269,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: "#134973",
     borderBottomWidth: 1,
-    height: 40,
+    paddingBottom: 5,
   },
   input: {
+    height: 40,
     flex: 1,
-    marginLeft: 10,
-    fontSize: 15,
     color: "#134973",
+    paddingHorizontal: 10,
   },
   button: {
     marginHorizontal: 30,
