@@ -18,17 +18,18 @@ import api from "../../Service/tokenService";
 
 class TelaRegistro extends Component {
   state = {
-    NomeUsuario: "",
-    DataNasc: "",
-    Email: "",
-    Senha: "",
-    Cep: "",
-    Rua: "",
-    Numero: "",
-    Bairro: "",
-    Cidade: "",
-    Estado: "",
-    confirmarSenha: "",
+
+    NomeUsuario: '',
+    DataNasc: '',
+    Email: '',
+    Senha: '',
+    Cep: '',
+    Rua: '',
+    Numero: '',
+    Bairro: '',
+    Cidade: '',
+    Estado: '',
+    confirmarSenha: '',
     dataNascimento: new Date(),
     showDatePicker: false,
     fontLoaded: false,
@@ -76,36 +77,15 @@ class TelaRegistro extends Component {
   };
 
   handleRegister = async () => {
-    const {
-      NomeUsuario,
-      Email,
-      Senha,
-      confirmarSenha,
-      Cep,
-      Rua,
-      Numero,
-      Bairro,
-      Cidade,
-      Estado,
-      dataNascimento,
-    } = this.state;
+
+    const { NomeUsuario, Email, Senha, confirmarSenha, Cep, Rua, Numero, Bairro, Cidade, Estado, dataNascimento } = this.state;
 
     if (Senha !== confirmarSenha) {
       Alert.alert("Erro", "As senhas não coincidem.");
       return;
     }
 
-    if (
-      !NomeUsuario ||
-      !Email ||
-      !Senha ||
-      !Cep ||
-      !Rua ||
-      !Numero ||
-      !Bairro ||
-      !Cidade ||
-      !Estado
-    ) {
+    if (!NomeUsuario || !Email || !Senha || !Cep || !Rua || !Numero || !Bairro || !Cidade || !Estado) {
       Alert.alert("Erro", "Todos os campos são obrigatórios.");
       return;
     }
@@ -116,7 +96,8 @@ class TelaRegistro extends Component {
       return;
     }
 
-    const formattedDate = dataNascimento.toISOString().split("T")[0];
+
+    const formattedDate = dataNascimento.toISOString().split('T')[0];
 
     // Log dos dados que serão enviados
     console.log("Dados a serem enviados:", {
@@ -132,39 +113,39 @@ class TelaRegistro extends Component {
       Estado,
     });
 
+
+    
+
     try {
-      const response = await api
-        .post("/Cadastro", {
-          NomeUsuario,
-          DataNasc: formattedDate,
-          Email,
-          Senha,
-          Cep,
-          Rua,
-          Numero,
-          Bairro,
-          Cidade,
-          Estado,
-        })
-        .then((e) => Alert.alert("Sucesso", "Cadastro realizado com sucesso!"));
+      const response = await api.post('/Cadastro', {
+        NomeUsuario,
+        DataNasc: formattedDate,
+        Email,
+        Senha,
+        Cep,
+        Rua,
+        Numero,
+        Bairro,
+        Cidade,
+        Estado,
+      }).then(e => (
+        Alert.alert("Sucesso", "Cadastro realizado com sucesso!")
+      ));
+
+     
     } catch (error) {
       if (error.response) {
         console.error("Response Error:", error.response.data);
-        Alert.alert(
-          "Erro",
-          error.response.data.message ||
-            "Ocorreu um erro ao registrar o usuário."
-        );
+        Alert.alert("Erro", error.response.data.message || "Ocorreu um erro ao registrar o usuário.");
       } else {
         console.error("Network Error:", error.message);
-        Alert.alert(
-          "Erro",
-          "Ocorreu um erro ao registrar o usuário: " + error.message
-        );
+        Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
+
       }
     }
   };
 
+  
   showDatepicker = () => {
     this.setState({ showDatePicker: true });
   };
@@ -174,15 +155,8 @@ class TelaRegistro extends Component {
     this.setState({ showDatePicker: false, dataNascimento: currentDate });
   };
 
-  renderInput(
-    title,
-    iconName,
-    stateKey,
-    keyboardType = "default",
-    placeholder = "",
-    secureTextEntry = false,
-    editable = true
-  ) {
+
+  renderInput(title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) {
     return (
       <View style={styles.form}>
         <Text style={styles.inputTitle}>{title}</Text>
@@ -236,43 +210,13 @@ class TelaRegistro extends Component {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {this.renderInput("Nome", "person-outline", "NomeUsuario")}
           {this.renderInput("CEP", "pin", "Cep", "numeric")}
-          {this.renderInput(
-            "Rua",
-            "home-outline",
-            "Rua",
-            "default",
-            "",
-            false,
-            false
-          )}
+
+          {this.renderInput("Rua", "home-outline", "Rua", "default", "", false, false)}
           {this.renderInput("Número", "pin", "Numero", "numeric")}
-          {this.renderInput(
-            "Bairro",
-            "home",
-            "Bairro",
-            "default",
-            "",
-            false,
-            false
-          )}
-          {this.renderInput(
-            "Cidade",
-            "location-outline",
-            "Cidade",
-            "default",
-            "",
-            false,
-            false
-          )}
-          {this.renderInput(
-            "Estado",
-            "flag",
-            "Estado",
-            "default",
-            "",
-            false,
-            false
-          )}
+          {this.renderInput("Bairro", "home", "Bairro", "default", "", false, false)}
+          {this.renderInput("Cidade", "location-outline", "Cidade", "default", "", false, false)}
+          {this.renderInput("Estado", "flag", "Estado", "default", "", false, false)}
+
 
           {/* Campo de Data de Nascimento */}
           <View style={styles.form}>
@@ -297,28 +241,11 @@ class TelaRegistro extends Component {
             )}
           </View>
 
-          {this.renderInput(
-            "Endereço de E-mail",
-            "mail-outline",
-            "Email",
-            "none"
-          )}
-          {this.renderInput(
-            "Senha",
-            "lock-closed-outline",
-            "Senha",
-            "none",
-            null,
-            true
-          )}
-          {this.renderInput(
-            "Confirmar Senha",
-            "lock-closed-outline",
-            "confirmarSenha",
-            "none",
-            null,
-            true
-          )}
+
+          {this.renderInput("Endereço de E-mail", "mail-outline", "Email", "none")}
+          {this.renderInput("Senha", "lock-closed-outline", "Senha", "none", null, true)}
+          {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "none", null, true)}
+
 
           <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
             <Text style={{ color: "#fff", fontWeight: "500" }}>Cadastrar</Text>

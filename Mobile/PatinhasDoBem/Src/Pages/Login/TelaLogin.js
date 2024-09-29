@@ -4,6 +4,11 @@ import { Ionicons } from '@expo/vector-icons'; // Ícones do Ionicons
 import api from '../../Service/tokenService'; // Importa o Axios já configurado
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font'; // Importa a biblioteca de fontes
+import { auth } from '../../Firebase/FirebaseConfig';
+
+// Dentro do seu componente
+const user = auth.currentUser;
+
 
 class LoginScreen extends Component {
   state = {

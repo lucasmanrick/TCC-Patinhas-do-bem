@@ -5,10 +5,13 @@ const bcrypt = require('bcrypt');
 const AccountManagementQueries = {
   async cadastraUsuarioQuery (dataUser) {
     const conn = await connection();
-      try {
-        console.log('chegou')                                                                                                                                                                                         
+      try {                                                                                                                                                                                 
         const uRes = await conn.query("INSERT INTO `Usuario` (`Nome`, `CEP`, `Rua`, `Numero`, `Bairro`, `Estado`, `DataNasc`, `Email`, `Senha`, `Administrador`,`Cidade`) VALUES (?,?,?,?,?,?,?,?,?,?,?)",[dataUser.NomeUsuario,dataUser.Cep,dataUser.Rua,dataUser.Numero,dataUser.Bairro,dataUser.Estado,dataUser.DataNasc,dataUser.Email,dataUser.Senha,0,dataUser.Cidade]);
-        return {sucess:"você conseguiu se cadastrar com sucesso!!"}
+        if(uRes[0].affectedRows >=1) {
+          return {sucess:"você conseguiu se cadastrar com sucesso!!"}
+        }else {
+          return {error:"não foi possivel cadastrar o usuário no nosso sistema tente novamente!"}
+        }
       }
       catch (e) {
         return {error:"houve um erro ao tentar completar o envio de dados: " & e }
