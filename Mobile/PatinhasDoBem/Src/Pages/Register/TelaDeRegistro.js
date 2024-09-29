@@ -1,5 +1,4 @@
-// TelaDeRegistro.js
-import React from "react";
+import React, { Component } from "react";
 import {
   View,
   Text,
@@ -8,107 +7,235 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
+  Alert,
+  ScrollView,
 } from "react-native";
-import { auth } from "../../Firebase/FirebaseConfig";
-import { FontAwesome } from "react-native-vector-icons";
-import { createUserWithEmailAndPassword } from "firebase/auth"; // Adicione esta linha
+import { Ionicons } from '@expo/vector-icons';
+import * as Font from 'expo-font';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios'; // Importando axios
+import api from '../../Service/tokenService';
 
-export default class TelaRegistro extends React.Component {
+class TelaRegistro extends Component {
   state = {
-    name: "",
-    email: "",
-    senha: "",
-    errorMessage: null,
+    NomeUsuario: '',
+    DataNasc: '',
+    Email: '',
+    Senha: '',
+    Cep: '',
+    Rua: '',
+    Numero: '',
+    Bairro: '',
+    Cidade: '',
+    Estado: '',
+    confirmarSenha: '',
+    dataNascimento: new Date(),
+    showDatePicker: false,
+    fontLoaded: false,
   };
 
-  handleSignUp = () => {
-    const { name, email, senha } = this.state;
+  async componentDidMount() {
+    await this.loadFonts();
+  }
 
-    // Use o auth com a função createUserWithEmailAndPassword corretamente
-    createUserWithEmailAndPassword(auth, email, senha)
-      .then((userCredentials) => {
-        return userCredentials.user.updateProfile({
-          displayName: name,
+  loadFonts = async () => {
+    await Font.loadAsync({
+      'Kavoon': require('../../../assets/font/Kavoon-Regular.ttf'),
+    });
+    this.setState({ fontLoaded: true });
+  };
+
+  fetchAddressByCep = async (cep) => {
+    try {
+      const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+      const { logradouro, bairro, localidade, uf } = response.data;
+
+      if (logradouro) {
+        this.setState({
+          Rua: logradouro,
+          Bairro: bairro,
+          Cidade: localidade,
+          Estado: uf,
         });
-      })
-      .then(() => {
-        this.props.navigation.navigate("Home");
-      })
-      .catch((error) => this.setState({ errorMessage: error.message }));
+      } else {
+        Alert.alert("Erro", "CEP não encontrado.");
+      }
+    } catch (error) {
+      Alert.alert("Erro", "Ocorreu um erro ao buscar o endereço: " + error.message);
+    }
   };
+
+  handleCepChange = (cep) => {
+    this.setState({ Cep: cep });
+    if (cep.length === 8) {
+      this.fetchAddressByCep(cep);
+    }
+  };
+
+  handleRegister = async () => {
+    const { NomeUsuario, Email, Senha, confirmarSenha, Cep, Rua, Numero, Bairro, Cidade, Estado, dataNascimento } = this.state;
+
+    if (Senha !== confirmarSenha) {
+      Alert.alert("Erro", "As senhas não coincidem.");
+      return;
+    }
+
+    if (!NomeUsuario || !Email || !Senha || !Cep || !Rua || !Numero || !Bairro || !Cidade || !Estado) {
+      Alert.alert("Erro", "Todos os campos são obrigatórios.");
+      return;
+    }
+
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(Email)) {
+      Alert.alert("Erro", "Insira um endereço de e-mail válido.");
+      return;
+    }
+
+    const formattedDate = dataNascimento.toISOString().split('T')[0];
+
+    // Log dos dados que serão enviados
+    console.log("Dados a serem enviados:", {
+      NomeUsuario,
+      DataNasc: formattedDate,
+      Email,
+      Senha,
+      Cep,
+      Rua,
+      Numero,
+      Bairro,
+      Cidade,
+      Estado,
+    });
+
+    
+
+    try {
+      const response = await api.post('/Cadastro', {
+        NomeUsuario,
+        DataNasc: formattedDate,
+        Email,
+        Senha,
+        Cep,
+        Rua,
+        Numero,
+        Bairro,
+        Cidade,
+        Estado,
+      }).then(e => (
+        Alert.alert("Sucesso", "Cadastro realizado com sucesso!")
+      ));
+
+     
+    } catch (error) {
+      if (error.response) {
+        console.error("Response Error:", error.response.data);
+        Alert.alert("Erro", error.response.data.message || "Ocorreu um erro ao registrar o usuário.");
+      } else {
+        console.error("Network Error:", error.message);
+        Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
+      }
+    }
+  };
+
+  
+  showDatepicker = () => {
+    this.setState({ showDatePicker: true });
+  };
+
+  onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || this.state.dataNascimento;
+    this.setState({ showDatePicker: false, dataNascimento: currentDate });
+  };
+
+  renderInput(title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) {
+    return (
+      <View style={styles.form}>
+        <Text style={styles.inputTitle}>{title}</Text>
+        <View style={styles.inputContainer}>
+          <Ionicons name={iconName} size={20} color="#134973" />
+          <TextInput
+            style={styles.input}
+            keyboardType={keyboardType}
+            secureTextEntry={secureTextEntry}
+            placeholder={placeholder}
+            onChangeText={(value) => {
+              if (stateKey === "Cep") {
+                this.handleCepChange(value);
+              } else {
+                this.setState({ [stateKey]: value });
+              }
+            }}
+            value={this.state[stateKey]}
+            editable={editable}
+          />
+        </View>
+      </View>
+    );
+  }
 
   render() {
+    const { showDatePicker, dataNascimento } = this.state;
+
     return (
       <View style={styles.container}>
-        <StatusBar barStyle="light-content"></StatusBar>
+        <StatusBar barStyle="light-content" />
         <Image
-          source={require("../../../assets/ImagenLogin.jpg")}
+          source={require("../../../assets/image/ImagenLogin.jpg")}
           style={{ marginTop: -10, width: 460, height: 150 }}
         />
+        {this.state.fontLoaded && (
+          <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
+        )}
 
-        <TouchableOpacity
-          style={styles.back}
-          onPress={() => this.props.navigation.goBack()}
-        >
-          <FontAwesome name="arrow-left" size={20} color="#fff" />
-        </TouchableOpacity>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {this.renderInput("Nome", "person-outline", "NomeUsuario")}
+          {this.renderInput("CEP", "pin", "Cep", "numeric")}
+          {this.renderInput("Rua", "home-outline", "Rua", "default", "", false, false)}
+          {this.renderInput("Número", "pin", "Numero", "numeric")}
+          {this.renderInput("Bairro", "home", "Bairro", "default", "", false, false)}
+          {this.renderInput("Cidade", "location-outline", "Cidade", "default", "", false, false)}
+          {this.renderInput("Estado", "flag", "Estado", "default", "", false, false)}
 
-        <View style={{position: "absolute", top: 64, alignItems: "center", width:"100%"}}>
-        <Text style={styles.greeting}>{`Bem-vindo!\nCadastre-se`}</Text>
-        </View>
+          {/* Campo de Data de Nascimento */}
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Data de Nascimento</Text>
+            <TouchableOpacity onPress={this.showDatepicker} style={styles.inputContainer}>
+              <Ionicons name="calendar-outline" size={20} color="#134973" />
+              <Text style={styles.input}>
+                {dataNascimento.toLocaleDateString()}
+              </Text>
+            </TouchableOpacity>
+            {showDatePicker && (
+              <DateTimePicker
+                value={dataNascimento}
+                mode="date"
+                display="spinner"
+                onChange={this.onChange}
+                style={{ width: '100%' }}
+              />
+            )}
+          </View>
 
-        
+          {this.renderInput("Endereço de E-mail", "mail-outline", "Email", "none")}
+          {this.renderInput("Senha", "lock-closed-outline", "Senha", "none", null, true)}
+          {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "none", null, true)}
 
-        <View style={styles.errorMessage}>
-          {this.state.errorMessage && (
-            <Text style={styles.error}>{this.state.errorMessage}</Text>
-          )}
-        </View>
+          <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
+            <Text style={{ color: "#fff", fontWeight: "500" }}>Cadastrar</Text>
+          </TouchableOpacity>
 
-        <View style={styles.form}>
-          <Text style={styles.inputTitle}>Nome Completo</Text>
-          <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            onChangeText={(name) => this.setState({ name })}
-            value={this.state.name}
-          />
-        </View>
-
-        <View style={styles.form}>
-          <Text style={styles.inputTitle}>Endereço de E-mail</Text>
-          <TextInput
-            style={styles.input}
-            autoCapitalize="none"
-            onChangeText={(email) => this.setState({ email })}
-            value={this.state.email}
-          />
-        </View>
-
-        <View style={styles.form}>
-          <Text style={styles.inputTitle}>Senha</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            autoCapitalize="none"
-            onChangeText={(senha) => this.setState({ senha })}
-            value={this.state.senha}
-          />
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
-          <Text style={{ color: "#fff", fontWeight: "500" }}>Cadastre-se</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ alignSelf: "center", margin: 32 }}
-          onPress={() => this.props.navigation.navigate("Login")}
-        >
-          <Text style={{ color: "#414959", fontSize: 13 }}>
-            Já tem conta?{" "}
-            <Text style={{ fontWeight: "500", color: "#3DAAD9" }}>Login</Text>
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{ alignSelf: "center", margin: 32 }}
+            onPress={() => this.props.navigation.navigate("Login")}
+          >
+            <Text style={{ color: "#414959", fontSize: 13 }}>
+              Já tem conta?{" "}
+              <Text style={{ fontWeight: "500", color: "#134973" }}>
+                Faça login
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
     );
   }
@@ -118,24 +245,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContainer: {
+    paddingBottom: 30,
+  },
   greeting: {
     marginTop: -2,
     fontSize: 28,
     fontWeight: "400",
     textAlign: "center",
-    color:"#FFF"
-  },
-  errorMessage: {
-    height: 72,
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 30,
-  },
-  error: {
-    color: "#E9446A",
-    fontSize: 13,
-    fontWeight: "600",
-    textAlign: "center",
+    color: "#000",
+    fontFamily: 'Kavoon',
   },
   form: {
     marginBottom: 48,
@@ -145,29 +264,27 @@ const styles = StyleSheet.create({
     color: "#8A8F9E",
     textTransform: "uppercase",
   },
-  input: {
-    borderBottomColor: "#8A8F9E",
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomColor: "#134973",
     borderBottomWidth: 1,
+    paddingBottom: 5,
+  },
+  input: {
     height: 40,
-    fontSize: 15,
-    color: "#161F3D",
+    flex: 1,
+    color: "#134973",
+    paddingHorizontal: 10,
   },
   button: {
     marginHorizontal: 30,
-    backgroundColor: "#3DAAD9",
-    borderRadius: 4,
-    height: 52,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  back: {
-    top: -120,
-    left: 32,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "rgba(21, 22, 48, 0.1)",
+    backgroundColor: "#134973",
+    borderRadius: 5,
+    height: 50,
     alignItems: "center",
     justifyContent: "center",
   },
 });
+
+export default TelaRegistro;
