@@ -96,51 +96,71 @@ const petQueries = {
 
     try {
       await conn.beginTransaction();
-      const verifyExistencePet = await conn.query("SELECT * FROM PET WHERE ID = ? AND status=? LIMIT 1", [PetID, 1]);
-      const verifyExistenceUser = await conn.query("SELECT * FROM Usuario WHERE ID = ? LIMIT 1", [UserID]);
-      const verifyExistenceIntrest = await conn.query("SELECT * FROM INTERESSE where IDInteressado = ? AND IDPet = ? LIMIT 1", [UserID, PetID])
-      if (verifyExistencePet[0][0].IDDoador === UserID) {
+      const verifyExistencePet = await conn.query("SELECT * FROM PET WHERE ID = ? AND status=? LIMIT 1", [PetID, 1]); //select para verificar se o pet esta registrado em nosso banco de dados.
+      const verifyExistenceUser = await conn.query("SELECT * FROM Usuario WHERE ID = ? LIMIT 1", [UserID]); // select para verificar se o usuário existe no banco de dados.
+      const verifyExistenceIntrest = await conn.query("SELECT * FROM INTERESSE where IDInteressado = ? AND IDPet = ? LIMIT 1", [UserID, PetID]) //select para verificar se o usuário já não demonstrou interesse no pet especificado.
+
+
+
+      if (verifyExistencePet[0][0].IDDoador === UserID) { // se existir o pet especificado e o dono deste pet for o proprio usuário demonstrando interesse.
         return { error: "O Usuário não pode demonstrar interesse no seu proprio pet" }
       }
 
-      if (verifyExistenceIntrest[0].length >= 1) {
+      if (verifyExistenceIntrest[0].length >= 1) { //verifica se o usuário e o pet já não estão em um vinculo de interesse.
         return { error: "O Usuário já demonstrou interesse neste pet!" }
       } else {
-        if (verifyExistencePet[0].length >= 1 && verifyExistenceUser[0].length >= 1) {
-          const intrestSendRequest = await conn.query("Insert into interesse (Status,IDInteressado,IDPet) values (?,?,?)", [1, UserID, PetID])
-          const verifyFriendInvite = await conn.query("Select * from solicitacaocontato where IDSolicitante=? AND IDDestinatario = ?", [UserID, verifyExistencePet[0][0].IDDoador])
-          const verifyContact = await conn.query("Select * from contato where IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=?", [UserID, verifyExistencePet[0][0].IDDoador,verifyExistencePet[0][0].IDDoador,UserID ])
+        if (verifyExistencePet[0].length >= 1 && verifyExistenceUser[0].length >= 1) { // se o usuário e o pet não estiverem em um vinculo de interesse fazer:
+          const intrestSendRequest = await conn.query("Insert into interesse (IDInteressado,IDPet) values (?,?)", [UserID, PetID]) // insert que faz um vinculo entre o usuário e o pet.
+
+
+          const verifyFriendInvite = await conn.query("Select * from solicitacaocontato where IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=? ", [UserID, verifyExistencePet[0][0].IDDoador, verifyExistencePet[0][0].IDDoador, UserID]) //select para verificar se o usuário que demonstrou interesse no pet e o dono do pet já não tem uma solicitação de amizade pendente.
+          const verifyContact = await conn.query("Select * from contato where IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=?", [UserID, verifyExistencePet[0][0].IDDoador, verifyExistencePet[0][0].IDDoador, UserID]) // select para verificar se o usuário que está demonstrando interesse já não tem um vinculo de contato com o dono do pet. 
           if (verifyFriendInvite[0].length >= 1) {  // SE O USUÁRIO QUE TA DEMONSTRANDO INTERESSE JÁ TIVER ENVIADO UMA SOLICITAÇÃO DE AMIZADE PARA O DONO DO PET FAZER:
+
             if (verifyFriendInvite[0][0].Interessado != '') { // VERIFICAR SE A SOLICITAÇÃO DE AMIZADE QUE JA POSSUI ESTÁ COM O INTERESSE EM UM DOS ANIMAIS SENDO DECLARADO.
               await conn.commit();  // SE JÁ TIVER DECLARADO INTERESSE NA SOLICITAÇÃO DE AMIZADE RETORNA MENSAGEM QUE FOI DEMONSTRADO INTERESSE COM SUCESSO.
               return { sucess: "O Usuário demonstrou interesse no pet com sucesso e já possui uma solicitação de contato demonstrando o interesse" }
             }
-            // SE NÃO TIVER MOSTRADO O INTERESSE NO PET, NÓS DEMONSTRAMOS O INTERESSE MUDANDO O CAMPO INTERESSADO PARA 1 AO INVÉS DE 0
-            const sendToFriendInviteInterest = await conn.query("UPDATE solicitacaocontato SET Interessado = ? WHERE ID=?", [1,verifyFriendInvite[0][0].ID])
-            if(sendToFriendInviteInterest[0].affectedRows >= 1) {
+            // SE NÃO TIVER MOSTRADO O INTERESSE NO PET NA SOLICITAÇÃO DE AMIZADE JÁ EXISTENTE, NÓS DEMONSTRAMOS O INTERESSE MUDANDO O CAMPO INTERESSADO PARA 1 AO INVÉS DE 0
+            const sendToFriendInviteInterest = await conn.query("UPDATE solicitacaocontato SET Interessado = ? WHERE ID=?", [1, verifyFriendInvite[0][0].ID])
+            if (sendToFriendInviteInterest[0].affectedRows >= 1) {
               await conn.commit();
-              return {sucess:"O Usuário demonstrou interesse no pet com sucesso, já possuia uma solicitação de contato com o doador porém agora foi demonstrado que a solicitação trata-se de interesse a um pet"}
+              return { sucess: "O Usuário demonstrou interesse no pet com sucesso, já possuia uma solicitação de contato com o doador porém agora foi demonstrado que a solicitação trata-se de interesse a um pet" }
+            } else {
+              await conn.rollback();
+              return { sucess: "Não foi possivel demonstrar interesse no pet, pois ao tentar mudar a solicitação de contato já existente para demonstrar interesse, o registro de solicitação de amizade não foi alterado." }
             }
 
-          }
-          if (verifyContact[0].length >= 1) { //Se o Usuário já tem o Doador na lista de contato 
-
-            if (verifyContact[0][0].Interessado != '') {
-              await conn.commit();
-              return { sucess: "O Usuário demonstrou interesse no pet e ja tem o dono do mesmo na sua lista de contatos" }
+          } else { //SE O USUÁRIO NÃO TIVER ENVIADO UMA SOLICITAÇÃO DE CONTATO FAZER:
+            if (verifyContact[0].length >= 1) { //Verificar se o usuário que está demonstrando interesse e o doador do pet já não são contatos um do outro SE FOR fazer: 
+              if (verifyContact[0][0].Interessado != '') { //verificar se o contato está registrado como um contato de interesse, se tiver como contato de interesse apenas retorna mensagem de sucesso informando que o usuário já está na lista de contatos.
+                //caso for enviar uma mensagem direta do usuário que demonstra o interesse no pet para o usuário dono do pet, inserir a validação aki.
+                await conn.commit();
+                return { sucess: "O Usuário demonstrou interesse no pet e ja tem o dono do mesmo na sua lista de contatos" }
+              }
+              const showInterest = await conn.query("UPDATE Contato SET Interessado = ? WHERE ID = ?", [1, verifyContact[0][0]])
+              if (showInterest[0].affectedRows >= 1) {
+                await conn.commit();
+                return { sucess: "O Usuário demonstrou interesse no pet, já possui o dono na lista de contato e agora o contato está na lista de interesse de ambos." }
+              } else {
+                await conn.rollback();
+                return { error: "Não foi possivel demonstrar interesse no pet, pois o contato ja está na lista de contatos, mas o sistema não conseguiu mudar a base de contato para interessado." }
+              }
             }
-            const showInterest = await conn.query("UPDATE Contato SET Interessado = ? WHERE ID = ?", [1,verifyContact[0][0]])
           }
 
-          if (intrestSendRequest[0].affectedRows >= 1) {
+
+          if (intrestSendRequest[0].affectedRows >= 1) { // SE O USUÁRIO NÃO TIVER SOLICITAÇÃO DE CONTATO JÁ ENVIADA AO DONO DO PET E NÃO TIVER O DONO DO PET NA LISTA DE CONTATOS, ENVIA A SOLICITAÇÃO DE AMIZADE DEMONSTRANDO O INTERESSE EM UM DOS PETS DO OUTRO USUÁRIO.
             const sendInviteToGiver = await conn.query("Insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)", [UserID, 1, verifyExistencePet[0][0].IDDoador])
             if (sendInviteToGiver[0].affectedRows >= 1) {
               await conn.commit();
-              return { sucess: "Usuário demonstrou interesse em um pet novo com sucesso" }
+              return { sucess: "Usuário demonstrou interesse em um pet novo com sucesso e foi enviado a solicitação de contato para o dono" }
+            } else {
+              await conn.rollback();
+              return { error: "não foi possivel enviar uma solicitação de amizade para o dono do pet" }
             }
-
           } else {
-            return { error: "não foi demonstrado interesse em nenhum pet pois houve um problema no sistema, tente novamente!" }
+            return { error: "não foi demonstrado interesse no pet desejado, tente novamente!" }
           }
         } else {
           return { error: "usuário informado ou pet não existem, portanto não foi possivel demonstrar interesse neste pet informado." }
@@ -188,18 +208,41 @@ const petQueries = {
   async removerInteressePetQuery(PetID, UserID) {
     const conn = await connection();
     try {
+      await conn.beginTransaction();
       const analyzeToRemove = await conn.query("DELETE FROM INTERESSE WHERE IDInteressado=? AND IDPet = ?", [UserID, PetID])
       console.log(analyzeToRemove)
       if (analyzeToRemove[0].affectedRows >= 1) {
-        return { sucess: "interesse ao pet retirado com sucesso!" }
-      } else {
-        return { error: "não foi identificado esses dados no sistema tente novamente!" }
+      return { sucess: "interesse ao pet retirada com sucesso, mas a solicitação de amizade ao dono permanece!" }
+        } else {
+        return { error: "não foi possivel remover o interesse ao pet de nossa base de dados." }
       }
     }
     catch (e) {
+      await conn.rollback();
       return { error: e }
     }
+  },
+
+ async enviarSolicitacaoDeAmizadeQuery (UserID,IDDestinatario) {
+  const conn = await connection();
+  try {
+    if(UserID === IDDestinatario) {
+      return {error:"você não pode enviar solicitação de contato para si mesmo"}
+    }
+    const existenceInvite = await conn.query ("select * from solicitacaocontato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID,IDDestinatario,IDDestinatario,UserID]);
+    const existenceContact = await conn.query ("SELECT * from contato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?",[UserID,IDDestinatario,IDDestinatario,UserID])
+    if (existenceInvite[0].length >= 1 || existenceContact[0].length >=1) {
+      return {error: "o usuário ou o destinatario já estão com uma solicitação de amizade pendente entre si, ou já estão na lista de contato um dos outros."}
+    }else {
+      const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)",[UserID,0,IDDestinatario])
+      if(sendInviteToNewFriend[0].affectedRows >= 1) {
+        return {sucess:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
+      }
+    }
+  }catch (e) {
+    return {error:e}
   }
+ }
 
 }
 
