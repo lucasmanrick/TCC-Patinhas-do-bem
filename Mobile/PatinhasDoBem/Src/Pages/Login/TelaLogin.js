@@ -74,12 +74,15 @@ class LoginScreen extends Component {
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Image
-          source={require("../../../assets/image/ImagenLogin.jpg")}
-          style={{ marginTop: -10, width: 460, height: 150 }}
+          source={{
+            uri: 'https://img.freepik.com/fotos-gratis/colagem-de-animal-de-estimacao-bonito-isolada_23-2150007407.jpg?w=740&t=st=1726268282~exp=1726268882~hmac=a7b97e6ec229c718b75f0a9c6b6f2c0b6f948559714034c5cf6312780321d2b6',
+          }}
+          style={{ marginTop: -100, width: 460, height: 350 }}
         />
         {this.state.fontLoaded && ( // Verifica se a fonte está carregada
           <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
         )}
+
         <View style={styles.errorMessage}>
           {!!this.state.errorMessage && (
             <Text style={styles.error}>{this.state.errorMessage}</Text>
@@ -89,30 +92,33 @@ class LoginScreen extends Component {
           )}
         </View>
 
-        <View style={styles.form}>
-          <Text style={styles.inputTitle}>Endereço de E-mail</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="mail-outline" size={20} color="#134973" />
-            <TextInput
-              style={styles.input}
-              autoCapitalize="none"
-              onChangeText={(Email) => this.setState({ Email })}
-              value={this.state.Email}
-            />
+        {/* Aqui movemos os campos mais para baixo */}
+        <View style={{ marginTop: 140,justifyContent: 'flex-end', marginBottom: 30 }}>
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Endereço de E-mail</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="mail-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                autoCapitalize="none"
+                onChangeText={(Email) => this.setState({ Email })}
+                value={this.state.Email}
+              />
+            </View>
           </View>
-        </View>
 
-        <View style={styles.form}>
-          <Text style={styles.inputTitle}>Senha</Text>
-          <View style={styles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={20} color="#134973" />
-            <TextInput
-              style={styles.input}
-              secureTextEntry
-              autoCapitalize="none"
-              onChangeText={(Senha) => this.setState({ Senha })}
-              value={this.state.Senha}
-            />
+          <View style={styles.form}>
+            <Text style={styles.inputTitle}>Senha</Text>
+            <View style={styles.inputContainer}>
+              <Ionicons name="lock-closed-outline" size={20} color="#134973" />
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                autoCapitalize="none"
+                onChangeText={(Senha) => this.setState({ Senha })}
+                value={this.state.Senha}
+              />
+            </View>
           </View>
         </View>
 
@@ -139,14 +145,17 @@ class LoginScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#f4f4f4", // Ajuste de fundo
   },
   greeting: {
-    marginTop: -2,
+    marginTop: -180,  // Mantém o título onde está
     fontSize: 28,
     fontWeight: "400",
     textAlign: "center",
-    color: "#000", // Cor do texto principal
+    color: "#FFF", // Ajuste a cor aqui: #FF8C00 (laranja) ou #134973 (azul escuro)
     fontFamily: 'Kavoon', // Aplicando a fonte Kavoon
+    borderColor: '#134973', // Cor da borda do título (Azul escuro)
+    
   },
   errorMessage: {
     height: 72,
@@ -161,7 +170,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   form: {
-    marginBottom: 48,
+    marginBottom: 24, // Reduzimos o espaço entre os campos
     marginHorizontal: 30,
   },
   inputTitle: {
@@ -188,6 +197,7 @@ const styles = StyleSheet.create({
     height: 52,
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 20,  // Ajusta o espaçamento abaixo do botão
   },
 });
 

@@ -10,14 +10,15 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
-import { Ionicons } from '@expo/vector-icons';
-import * as Font from 'expo-font';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import axios from 'axios'; // Importando axios
-import api from '../../Service/tokenService';
+import { Ionicons } from "@expo/vector-icons";
+import * as Font from "expo-font";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import axios from "axios"; // Importando axios
+import api from "../../Service/tokenService";
 
 class TelaRegistro extends Component {
   state = {
+
     NomeUsuario: '',
     DataNasc: '',
     Email: '',
@@ -40,7 +41,7 @@ class TelaRegistro extends Component {
 
   loadFonts = async () => {
     await Font.loadAsync({
-      'Kavoon': require('../../../assets/font/Kavoon-Regular.ttf'),
+      Kavoon: require("../../../assets/font/Kavoon-Regular.ttf"),
     });
     this.setState({ fontLoaded: true });
   };
@@ -61,7 +62,10 @@ class TelaRegistro extends Component {
         Alert.alert("Erro", "CEP não encontrado.");
       }
     } catch (error) {
-      Alert.alert("Erro", "Ocorreu um erro ao buscar o endereço: " + error.message);
+      Alert.alert(
+        "Erro",
+        "Ocorreu um erro ao buscar o endereço: " + error.message
+      );
     }
   };
 
@@ -73,6 +77,7 @@ class TelaRegistro extends Component {
   };
 
   handleRegister = async () => {
+
     const { NomeUsuario, Email, Senha, confirmarSenha, Cep, Rua, Numero, Bairro, Cidade, Estado, dataNascimento } = this.state;
 
     if (Senha !== confirmarSenha) {
@@ -91,6 +96,7 @@ class TelaRegistro extends Component {
       return;
     }
 
+
     const formattedDate = dataNascimento.toISOString().split('T')[0];
 
     // Log dos dados que serão enviados
@@ -106,6 +112,7 @@ class TelaRegistro extends Component {
       Cidade,
       Estado,
     });
+
 
     
 
@@ -133,6 +140,7 @@ class TelaRegistro extends Component {
       } else {
         console.error("Network Error:", error.message);
         Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
+
       }
     }
   };
@@ -146,6 +154,7 @@ class TelaRegistro extends Component {
     const currentDate = selectedDate || this.state.dataNascimento;
     this.setState({ showDatePicker: false, dataNascimento: currentDate });
   };
+
 
   renderInput(title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) {
     return (
@@ -180,26 +189,42 @@ class TelaRegistro extends Component {
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
         <Image
-          source={require("../../../assets/image/ImagenLogin.jpg")}
-          style={{ marginTop: -10, width: 460, height: 150 }}
+          source={{
+            uri: "https://img.freepik.com/fotos-gratis/colagem-de-animal-de-estimacao-bonito-isolada_23-2150007407.jpg?w=740&t=st=1726268282~exp=1726268882~hmac=a7b97e6ec229c718b75f0a9c6b6f2c0b6f948559714034c5cf6312780321d2b6",
+          }}
+          style={{ marginTop: -100, width: 460, height: 350 }}
         />
         {this.state.fontLoaded && (
           <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
         )}
 
+        <TouchableOpacity style={styles.avatar}>
+          <Ionicons
+            name="add-outline" // Corrigir o nome do ícone
+            size={40}
+            color="#fff"
+            style={{ marginTop: 6 }}
+          />
+        </TouchableOpacity>
+
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {this.renderInput("Nome", "person-outline", "NomeUsuario")}
           {this.renderInput("CEP", "pin", "Cep", "numeric")}
+
           {this.renderInput("Rua", "home-outline", "Rua", "default", "", false, false)}
           {this.renderInput("Número", "pin", "Numero", "numeric")}
           {this.renderInput("Bairro", "home", "Bairro", "default", "", false, false)}
           {this.renderInput("Cidade", "location-outline", "Cidade", "default", "", false, false)}
           {this.renderInput("Estado", "flag", "Estado", "default", "", false, false)}
 
+
           {/* Campo de Data de Nascimento */}
           <View style={styles.form}>
             <Text style={styles.inputTitle}>Data de Nascimento</Text>
-            <TouchableOpacity onPress={this.showDatepicker} style={styles.inputContainer}>
+            <TouchableOpacity
+              onPress={this.showDatepicker}
+              style={styles.inputContainer}
+            >
               <Ionicons name="calendar-outline" size={20} color="#134973" />
               <Text style={styles.input}>
                 {dataNascimento.toLocaleDateString()}
@@ -211,14 +236,16 @@ class TelaRegistro extends Component {
                 mode="date"
                 display="spinner"
                 onChange={this.onChange}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
               />
             )}
           </View>
 
+
           {this.renderInput("Endereço de E-mail", "mail-outline", "Email", "none")}
           {this.renderInput("Senha", "lock-closed-outline", "Senha", "none", null, true)}
           {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "none", null, true)}
+
 
           <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
             <Text style={{ color: "#fff", fontWeight: "500" }}>Cadastrar</Text>
@@ -249,12 +276,12 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
   },
   greeting: {
-    marginTop: -2,
+    marginTop: -200,
     fontSize: 28,
     fontWeight: "400",
     textAlign: "center",
-    color: "#000",
-    fontFamily: 'Kavoon',
+    color: "#FFF",
+    fontFamily: "Kavoon",
   },
   form: {
     marginBottom: 48,
@@ -265,8 +292,8 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     borderBottomColor: "#134973",
     borderBottomWidth: 1,
     paddingBottom: 5,
@@ -284,6 +311,16 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#E1E2E6",
+    marginTop: 48,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center", // Centraliza o botão na tela
   },
 });
 
