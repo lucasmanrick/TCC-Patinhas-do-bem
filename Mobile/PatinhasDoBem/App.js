@@ -13,6 +13,7 @@ import TelaDeMensagem from './Src/Pages/Chat/TelaContato';
 import TelaDeNotificacao from './Src/Pages/Notification/TelaDeNotificacao';
 import TelaDePerfil from './Src/Pages/Profile/TelaDePerfil';
 import TelaDePost from './Src/Pages/Post/TelaPost';
+import TelaDePets from './Src/Pages/Animals/VisualizarPet';
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -35,8 +36,8 @@ function HomeTabs() {
           } else if (route.name === 'Mensagem') {
             iconName = 'comments';
             size = 24;
-          } else if (route.name === 'Post') {
-            iconName = 'plus-circle';
+          } else if (route.name === 'Pets') {
+            iconName = 'paw';
             size = focused ? 50 : 40; // Maior quando focado
             color = '#3DAAD9'; // Cor personalizada
             iconStyle = {
@@ -71,7 +72,7 @@ function HomeTabs() {
     >
       <Tab.Screen name="Home" component={TelaInicial} />
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
-      <Tab.Screen name="Post" component={TelaDePost} />
+      <Tab.Screen name="Pets" component={TelaDePets} />
       <Tab.Screen name="Notificação" component={TelaDeNotificacao} />
       <Tab.Screen name="Perfil" component={TelaDePerfil} />
     </Tab.Navigator>
