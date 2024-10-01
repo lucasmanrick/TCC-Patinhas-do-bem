@@ -129,7 +129,8 @@ class TelaRegistro extends Component {
         Cidade,
         Estado,
       }).then(e => (
-        Alert.alert("Sucesso", "Cadastro realizado com sucesso!")
+        Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
+        this.props.navigation.navigate('Home')
       ));
 
      
