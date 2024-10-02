@@ -132,7 +132,6 @@ CREATE TABLE IF NOT EXISTS `Pet` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Interesse` (
   `ID` INT NOT NULL AUTO_INCREMENT,
-  `Status` TINYINT NOT NULL,
   `IDInteressado` INT NOT NULL,
   `IDPet` INT NOT NULL,
   PRIMARY KEY (`ID`),
@@ -146,11 +145,10 @@ CREATE TABLE IF NOT EXISTS `Interesse` (
 CREATE TABLE IF NOT EXISTS `SolicitacaoContato` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `IDSolicitante` INT NOT NULL,
-  `IDPetInteressado` INT,
+  `Interessado` INT NOT NULL,
   `IDDestinatario` INT NOT NULL,
   PRIMARY KEY (`ID`),
-  FOREIGN KEY (`IDSolicitante`) REFERENCES `Usuario` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`IDPetInteressado`) REFERENCES `Pet` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
+  FOREIGN KEY (`IDSolicitante`) REFERENCES `Usuario` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -160,7 +158,7 @@ CREATE TABLE IF NOT EXISTS `Contato` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `Data` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `IDSolicitante` INT NOT NULL,
-  `IDPetInteressado` INT NOT NULL,
+  `Interessado` INT NOT NULL,
   `IDDestinatario` INT NOT NULL,
   PRIMARY KEY (`ID`),
   FOREIGN KEY (`IDSolicitante`) REFERENCES `Usuario` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
