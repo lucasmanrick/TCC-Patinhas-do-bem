@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const accountManagement = require ('../Controllers/accountController');
-const petManagement = require("../Controllers/petController")
+const petManagement = require("../Controllers/petController");
+const userInteractController = require("../Controllers/userInteractController");
 
 
 function verificadorDoToken(req, res, next){
@@ -75,6 +76,17 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
   //Rota para Solicitar amizade de um usuário sem que haja interesse em algum de seus pets.
 
-  router.post ("/SolicitaAmizade", verificadorDoToken, petManagement.enviarSolicitacaoDeAmizade)
+  router.post ("/SolicitaAmizade", verificadorDoToken, userInteractController.enviarSolicitacaoDeAmizade)
+
+
+  //Rota para remover uma solicitação de amizade que enviamos a algum usuário.
+  router.delete ("/RemoveSolicitacao", verificadorDoToken, userInteractController.removeSolicitacaoDeAmizade)
+
+ //Rota para ver solicitações de amizades enviadas para mim
+  router.get("/MinhasSolicitacoes",verificadorDoToken,userInteractController.minhasSolicitacoes);
+
+ 
+  router.get("/ProfileUser",verificadorDoToken,userInteractController.ProfileUser);
+
 
 module.exports = router;

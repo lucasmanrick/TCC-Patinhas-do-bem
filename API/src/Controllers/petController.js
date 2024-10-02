@@ -146,22 +146,6 @@ const petManagement = {
     catch (e) {
       res.json({error:e})
     }
-  },
-
-  enviarSolicitacaoDeAmizade: async (req,res) => {
-    try{
-      const {ID} = req.dataUser;
-      const {IDDestinatario} = req.body;
-
-      if(ID,IDDestinatario && typeof(IDDestinatario) === 'number') {
-        const requestInvite = await petQueries.enviarSolicitacaoDeAmizadeQuery(ID,IDDestinatario);
-        res.json(requestInvite)
-      }
-
-    }
-    catch(e) {
-      res.json({error:e})
-    }
   }
 }
 

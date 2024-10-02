@@ -221,29 +221,9 @@ const petQueries = {
       await conn.rollback();
       return { error: e }
     }
-  },
-
- async enviarSolicitacaoDeAmizadeQuery (UserID,IDDestinatario) {
-  const conn = await connection();
-  try {
-    if(UserID === IDDestinatario) {
-      return {error:"você não pode enviar solicitação de contato para si mesmo"}
-    }
-    const existenceInvite = await conn.query ("select * from solicitacaocontato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID,IDDestinatario,IDDestinatario,UserID]);
-    const existenceContact = await conn.query ("SELECT * from contato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?",[UserID,IDDestinatario,IDDestinatario,UserID])
-    if (existenceInvite[0].length >= 1 || existenceContact[0].length >=1) {
-      return {error: "o usuário ou o destinatario já estão com uma solicitação de amizade pendente entre si, ou já estão na lista de contato um dos outros."}
-    }else {
-      const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)",[UserID,0,IDDestinatario])
-      if(sendInviteToNewFriend[0].affectedRows >= 1) {
-        return {sucess:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
-      }
-    }
-  }catch (e) {
-    return {error:e}
   }
- }
 
+ 
 }
 
 module.exports = petQueries;
