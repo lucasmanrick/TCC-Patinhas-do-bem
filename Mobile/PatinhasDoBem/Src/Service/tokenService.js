@@ -1,24 +1,22 @@
-import axios from 'axios';
+import { create } from 'apisauce';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Cria uma instância do Axios
-const api = axios.create({
-  baseURL: 'http://192.168.2.253:500',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-   // URL base da sua API
+// Cria uma instância do Apisauce
+const api = create({
+  baseURL: 'http://10.0.3.252:5000',
 });
 
-// Adiciona o interceptor para incluir o token JWT no cabeçalho de todas as requisições
-api.interceptors.request.use(async (config) => {
-    const token = await AsyncStorage.getItem('jwtToken'); // Recupera o token do AsyncStorage
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`; // Adiciona o token ao cabeçalho
-    }
-    return config;
-  }, (error) => {
-    return Promise.reject(error);
-  });
-  
-  export default api; 
+// Adiciona transformação de requisição
+api.addRequestTransform(async (request) => {
+  const token = await AsyncStorage.getItem('@CodeApi:token');
+  if (token) {
+    request.headers['Authorization'] = `Bearer ${token}`;
+  }
+});
+
+// Adiciona transformação de resposta
+api.addResponseTransform(response => {
+  if (!response.ok) throw response;
+});
+
+export default api;
