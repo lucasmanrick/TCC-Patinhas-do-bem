@@ -14,6 +14,7 @@ import TelaDeNotificacao from './Src/Pages/Notification/TelaDeNotificacao';
 import TelaDePerfil from './Src/Pages/Profile/TelaDePerfil';
 import TelaDePost from './Src/Pages/Post/TelaPost';
 import TelaDePets from './Src/Pages/Animals/VisualizarPet';
+import CadastroPet from './Src/Pages/CadastroPet/Cadastro';
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -72,7 +73,7 @@ function HomeTabs() {
     >
       <Tab.Screen name="Home" component={TelaInicial} />
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
-      <Tab.Screen name="Pets" component={TelaDePets} />
+      <Tab.Screen name="Pets" component={TelaDePets} options={{ headerShown: false }} />
       <Tab.Screen name="Notificação" component={TelaDeNotificacao} />
       <Tab.Screen name="Perfil" component={TelaDePerfil} />
     </Tab.Navigator>
@@ -103,6 +104,12 @@ export default function App() {
         <Stack.Screen
           name="Register"
           component={TelaDeRegistro}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="Pet"
+          component={CadastroPet}
           options={{ headerShown: false }} // Oculta o header
         />
 
