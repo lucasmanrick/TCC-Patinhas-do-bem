@@ -26,7 +26,7 @@ const userInteractQueries = {
         }
       }
     }catch (e) {
-      return {error:e}
+      return {error:e.message}
     }
    },
 
@@ -40,7 +40,7 @@ const userInteractQueries = {
         return {error:"não foi retirado a solicitação de amizade especificada, a mesma pode não existir ou já ter sido removida tente novamente"}
       
     }catch (e) {
-      return {error:e}
+      return {error:e.message}
     }
    },
    async minhasSolicitacoesQuery (UserID) {
@@ -53,7 +53,7 @@ const userInteractQueries = {
       return{error:"não foi identificado nenhuma solicitação de contato ou houve algum problema durante o processo."}
     }
     }catch(e) {
-      return{error:e}
+      return{error:e.message}
     }
    },
 
@@ -63,12 +63,24 @@ const userInteractQueries = {
       if(userID && inviteID) {
         const verifyExistenceInvite = await conn.query("select * from solicitacaocontato WHERE IDDestinatario = ? && ID=?",[userID,inviteID]);
         if(verifyExistenceInvite[0].length >=1) {
-          const updateInvite = await conn.query("insert into contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)",[new Date(),verifyExistenceInvite[0][0].IDSolicitante,verifyExistenceInvite[0][0].Interessado,verifyExistenceInvite[0][0].IDDestinatario])
-          if(updateInvite[0].insertRows )
+          const acceptInvite = await conn.query("insert into contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)",[new Date(),verifyExistenceInvite[0][0].IDSolicitante,verifyExistenceInvite[0][0].Interessado,verifyExistenceInvite[0][0].IDDestinatario])
+          console.log(acceptInvite)
+          if(acceptInvite[0].affectedRows >= 1) {
+            const deleteInviteExistence = await conn.query("DELETE from solicitacaocontato WHERE ID=?",[verifyExistenceInvite[0][0].ID])
+            if(deleteInviteExistence[0].affectedRows >=1) {
+              return{sucess:"você aceitou a solicitação de amizade com sucesso!"}
+            }else {
+              return{error:"não foi possivel aceitar a solicitação de amizade, tente novamente!"}
+            }
+          }else {
+            return{error:"não foi possivel tornar o usuário um de seus contatos"}
+          }
+        }else {
+          return{error:"esta solicitação de amizade já não existe ou não foi identificada, tente novamente"}
         }
       }
     }catch(e) {
-      return {error:e}
+      return {error:e.message}
     }
    },
 
@@ -92,9 +104,25 @@ const userInteractQueries = {
     } else { // se o usuário quiser ver o perfil de outra pessoa
       const returnAnotherUserProfile = await conn.query ("select u.Nome, u.Bairro, u.Estado, u.DataNasc,u.Cidade from usuario As u WHERE id=? ",[usuarioASerRetornado]);
       const returnPetsOfThisUser = await petQueries.petsDeUmUsuarioQuery(usuarioASerRetornado);
-      
+      const verifyContactVinculate = await conn.query("select * from contato WHERE IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=?",[userID,usuarioASerRetornado,usuarioASerRetornado,userID])
+      const verifyInviteExistence = await conn.query("select * from solicitacaocontato where IDSolicitante =? AND IDDestinatario = ? OR IDDestinatario=? AND IDSolicitante = ?",[userID,usuarioASerRetornado,usuarioASerRetornado,userID])
+
+      let saoAmigos;
+      let envioAmizadePendente;
+      if(verifyContactVinculate[0].length >=1) {
+        saoAmigos = true;
+      }else {
+        saoAmigos = false
+      }
+
+      if(verifyInviteExistence[0].length >=1) {
+        envioAmizadePendente = true;
+      }else {
+        envioAmizadePendente = false;
+      }
+
       if(returnAnotherUserProfile[0].length >=1) {
-        return {sucess: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse}
+        return {sucess: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente}
       } else {
         return{error:"não foi possivel retornar dados do perfil do usuário especificado"}
       }
@@ -117,7 +145,7 @@ const userInteractQueries = {
         }
       }
     }catch(e) {
-      return {error:e}
+      return {error:e.message}
     }
    },
 
@@ -131,9 +159,10 @@ const userInteractQueries = {
         return{error:"não foi possivel atualizar os dados do usuário, tente novamente!"}
       }
     }catch(e) {
-      return{error:e}
+      return{error:e.message}
     }
-   }
+   },
+
 }
 
 module.exports = userInteractQueries;
