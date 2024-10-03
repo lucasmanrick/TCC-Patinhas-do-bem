@@ -1,14 +1,19 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, StatusBar, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  Image,
+  Alert,
+} from "react-native";
 import { Ionicons } from '@expo/vector-icons'; // Ícones do Ionicons
 import api from '../../Service/tokenService'; // Importa o Axios já configurado
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Font from 'expo-font'; // Importa a biblioteca de fontes
 import { auth } from '../../Firebase/FirebaseConfig';
-
-// Dentro do seu componente
-const user = auth.currentUser;
-
 
 class LoginScreen extends Component {
   state = {
@@ -21,10 +26,13 @@ class LoginScreen extends Component {
 
   async componentDidMount() {
     await this.loadFonts(); // Carrega as fontes
-    const token = await AsyncStorage.getItem('@codeApi:token');
+    const token = await AsyncStorage.getItem('@CodeApi:token');
 
-    if (token && user) {
-      this.setState({ loggedInUser: user });
+    if (token) {
+      const user = auth.currentUser; // Move para cá
+      if (user) {
+        this.setState({ loggedInUser: user.email }); // Armazena o email do usuário logado
+      }
     }
   }
 
@@ -39,6 +47,11 @@ class LoginScreen extends Component {
   handleLogin = async () => {
     const { Email, Senha } = this.state;
 
+    if (!Email || !Senha) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      return; // Verifica se os campos estão preenchidos
+    }
+
     try {
       const response = await api.post('/Login', {
         Email,
@@ -51,9 +64,7 @@ class LoginScreen extends Component {
         const { token } = response.data;
 
         if (token) { // Agora verificamos apenas o token
-          await AsyncStorage.multiSet([
-            ['@CodeApi:token', token],
-          ]);
+          await AsyncStorage.setItem('@CodeApi:token', token); // Armazena o token
 
           this.props.navigation.navigate('Home');
         } else {
@@ -88,12 +99,11 @@ class LoginScreen extends Component {
             <Text style={styles.error}>{this.state.errorMessage}</Text>
           )}
           {!!this.state.loggedInUser && (
-            <Text style={styles.error}>{this.state.loggedInUser}</Text>
+            <Text style={styles.success}>Logado como: {this.state.loggedInUser}</Text>
           )}
         </View>
 
-        {/* Aqui movemos os campos mais para baixo */}
-        <View style={{ marginTop: 140,justifyContent: 'flex-end', marginBottom: 30 }}>
+        <View style={{ marginTop: 140, justifyContent: 'flex-end', marginBottom: 30 }}>
           <View style={styles.form}>
             <Text style={styles.inputTitle}>Endereço de E-mail</Text>
             <View style={styles.inputContainer}>
@@ -103,6 +113,7 @@ class LoginScreen extends Component {
                 autoCapitalize="none"
                 onChangeText={(Email) => this.setState({ Email })}
                 value={this.state.Email}
+                placeholder="Digite seu e-mail"
               />
             </View>
           </View>
@@ -117,6 +128,7 @@ class LoginScreen extends Component {
                 autoCapitalize="none"
                 onChangeText={(Senha) => this.setState({ Senha })}
                 value={this.state.Senha}
+                placeholder="Digite sua senha"
               />
             </View>
           </View>
@@ -155,7 +167,6 @@ const styles = StyleSheet.create({
     color: "#FFF", // Ajuste a cor aqui: #FF8C00 (laranja) ou #134973 (azul escuro)
     fontFamily: 'Kavoon', // Aplicando a fonte Kavoon
     borderColor: '#134973', // Cor da borda do título (Azul escuro)
-    
   },
   errorMessage: {
     height: 72,
@@ -165,6 +176,12 @@ const styles = StyleSheet.create({
   },
   error: {
     color: "#E9446A",
+    fontSize: 13,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  success: {
+    color: "#134973",
     fontSize: 13,
     fontWeight: "600",
     textAlign: "center",

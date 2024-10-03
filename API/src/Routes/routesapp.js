@@ -37,7 +37,7 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
 
 //Rota para cadastrar os dados de um novo pet 
- router.post ("/CadastraPet",verificadorDoToken,petManagement.cadastraPet)
+ router.post ("/CadastraPet",verificadorDoToken,petManagement.cadastraPet);
 
 
   //Rota para Editar informações de um pet já cadastrado.

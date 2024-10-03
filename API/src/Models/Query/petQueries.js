@@ -17,6 +17,7 @@ const petQueries = {
       return ({ error: e })
     }
   },
+  
   async editPetInfoQuery(petForm) {
     const conn = await connection();
     try {
