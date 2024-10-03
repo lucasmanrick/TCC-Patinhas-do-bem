@@ -32,6 +32,13 @@ const accountManagement = {
           res.json({ error: "O Campo Cidade está com tipo diferente do esperado" })
         }
 
+        const re = /\S+@\S+\.\S+/;
+        const testRegex = re.test(Email);
+
+        if(testRegex === false) {
+          res.json({error:"seu e-mail é invalido verifique se está correto e tente novamente."})
+        } 
+
         const validaCadastroAnterior = await AccountManagementQueries.verificaExistenciaUsuarioQuery(Email)
 
         if (validaCadastroAnterior.error) {

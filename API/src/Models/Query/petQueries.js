@@ -193,7 +193,7 @@ const petQueries = {
   async meusInteressesQuery(MeuID) { //retorna todos pets que demonstrei interesse
     const conn = await connection();
     try {
-      const verifyMyInterests = await conn.query("select p.* FROM Pet as p JOIN interesse as I WHERE I.IDInteressado = ?", [MeuID])
+      const verifyMyInterests = await conn.query("select p.*, u.Nome FROM Pet as p JOIN interesse as I JOIN usuario As u WHERE I.IDInteressado = ? AND u.ID = p.IDDoador", [MeuID])
       if (verifyMyInterests[0].length >= 1) {
         return { sucess: "retornando pets no quais demonstrei interesse!", myInterests: verifyMyInterests[0] }
       } else {
@@ -221,29 +221,9 @@ const petQueries = {
       await conn.rollback();
       return { error: e }
     }
-  },
-
- async enviarSolicitacaoDeAmizadeQuery (UserID,IDDestinatario) {
-  const conn = await connection();
-  try {
-    if(UserID === IDDestinatario) {
-      return {error:"você não pode enviar solicitação de contato para si mesmo"}
-    }
-    const existenceInvite = await conn.query ("select * from solicitacaocontato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID,IDDestinatario,IDDestinatario,UserID]);
-    const existenceContact = await conn.query ("SELECT * from contato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?",[UserID,IDDestinatario,IDDestinatario,UserID])
-    if (existenceInvite[0].length >= 1 || existenceContact[0].length >=1) {
-      return {error: "o usuário ou o destinatario já estão com uma solicitação de amizade pendente entre si, ou já estão na lista de contato um dos outros."}
-    }else {
-      const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)",[UserID,0,IDDestinatario])
-      if(sendInviteToNewFriend[0].affectedRows >= 1) {
-        return {sucess:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
-      }
-    }
-  }catch (e) {
-    return {error:e}
   }
- }
 
+ 
 }
 
 module.exports = petQueries;
