@@ -18,7 +18,7 @@ const userInteractController = {
 
     }
     catch(e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   },
 
@@ -33,7 +33,7 @@ const userInteractController = {
         res.json({error:"você não especificou uma solicitação de amizade que há de ser excluida."})
       }
     }catch (e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   },
 
@@ -47,7 +47,7 @@ const userInteractController = {
       }
     }
     catch(e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   },
 
@@ -58,9 +58,11 @@ const userInteractController = {
       if(ID && inviteID) {
         const acceptInviteRequest = await userInteractQueries.aceitaSolicitacaoQuery(ID,inviteID);
         res.json(acceptInviteRequest)
+      }else {
+        res.json({error:"faltam informações para que a solicitação de amizade desejada seja aceita"})
       }
     }catch(e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   },
 
@@ -79,7 +81,7 @@ const userInteractController = {
       }
     }
     catch(e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   },
 
@@ -102,7 +104,7 @@ const userInteractController = {
 
     }
     catch(e) {
-      return {error:e}
+      res.json({error:e.message})
     }
   },
 
@@ -120,7 +122,7 @@ const userInteractController = {
         res.json({error:"falta informações para ser enviado "})
       }
     }catch (e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   }
 }
