@@ -9,6 +9,7 @@ const api = create({
 // Adiciona transformação de requisição
 api.addRequestTransform(async (request) => {
   const token = await AsyncStorage.getItem('@CodeApi:token');
+  console.log('Token recuperado:', token); 
   if (token) {
     request.headers['Authorization'] = `Bearer ${token}`;
   }

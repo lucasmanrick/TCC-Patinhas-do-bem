@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+LOG  {"config": {"adapter": ["xhr", "http", "fetch"], "baseURL": "http://10.0.3.252:5000", "data": "{\"TipoAnimal\":\"Ddff\",\"Linhagem\":\"Ggffg\",\"Idade\":\"3\",\"Sexo\":\"F\",\"Cor\":\"Gggg\",\"Descricao\":\"Ggffff\"}", "env": {"Blob": [Function Blob], "FormData": [Function FormData]}, "headers": [Object], "maxBodyLength": -1, "maxContentLength": -1, "method": "post", "timeout": 0, "transformRequest": [[Function transformRequest]], "transformRespoObject], "maxBodyLength": -1, "maxContentLength": -1, "method": "post", "timeout": 0, "transformRequest": [[Function transformRequest]], "transformResponse": [[Function transformResponse]], "transitional": {"clarifyTimeoutError": false, "forcedJSONParsing": true, "silentJSONParsing": true}, "url": "/Cadnse": [[Function transformResponse]], "transitional": {"clarifyTimeoutError": false, "forcedJSONParsing": true, "silentJSONParsing": true}, "url": "/CadastraPet", "validateStatus": [Function validateStatus], "xsrfCookieName": "XSRF-TOKEN", "xsrfHeaderName": "X-XSRF-TOKEN"}, "data": {"idDoPet": 4, "sucess": "pet cadastrado com sucesso"}, "duration": 336, "headers": {"connection": "keep-alive", "content-length": "51", "content-type": "application/json; charset=utf-8", "date": "Wed, 02 Oct 2024 23:47:13 GMT", "etag": "W/\"33-HVy8cQZV8Y24rK8OpFc+yqmTS5g\"", "keep-alive": "timeout=5", "x-powered-by": "Express"}, "ok": true, "originalError": null, "problem": null, "status": 200}
+
+
+esta funcionado corretamente mais a validação do front do mobile esta caindo no erro: import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +11,6 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"; // Correção no import
 import api from "../../Service/tokenService"; // Certifique-se que esse caminho está correto para sua API configurada
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Para armazenamento do token
@@ -47,17 +49,26 @@ const CadastroPet = ({ navigation }) => {
         return;
       }
       
+      if (!token) {
+        Alert.alert("Erro", "Token não encontrado. Faça login novamente.");
+        return; // Para evitar a execução da requisição sem um token válido
+      }
+
 
         const response = await api.post("/CadastraPet", petData, {
           headers: {
             Authorization: token, // Envia o token no cabeçalho
             "Content-Type": "application/json",
           },
-        }).then(e => (
-          Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
-          navigation.goBack()
-        ));
+        });
 
+        if (response.data.success) {
+          Alert.alert("Sucesso", "Pet cadastrado com sucesso!");
+          navigation.navigate("Home"); // Navega para a página inicial
+        } else {
+          Alert.alert("Erro", response.data.error || "Não foi possível cadastrar o pet.");
+          console.log(response);
+        }
       } catch (error) {
         console.error("Erro ao cadastrar pet:", error);
         Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
@@ -80,16 +91,6 @@ const CadastroPet = ({ navigation }) => {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           <Text style={styles.header}>Cadastrar Pet</Text>
-
-          <TouchableOpacity style={styles.avatar}  onPress={() => navigation.navigate("Biblioteca")}>
-          <Ionicons
-            name="add-outline" // Corrigir o nome do ícone
-            size={40}
-            color="#fff"
-            style={{ marginTop: 6 }}
-          />
-        </TouchableOpacity>
-
           {renderInput("Tipo do Animal", "pets", TipoAnimal, setTipoAnimal)}
           {renderInput("Linhagem", "category", Linhagem, setLinhagem)}
           {renderInput("Idade", "calendar-today", Idade, setIdade)}
@@ -143,16 +144,7 @@ const CadastroPet = ({ navigation }) => {
       fontSize: 18,
       fontWeight: "bold",
     },
-    avatar: {
-      width: 100,
-      height: 100,
-      borderRadius: 50,
-      backgroundColor: "#E1E2E6",
-      marginTop: 48,
-      justifyContent: "center",
-      alignItems: "center",
-      alignSelf: "center", // Centraliza o botão na tela
-    },
   });
 
   export default CadastroPet;
+ arruma para Mim
