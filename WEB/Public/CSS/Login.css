@@ -1,474 +1,483 @@
-/* Importa a fonte "Open Sans" do Google Fonts */
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap');
-
-/* Reseta margens e preenchimentos de todos os elementos, além de definir box-sizing */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
-/* Estilo do corpo da página */
 body {
-    font-family: 'Open Sans', sans-serif; /* Define a fonte para o corpo */
-    margin-top: -140px; /* Ajusta a margem superior do corpo */
+    font-family: 'Open Sans', sans-serif;
+    margin-top: -140px;
 }
-
-/* Estilo para o contêiner principal */
 .container-1 {
-    display: flex; /* Usa flexbox para layout */
-    justify-content: center; /* Centraliza horizontalmente */
-    align-items: center; /* Centraliza verticalmente */
-    height: 115vh; /* Altura de 115% da viewport */
-    background-color: #cbedd4; /* Define a cor de fundo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 115vh;
+    background-color: 
+    #cbedd4;
+    margin-right: 20px;
 }
-
-/* Estilo para o elemento de seleção de países */
 #paises {
-    width: 215px; /* Largura do seletor */
-    padding: 10px; /* Preenchimento interno */
-    border-color: #fff; /* Cor da borda */
-}
+    width: 215px;
+    padding: 10px;
+    border-color: #fff;
+  }
 
-/* Estilo do conteúdo principal */
+
 .content {
-    background-color: #fff; /* Cor de fundo branca */
-    border-radius: 15px; /* Cantos arredondados */
-    width: 960px; /* Largura do conteúdo */
-    height: 50%; /* Altura de 50% */
-    justify-content: space-between; /* Espaçamento entre os itens */
-    align-items: center; /* Alinha itens no centro verticalmente */
-    position: relative; /* Permite posicionamento absoluto dos filhos */
+    background-color: #fff;
+    border-radius: 15px;
+    width: 960px;
+    height: 50%;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
-
-/* Estilo para a pseudo-elemento antes do conteúdo */
 .content::before {
-    content: ""; /* Necessário para criar um pseudo-elemento */
-    position: absolute; /* Posicionamento absoluto */
-    background-color: #56A2E1; /* Cor de fundo azul */
-    width: 45%; /* Largura do pseudo-elemento */
-    height: 100%; /* Altura igual ao conteúdo */
-    border-top-left-radius: 15px; /* Cantos arredondados no topo esquerdo */
-    border-bottom-left-radius: 15px; /* Cantos arredondados no fundo esquerdo */
-    left: 0; /* Alinhado à esquerda */
-}
+    content: "";
+    position: absolute;
+    background-color: #56A2E1;
+    width: 45%;
+    height: 100%;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    left: 0;
 
-/* Estilo para os títulos */
+  
+}
 .title {
-    font-size: 28px; /* Tamanho da fonte */
-    font-weight: bold; /* Negrito */
-    text-transform: capitalize; /* Primeira letra de cada palavra maiúscula */
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: capitalize;
 }
-
-/* Estilos para diferentes títulos */
 .title-primary {
-    color: #fff; /* Cor branca */
-}
-.title-primary-1 {
-    color: #fff; /* Cor branca */
-    margin-top: 100px; /* Margem superior */
-    margin-left: 10px; /* Margem esquerda */
-}
-.title-second {
-    color: #56A2E1; /* Cor azul */
-    margin-top: 65px; /* Margem superior */
+    color: #fff;
 }
 
-/* Estilo para a descrição */
+
+.title-primary-1 {
+    color: #fff;
+margin-top: 100px;
+margin-left: 10px;
+}
+
+.title-second {
+    color: #56A2E1;
+    margin-top: 35PX;
+}
+
+
+/* ---------------------------PARTE ESQUERDA DA TELA -------------------------- */
+
+.title-second-1 {
+    color: #56A2E1;
+    margin-top: 65px;
+    margin-left: 210px;
+    
+}
 .description {
-    font-size: 14px; /* Tamanho da fonte */
-    font-weight: 300; /* Peso da fonte leve */
-    line-height: 30px; /* Altura da linha */
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 30px;
 }
 .description-primary {
-    color: #fff; /* Cor branca */
+    color: #fff;
 }
 .description-second {
-    color: #7f8c8d; /* Cor cinza */
+    color: #7f8c8d;
 }
-
-/* Estilo para botões */
 .btn {
-    border-radius: 15px; /* Cantos arredondados */
-    text-transform: uppercase; /* Letras maiúsculas */
-    color: #fff; /* Cor do texto */
-    font-size: 10px; /* Tamanho da fonte */
-    padding: 10px 50px; /* Preenchimento interno */
-    cursor: pointer; /* Cursor de ponteiro ao passar o mouse */
-    font-weight: bold; /* Negrito */
-    width: 150px; /* Largura do botão */
-    align-self: center; /* Centraliza o botão */
-    border: none; /* Remove a borda */
-    margin-top: 1rem; /* Margem superior */
+    border-radius: 15px;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 10px;
+    padding: 10px 50px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 150px;
+    align-self: center;
+    border: none;
+    margin-top: 1rem;
 }
-
-/* Estilo para o botão primário */
 .btn-primary {
-    background-color: transparent; /* Fundo transparente */
-    border: 1px solid #fff; /* Borda branca */
-    transition: background-color .5s; /* Transição suave para a cor de fundo */
+    background-color: transparent;
+    border: 1px solid #fff;
+    transition: background-color .5s;
 }
 .btn-primary:hover {
-    background-color: #fff; /* Cor de fundo ao passar o mouse */
-    color: #56A2E1; /* Cor do texto ao passar o mouse */
+    background-color: #fff;
+    color: #56A2E1;
+}
+.btn-second {
+    background-color: #56A2E1;
+    border: 1px solid #56A2E1;
+    transition: background-color .5s;
+    margin-top: 65px;
+    margin-left: 200px;
 }
 
-/* Estilo para o botão secundário */
-.btn-second {
-    background-color: #56A2E1; /* Cor de fundo azul */
-    border: 1px solid #56A2E1; /* Borda azul */
-    transition: background-color .5s; /* Transição suave para a cor de fundo */
-    margin-top: 15px; /* Margem superior */
+.btn-second1 {
+    background-color: #56A2E1;
+    border: 1px solid #56A2E1;
+    transition: background-color .5s;
+    margin-top: 15px;
+    margin-left: 20px;
 }
 .btn-second:hover {
-    background-color: #ffffff; /* Cor de fundo ao passar o mouse */
-    border: 1px solid #56A2E1; /* Borda azul ao passar o mouse */
-    color: #56A2E1; /* Cor do texto ao passar o mouse */
+    background-color: #ffffff;
+    border: 1px solid #56A2E1;
+    color: #56A2E1;
 }
-
-/* Estilo para o primeiro conteúdo */
 .first-content {
-    display: flex; /* Usa flexbox para layout */
-    height: 67vh; /* Altura de 67% da viewport */
-    margin-top: 150px; /* Margem superior */
+    display: flex;
+    height: 67vh;
+    margin-top: 150px;
+
+   
 }
 .first-content .second-column {
-    z-index: 11; /* Camada acima */
+    z-index: 11;
 }
 .first-column {
-    text-align: center; /* Centraliza o texto */
-    width: 40%; /* Largura do primeiro coluna */
-    z-index: 20; /* Camada acima */
+    text-align: center;
+    width: 40%;
+    z-index: 20;
+
 }
 .second-column {
-    width: 60%; /* Largura da segunda coluna */
-    display: flex; /* Usa flexbox para layout */
-    flex-direction: column; /* Organiza os itens em coluna */
-    align-items: center; /* Alinha itens no centro */
-    margin-top: -80px; /* Margem negativa */
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -80px;
 }
-
-/* Estilo para redes sociais */
 .social-media {
-    margin: 1rem 0; /* Margens superior e inferior */
+    margin: 1rem 0;
 }
 .link-social-media:not(:first-child){
-    margin-left: 10px; /* Margem esquerda para itens que não são o primeiro */
+    margin-left: 10px;
 }
 .link-social-media .item-social-media {
-    transition: background-color .5s; /* Transição suave para a cor de fundo */
+    transition: background-color .5s;
 }
-.link-social-media:hover .item-social-media {
-    background-color: #56A2E1; /* Cor de fundo ao passar o mouse */
-    color: #fff; /* Cor do texto ao passar o mouse */
-    border-color: #56A2E1; /* Cor da borda ao passar o mouse */
+.link-social-media:hover .item-social-media{
+    background-color: #56A2E1;
+    color: #fff;
+    border-color: #56A2E1;
 }
 .list-social-media {
-    display: flex; /* Usa flexbox para layout */
-    list-style-type: none; /* Remove marcadores da lista */
+    display: flex;
+    list-style-type: none;
 }
 .item-social-media {
-    border: 1px solid #bdc3c7; /* Borda cinza */
-    border-radius: 50%; /* Forma circular */
-    width: 35px; /* Largura */
-    height: 35px; /* Altura */
-    line-height: 35px; /* Centraliza o texto verticalmente */
-    text-align: center; /* Centraliza o texto horizontalmente */
-    color: #95a5a6; /* Cor do texto */
+    border: 1px solid #bdc3c7;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    color: #95a5a6;
 }
 
-/* Estilo do formulário da esquerda */
+/* --------------- formulario da esquerda ------------------*/
 .form {
-    display: flex; /* Usa flexbox para layout */
-    flex-direction: column; /* Organiza os itens em coluna */
-    width: 40%; /* Largura do formulário */
-    margin-right: 250px; /* Margem direita */
-    margin-top: -0px; /* Margem superior */
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin-right: 250px;
+    margin-top: -0PX;
 }
 
-/* Estilo dos inputs no formulário */
 .form input {
-    height: 45px; /* Altura do input */
-    width: 100%; /* Largura do input */
-    border: none; /* Remove a borda */
-    background-color: #ecf0f1; /* Cor de fundo do input */
+    height: 45px;
+    width: 100%;
+    border: none;
+    background-color: #ecf0f1;
 }
 
-/* Estilo do formulário da direita */
+/* --------------- formulario da direita ------------------*/
 .form-1 {
-    display: flex; /* Usa flexbox para layout */
-    flex-direction: column; /* Organiza os itens em coluna */
-    width: 45%; /* Largura do formulário */
-    margin-left: 300px; /* Margem esquerda */
-    margin-top: -305px; /* Margem superior */
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    margin-left: 300px;
+    margin-top: -415PX;
 }
 
-/* Estilo dos inputs no segundo formulário */
 .form-1 input {
-    height: 45px; /* Altura do input */
-    width: 100%; /* Largura do input */
-    border: none; /* Remove a borda */
-    background-color: #ecf0f1; /* Cor de fundo do input */
+    height: 45px;
+    width: 100%;
+    border: none;
+    background-color: #ecf0f1;
 }
 
-/* Estilo para inputs com autofill no Chrome */
-input:-webkit-autofill {    
-    -webkit-box-shadow: 0 0 0px 1000px #ecf0f1 inset !important; /* Remove a cor de fundo padrão */
-    -webkit-text-fill-color: #000 !important; /* Define a cor do texto */
+input:-webkit-autofill 
+{    
+    -webkit-box-shadow: 0 0 0px 1000px #ecf0f1 inset !important;
+    -webkit-text-fill-color: #000 !important;
 }
-
-/* Estilo do rótulo do input */
 .label-input {
-    background-color: #ecf0f1; /* Cor de fundo do rótulo */
-    display: flex; /* Usa flexbox para layout */
-    align-items: center; /* Alinha itens no centro verticalmente */
-    margin: 8px; /* Margem em volta */
+    background-color: #ecf0f1;
+    display: flex;
+    align-items: center;
+    margin: 8px;
+   
+   
 }
-
-/* Estilo do ícone de modificação */
 .icon-modify {
-    color: #7f8c8d; /* Cor cinza */
-    padding: 0 5px; /* Preenchimento horizontal */
+    color: #7f8c8d;
+    padding: 0 5px;
 }
 
-/* Estilo do segundo formulário */
+
 .form-2 {
-    display: flex; /* Usa flexbox para layout */
-    flex-direction: column; /* Organiza os itens em coluna */
-    width: 80%; /* Largura do formulário */
-    margin-left: 150px; /* Margem esquerda */
-    margin-top: 65px; /* Margem superior */
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin-left: 150px;
+    margin-top: 65px;
+    
 }
 
-/* Estilo dos inputs no segundo formulário */
 .form-2 input {
-    height: 45px; /* Altura do input */
-    width: 100%; /* Largura do input */
-    border: none; /* Remove a borda */
-    background-color: #ecf0f1; /* Cor de fundo do input */
+    height: 45px;
+    width: 100%;
+    border: none;
+    background-color: #ecf0f1;
 }
 
-/* Estilo do segundo conteúdo */
+
+
+/* second content*/
+
 .second-content {
-    position: absolute; /* Permite posicionamento absoluto */
-    display: flex; /* Usa flexbox para layout */
+    position: absolute;
+    display: flex;
+    
 }
-
-/* Ordem e z-index para as colunas no segundo conteúdo */
 .second-content .first-column {
-    order: 2; /* Ordem do flexbox */
-    z-index: -1; /* Camada inferior */
+    order: 2;
+    z-index: -1;
 }
 .second-content .second-column {
-    order: 1; /* Ordem do flexbox */
-    z-index: -1; /* Camada inferior */
+    order: 1;
+    z-index: -1;
 }
-
-/* Estilo da senha */
 .password {
-    color: #34495e; /* Cor do texto */
-    font-size: 14px; /* Tamanho da fonte */
-    margin: 15px 0; /* Margem vertical */
-    text-align: center; /* Centraliza o texto */
+    color: #34495e;
+    font-size: 14px;
+    margin: 15px 0;
+    text-align: center;
 }
 .password::first-letter {
-    text-transform: capitalize; /* Primeira letra maiúscula */
+    text-transform: capitalize;
 }
 
-/* Estilos específicos para a classe de login */
+
+
 .sign-in-js .first-content .first-column {
-    z-index: -1; /* Camada inferior */
+    z-index: -1;
 }
+
 .sign-in-js .second-content .second-column {
-    z-index: 11; /* Camada superior */
+    z-index: 11;
 }
 .sign-in-js .second-content .first-column {
-    z-index: 13; /* Camada superior */
-}
-.sign-in-js .content::before {
-    left: 60%; /* Posição do pseudo-elemento */
-    border-top-left-radius: 0; /* Remove arredondamento do canto superior esquerdo */
-    border-bottom-left-radius: 0; /* Remove arredondamento do canto inferior esquerdo */
-    border-top-right-radius: 15px; /* Mantém arredondamento do canto superior direito */
-    border-bottom-right-radius: 15px; /* Mantém arredondamento do canto inferior direito */
-    animation: slidein 1.3s; /* Animação ao entrar */
-    z-index: 12; /* Camada superior */
+    z-index: 13;
 }
 
-/* Estilos específicos para a classe de cadastro */
-.sign-up-js .content::before {
-    animation: slideout 1.3s; /* Animação ao sair */
-    z-index: 12; /* Camada superior */
+.sign-in-js .content::before {
+    left: 60%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    animation: slidein 1.3s; /*MODIFIQUEI DE 3s PARA 1.3s*/
+
+    z-index: 12;
 }
+
+.sign-up-js .content::before {
+    animation: slideout 1.3s; /*MODIFIQUEI DE 3s PARA 1.3s*/
+
+    z-index: 12;
+}
+
 .sign-up-js .second-content .first-column,
 .sign-up-js .second-content .second-column {
-    z-index: -1; /* Camada inferior */
+    z-index: -1;
 }
+
 .sign-up-js .first-content .second-column {
-    z-index: 11; /* Camada superior */
+    z-index: 11;
 }
+
 .sign-up-js .first-content .first-column {
-    z-index: 13; /* Camada superior */
+    z-index: 13;    
 }
 
-/* Animações de deslocamento */
+
+/* DESLOCAMENTO CONTEÚDO ATRÁS DO CONTENT:BEFORE*/
 .sign-in-js .first-content .second-column {
-    z-index: -1; /* Camada inferior */
-    position: relative; /* Permite posicionamento relativo */
-    animation: deslocamentoEsq 1.3s; /* Animação ao deslocar para a esquerda */
-}
-.sign-up-js .second-content .second-column {
-    position: relative; /* Permite posicionamento relativo */
-    z-index: -1; /* Camada inferior */
-    animation: deslocamentoDir 1.3s; /* Animação ao deslocar para a direita */
+
+    z-index: -1;
+    position: relative;
+    animation: deslocamentoEsq 1.3s; /*MODIFIQUEI DE 3s PARA 1.3s*/
 }
 
-/* Animações CSS para o conteúdo */
+.sign-up-js .second-content .second-column {
+    position: relative;
+    z-index: -1;
+    animation: deslocamentoDir 1.3s; /*MODIFIQUEI DE 3s PARA 1.3s*/
+}
+
+/*ANIMAÇÃOO CSS PARA O CONTEÚDO*/
+
 @keyframes slideLeft {
     from {
-        left: 0; /* Início da animação */
-        opacity: 1; /* Totalmente visível */
+      left: 0;
+      opacity: 1;
     }
     25% {
-        left: -60px; /* Move para a esquerda */
-        opacity: 0.5; /* Semi-visível */
+      left: -60px;
+      opacity: 0.5;
     }
     50% {
-        left: -80px; /* Move mais para a esquerda */
-        opacity: 0.2; /* Quase invisível */
+      left: -80px;
+      opacity: 0.2;
     }
     to {
-        left: -100px; /* Finaliza fora da tela */
-        opacity: 0; /* Invisível */
+      left: -100px;
+      opacity: 0;
     }
-}
-
-@keyframes slideRight {
+  }
+  
+  @keyframes slideRight {
     from {
-        left: 0; /* Início da animação */
+      left: 0;
     }
     25% {
-        left: 70px; /* Move para a direita */
+      left: 70px;
     }
     50% {
-        left: 90px; /* Move mais para a direita */
+      left: 90px;
     }
     to {
-        left: 100px; /* Finaliza fora da tela */
+      left: 100px;
     }
-}
-
-@keyframes fadeIn {
+  }
+  
+  @keyframes fadeIn {
     from {
-        left: 0; /* Início da animação */
-        width: 40%; /* Largura inicial */
+      left: 0;
+      width: 40%;
     }
     25% {
-        left: 5%; /* Ajusta posição */
-        width: 50%; /* Aumenta largura */
+      left: 5%;
+      width: 50%;
     }
     50% {
-        left: 25%; /* Ajusta posição */
-        width: 60%; /* Aumenta largura */
+      left: 25%;
+      width: 60%;
     }
     75% {
-        left: 45%; /* Ajusta posição */
-        width: 50%; /* Reduz largura */
+      left: 45%;
+      width: 50%;
     }
     to {
-        left: 60%; /* Finaliza posição */
-        width: 40%; /* Largura final */
+      left: 60%;
+      width: 40%;
     }
-}
-
-@keyframes fadeOut {
+  }
+  
+  @keyframes fadeOut {
     from {
-        left: 60%; /* Início da animação */
-        width: 40%; /* Largura inicial */
+      left: 60%;
+      width: 40%;
     }
     25% {
-        left: 45%; /* Ajusta posição */
-        width: 50%; /* Aumenta largura */
+      left: 45%;
+      width: 50%;
     }
     50% {
-        left: 25%; /* Ajusta posição */
-        width: 60%; /* Aumenta largura */
+      left: 25%;
+      width: 60%;
     }
     75% {
-        left: 5%; /* Ajusta posição */
-        width: 50%; /* Reduz largura */
+      left: 5%;
+      width: 50%;
     }
     to {
-        left: 0; /* Finaliza posição */
-        width: 40%; /* Largura final */
+      left: 0;
+      width: 40%;
     }
-}
+  }
 
-/* Estilos responsivos */
 @media screen and (max-width: 740px) {
     .form {
-        width: 50%; /* Largura do formulário em telas pequenas */
+        width: 50%;
     }
 }
 
 @media screen and (max-width: 425px) {
     .form {
-        width: 100%; /* Largura do formulário em telas muito pequenas */
+        width: 100%;
     }
 }
 
-/* Estilo para a imagem de fundo */
+
 .img-fundo {
-    position: absolute; /* Permite posicionamento absoluto */
-    top: 0; /* Alinha ao topo */
-    left: 0; /* Alinha à esquerda */
-    width: 100%; /* Largura total */
-    height: 100%; /* Altura total */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: -1; /* Para garantir que a imagem fique atrás de outros elementos */
+    
 }
 
 .img-fundo img {
-    width: 100%; /* Largura total da imagem */
-    height: 100%; /* Altura total da imagem */
-    object-fit: cover; /* Cobre toda a área, mantendo proporção */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}   
+
+.btn-primaryy{
+margin-top: -80px;
+margin-left: 1000px;
 }
 
-/* Estilo para um botão específico */
-.btn-primaryy {
-    margin-top: -80px; /* Margem superior negativa */
-    margin-left: 1000px; /* Margem esquerda */
+.valido{
+    color: rgb(110, 231, 18);
+    margin-top: -380px;
+    margin-left: 280px;
+
 }
 
-/* Estilo para mensagens de validação */
-.valido {
-    color: rgb(110, 231, 18); /* Cor verde */
-    margin-top: -380px; /* Margem superior negativa */
-    margin-left: 280px; /* Margem esquerda */
-}
 
-/* Estilo do rodapé */
 footer {
-    position: fixed; /* Fixa o rodapé na parte inferior */
-    margin-top: -10px; /* Margem superior negativa */
-    display: block; /* Exibe como bloco */
-    background: #56A2E1; /* Cor de fundo azul */
-    color: #fff; /* Cor do texto branca */
-    text-align: center; /* Centraliza o texto */
-    font-size: 14px; /* Tamanho da fonte */
-    width: 100%; /* Largura total */
-    bottom: 0; /* Alinha ao fundo da página */
-    left: 0; /* Alinha à esquerda */
-    padding: 12px 0; /* Preenchimento vertical */
-    font-family: "Armata", sans-serif; /* Fonte do rodapé */
-    font-weight: 400; /* Peso da fonte */
-    font-style: normal; /* Estilo da fonte */
-    z-index: 1000; /* Camada superior */
+position: fixed;
+    margin-top: -10px;
+    display: block;
+    background: #56A2E1;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+    width: 100%;
+    bottom: 0; /* Garante que o footer esteja no fundo da página */
+    left: 0; /* Garante que o footer esteja alinhado à esquerda */
+    padding: 12px 0;
+    font-family: "Armata", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    z-index: 1000; /* Garante que o footer fique sobre outros elementos */
 }
 
-/* Estilos para ícones FontAwesome */
-.fa-solid {
-    color: #858484; /* Cor cinza */
+.fa-solid{
+    color: #858484;
 }
-.fa-regular {
-    color: #858484; /* Cor cinza */
+
+.fa-regular{
+    color: #858484;
 }
