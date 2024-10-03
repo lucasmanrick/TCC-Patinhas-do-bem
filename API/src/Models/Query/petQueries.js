@@ -193,7 +193,7 @@ const petQueries = {
   async meusInteressesQuery(MeuID) { //retorna todos pets que demonstrei interesse
     const conn = await connection();
     try {
-      const verifyMyInterests = await conn.query("select p.* FROM Pet as p JOIN interesse as I WHERE I.IDInteressado = ?", [MeuID])
+      const verifyMyInterests = await conn.query("select p.*, u.Nome FROM Pet as p JOIN interesse as I JOIN usuario As u WHERE I.IDInteressado = ? AND u.ID = p.IDDoador", [MeuID])
       if (verifyMyInterests[0].length >= 1) {
         return { sucess: "retornando pets no quais demonstrei interesse!", myInterests: verifyMyInterests[0] }
       } else {

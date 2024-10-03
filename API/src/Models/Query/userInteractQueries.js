@@ -57,7 +57,22 @@ const userInteractQueries = {
     }
    },
 
-   async ProfileUserQuery(usuarioASerRetornado, userID) {
+   async aceitaSolicitacaoQuery (userID,inviteID) {
+    const conn = await connection();
+    try{
+      if(userID && inviteID) {
+        const verifyExistenceInvite = await conn.query("select * from solicitacaocontato WHERE IDDestinatario = ? && ID=?",[userID,inviteID]);
+        if(verifyExistenceInvite[0].length >=1) {
+          const updateInvite = await conn.query("insert into contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)",[new Date(),verifyExistenceInvite[0][0].IDSolicitante,verifyExistenceInvite[0][0].Interessado,verifyExistenceInvite[0][0].IDDestinatario])
+          if(updateInvite[0].insertRows )
+        }
+      }
+    }catch(e) {
+      return {error:e}
+    }
+   },
+
+   async profileUserQuery(usuarioASerRetornado, userID) {
     const conn = await connection();
 
 
@@ -65,18 +80,58 @@ const userInteractQueries = {
     if (userID && !usuarioASerRetornado) { // se o usuário solicitou analise de algum perfil e não passou id será retornado as informações dele mesmo, caso ele passe id sera pego os dados do usuário solicitado.
       //returnDataCleaned pega os dados (que podem ser vistos) do usuário que será visto o perfil.
       const returnDataCleaned = await conn.query("select u.Nome, u.CEP, u.Rua, u.Numero, u.Bairro, u.Estado, u.DataNasc,u.Cidade, u.Email  from usuario As u WHERE id=? ",[userID]);   
-      const returnPetsUser = await petQueries.petsDeUmUsuarioQuery(userID)
+      const returnPetsUser = await petQueries.petsDeUmUsuarioQuery(userID);
 
-      console.log(returnDataCleaned[0][0])
 
-      if(returnDataCleaned[0].length >=1 && returnPetsUser.sucess != null) {
+      if(returnDataCleaned[0].length >=1) {
        return {sucess:"retornando dados do seu perfil para uso", dadosUsuario: returnDataCleaned[0][0],dadosPetsUsuario:returnPetsUser.dataResponse}
       }else {
         return{error:"não foi possivel retornar dados do seu perfil, tente novamente por favor"}
       }
 
     } else { // se o usuário quiser ver o perfil de outra pessoa
-      const returnAnotherUserProfile = await conn.query ("select")
+      const returnAnotherUserProfile = await conn.query ("select u.Nome, u.Bairro, u.Estado, u.DataNasc,u.Cidade from usuario As u WHERE id=? ",[usuarioASerRetornado]);
+      const returnPetsOfThisUser = await petQueries.petsDeUmUsuarioQuery(usuarioASerRetornado);
+      
+      if(returnAnotherUserProfile[0].length >=1) {
+        return {sucess: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse}
+      } else {
+        return{error:"não foi possivel retornar dados do perfil do usuário especificado"}
+      }
+    }
+   },
+
+   async removeDadosUsuarioQuery(UsuarioRequisitorID,UsuarioASerRemovido) {
+    const conn = await connection();
+    try{
+      if(UsuarioRequisitorID && UsuarioASerRemovido) {
+        const deletingSomeUser = await conn.query("DELETE FROM usuario WHERE ID=?",[UsuarioASerRemovido]);
+       
+        if(deletingSomeUser[0].affectedRows >=1) {
+          return {sucess:"usuário removido por completo do sistema"}
+        }
+      } else if (UsuarioRequisitorID && !UsuarioASerRemovido) {
+        const deletingYourselfProfile = await conn.query("DELETE FROM usuario WHERE id=?",[UsuarioRequisitorID])
+        if(deletingYourselfProfile[0].affectedRows >=1) {
+          return {sucess:"seu perfil foi deletado com sucesso de nosso sistema!."}
+        }
+      }
+    }catch(e) {
+      return {error:e}
+    }
+   },
+
+   async editaDadosCadastraisQuery (userForm) {
+    const conn = await connection();
+    try{                                               
+      const sendToDBRefreshUserData = await conn.query("UPDATE usuario SET Nome = ?, CEP=?, Rua=?, Numero=?, Bairro=?, Estado=?, DataNasc=?, Email=?, Senha=?,Cidade=? WHERE ID=?",[userForm.NomeUsuario,userForm.Cep,userForm.Rua,userForm.Numero,userForm.Bairro,userForm.Estado,userForm.DataNasc,userForm.Email,userForm.Senha,userForm.Cidade,userForm.ID])
+      if(sendToDBRefreshUserData[0].affectedRows >=1) {
+        return{sucess:"atualizado os dados do usuário com sucesso"}
+      }else {
+        return{error:"não foi possivel atualizar os dados do usuário, tente novamente!"}
+      }
+    }catch(e) {
+      return{error:e}
     }
    }
 }

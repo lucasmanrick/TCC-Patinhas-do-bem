@@ -85,8 +85,17 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
  //Rota para ver solicitações de amizades enviadas para mim
   router.get("/MinhasSolicitacoes",verificadorDoToken,userInteractController.minhasSolicitacoes);
 
- 
-  router.get("/ProfileUser",verificadorDoToken,userInteractController.ProfileUser);
+  router.get("/AceitaSolicitacaoAmizade",verificadorDoToken,userInteractController.aceitaSolicitacao)
+
+  //Rota para obter dados de perfil de usuários do site (chamar quando quiser ver o perfil de um usuário, ou ver o seu próprio perfil).
+  router.get("/ProfileUser",verificadorDoToken,userInteractController.profileUser);
+
+  //Rota para o ADM Remover um usuário do sistema, ou o próprio usuário se remover do sistema permanentemente
+  router.delete("/RemoveDadosUsuario",verificadorDoToken,userInteractController.removeDadosUsuario);
+
+  //Rota para o Usuário conseguir alterar seus dados cadastrais
+  router.put("/EditaDados",verificadorDoToken, userInteractController.editaDadosCadastrais);
 
 
+  // router.get("/MensagensContato",verificadorDoToken, userInteractController.mensagensContato)
 module.exports = router;
