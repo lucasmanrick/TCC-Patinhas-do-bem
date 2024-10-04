@@ -124,7 +124,7 @@ const userInteractQueries = {
       if(returnAnotherUserProfile[0].length >=1) {
         return {sucess: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente}
       } else {
-        return{error:"não foi possivel retornar dados do perfil do usuário especificado"}
+        return {error:"não foi possivel retornar dados do perfil do usuário especificado"}
       }
     }
    },
@@ -163,6 +163,34 @@ const userInteractQueries = {
     }
    },
 
+   async removeUsuarioDaListaDeContatosQuery (contactID,userID) {
+    const conn = await connection();
+    try{
+      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
+      if(verifyIfUserAreInContact[0].length >=1) {
+        const removingContact = await conn.query("delete from contato WHERE ID=?",[contactID])
+        if(removingContact[0].affectedRows >=1) {
+          return{sucess:"contato removido da sua lista de contatos com sucesso."}
+        }else {
+          return{error:"não foi possivel remover o contato da sua lista, tente novamente!"}
+        }
+      }else {
+        return{error:"o usuário não pode remover o contato, pois não participa deste contato para geri-lo"}
+      }
+    }catch(e) {
+      return{error:e.message}
+    }
+   },
+
+   async meusContatosQuery (userID) {
+    const conn = await connection();
+    try{
+      const getingMyContacts = await conn.query("select u.Nome, m.Texto,c.ID  FROM usuario as u JOIN messagem as m JOIN contato as c WHERE u.ID=? AND c.IDSolicitante = ? AND m.IDContato = c.ID ",[userID,userID])
+      const getingMyContactsWhereIAcceptedInvite = await conn.query("select u.Nome, m.Texto,c.ID  FROM usuario as u JOIN messagem as m JOIN contato as c WHERE u.ID=? AND c.IDDestinatario = ? AND m.IDContato = c.ID",[userID,userID])
+    }catch(e) {
+      return{error:e.message}
+    }
+   }
 }
 
 module.exports = userInteractQueries;

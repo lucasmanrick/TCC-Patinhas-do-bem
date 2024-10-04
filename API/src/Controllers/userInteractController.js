@@ -124,6 +124,33 @@ const userInteractController = {
     }catch (e) {
       res.json({error:e.message})
     }
+  },
+
+  removeUsuarioDaListaDeContatos:async (req,res) => {
+    try {
+      const {ID} = req.dataUser;
+      const {IDContato} = req.body;
+
+      if(ID && IDContato) {
+        const sendRequestRemoveContact = await userInteractQueries.removeUsuarioDaListaDeContatosQuery(IDContato,ID)
+        res.json(sendRequestRemoveContact)
+      }else {
+        res.json({error:"não foi possivel remover o usuário da lista de contato pois não falta informações para ser feito a requisição"})
+      }
+    }catch(e) {
+      res.json({error:e.message})
+    }
+  },
+
+  meusContatos: async (req,res) => {
+    const {ID} = req.dataUser;
+    try {
+      if(!ID) return res.json({error:"não é possivel puxar os contatos, pois não foi especificado o Usuário"})
+       const takeUsersOnMyContacts = await userInteractQueries.meusContatosQuery(ID);
+       res.json(takeUsersOnMyContacts)
+    }catch(e) {
+      res.json({error:e.message})
+    }
   }
 }
 
