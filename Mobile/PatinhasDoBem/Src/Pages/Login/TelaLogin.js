@@ -8,6 +8,9 @@ import {
   StatusBar,
   Image,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from '@expo/vector-icons'; // Ícones do Ionicons
 import api from '../../Service/tokenService'; // Importa o Axios já configurado
@@ -82,74 +85,82 @@ class LoginScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <Image
-          source={{
-            uri: 'https://img.freepik.com/fotos-gratis/colagem-de-animal-de-estimacao-bonito-isolada_23-2150007407.jpg?w=740&t=st=1726268282~exp=1726268882~hmac=a7b97e6ec229c718b75f0a9c6b6f2c0b6f948559714034c5cf6312780321d2b6',
-          }}
-          style={{ marginTop: -100, width: 460, height: 350 }}
-        />
-        {this.state.fontLoaded && ( // Verifica se a fonte está carregada
-          <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
-        )}
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={0} // Ajuste conforme necessário
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.container}>
+            <StatusBar barStyle="light-content" />
+            <Image
+              source={{
+                uri: 'https://img.freepik.com/fotos-gratis/colagem-de-animal-de-estimacao-bonito-isolada_23-2150007407.jpg?w=740&t=st=1726268282~exp=1726268882~hmac=a7b97e6ec229c718b75f0a9c6b6f2c0b6f948559714034c5cf6312780321d2b6',
+              }}
+              style={{ marginTop: -100, width: 460, height: 350 }}
+            />
+            {this.state.fontLoaded && ( // Verifica se a fonte está carregada
+              <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
+            )}
 
-        <View style={styles.errorMessage}>
-          {!!this.state.errorMessage && (
-            <Text style={styles.error}>{this.state.errorMessage}</Text>
-          )}
-          {!!this.state.loggedInUser && (
-            <Text style={styles.success}>Logado como: {this.state.loggedInUser}</Text>
-          )}
-        </View>
-
-        <View style={{ marginTop: 140, justifyContent: 'flex-end', marginBottom: 30 }}>
-          <View style={styles.form}>
-            <Text style={styles.inputTitle}>Endereço de E-mail</Text>
-            <View style={styles.inputContainer}>
-              <Ionicons name="mail-outline" size={20} color="#134973" />
-              <TextInput
-                style={styles.input}
-                autoCapitalize="none"
-                onChangeText={(Email) => this.setState({ Email })}
-                value={this.state.Email}
-                placeholder="Digite seu e-mail"
-              />
+            <View style={styles.errorMessage}>
+              {!!this.state.errorMessage && (
+                <Text style={styles.error}>{this.state.errorMessage}</Text>
+              )}
+              {!!this.state.loggedInUser && (
+                <Text style={styles.success}>Logado como: {this.state.loggedInUser}</Text>
+              )}
             </View>
-          </View>
 
-          <View style={styles.form}>
-            <Text style={styles.inputTitle}>Senha</Text>
-            <View style={styles.inputContainer}>
-              <Ionicons name="lock-closed-outline" size={20} color="#134973" />
-              <TextInput
-                style={styles.input}
-                secureTextEntry
-                autoCapitalize="none"
-                onChangeText={(Senha) => this.setState({ Senha })}
-                value={this.state.Senha}
-                placeholder="Digite sua senha"
-              />
+            <View style={{ marginTop: 140, justifyContent: 'flex-end', marginBottom: 30 }}>
+              <View style={styles.form}>
+                <Text style={styles.inputTitle}>Endereço de E-mail</Text>
+                <View style={styles.inputContainer}>
+                  <Ionicons name="mail-outline" size={20} color="#134973" />
+                  <TextInput
+                    style={styles.input}
+                    autoCapitalize="none"
+                    onChangeText={(Email) => this.setState({ Email })}
+                    value={this.state.Email}
+                    placeholder="Digite seu e-mail"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.form}>
+                <Text style={styles.inputTitle}>Senha</Text>
+                <View style={styles.inputContainer}>
+                  <Ionicons name="lock-closed-outline" size={20} color="#134973" />
+                  <TextInput
+                    style={styles.input}
+                    secureTextEntry
+                    autoCapitalize="none"
+                    onChangeText={(Senha) => this.setState({ Senha })}
+                    value={this.state.Senha}
+                    placeholder="Digite sua senha"
+                  />
+                </View>
+              </View>
             </View>
+
+            <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
+              <Text style={{ color: "#fff", fontWeight: "500" }}>Entrar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{ alignSelf: "center", margin: 32 }}
+              onPress={() => this.props.navigation.navigate("Register")}
+            >
+              <Text style={{ color: "#414959", fontSize: 13 }}>
+                Não tem conta?{" "}
+                <Text style={{ fontWeight: "500", color: "#134973" }}>
+                  Cadastre-se
+                </Text>
+              </Text>
+            </TouchableOpacity>
           </View>
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={this.handleLogin}>
-          <Text style={{ color: "#fff", fontWeight: "500" }}>Entrar</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{ alignSelf: "center", margin: 32 }}
-          onPress={() => this.props.navigation.navigate("Register")}
-        >
-          <Text style={{ color: "#414959", fontSize: 13 }}>
-            Não tem conta?{" "}
-            <Text style={{ fontWeight: "500", color: "#134973" }}>
-              Cadastre-se
-            </Text>
-          </Text>
-        </TouchableOpacity>
-      </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

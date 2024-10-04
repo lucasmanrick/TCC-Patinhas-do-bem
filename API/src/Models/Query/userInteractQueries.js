@@ -60,16 +60,16 @@ const userInteractQueries = {
    async aceitaSolicitacaoQuery (userID,inviteID) {
     const conn = await connection();
     try{
-      if(userID && inviteID) {
-        const verifyExistenceInvite = await conn.query("select * from solicitacaocontato WHERE IDDestinatario = ? && ID=?",[userID,inviteID]);
-        if(verifyExistenceInvite[0].length >=1) {
-          const updateInvite = await conn.query("insert into contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)",[new Date(),verifyExistenceInvite[0][0].IDSolicitante,verifyExistenceInvite[0][0].Interessado,verifyExistenceInvite[0][0].IDDestinatario])
-          if(updateInvite[0].insertRows )
-        }
-      }
+    //   if(userID && inviteID) {
+    //     const verifyExistenceInvite = await conn.query("select * from solicitacaocontato WHERE IDDestinatario = ? && ID=?",[userID,inviteID]);
+    //     if(verifyExistenceInvite[0].length >=1) {
+    //       const updateInvite = await conn.query("insert into contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)",[new Date(),verifyExistenceInvite[0][0].IDSolicitante,verifyExistenceInvite[0][0].Interessado,verifyExistenceInvite[0][0].IDDestinatario])
+    //       if(updateInvite[0].insertRows )
+    //     }
+    //   }
     }catch(e) {
-      return {error:e}
-    }
+    //   return {error:e}
+     }
    },
 
    async profileUserQuery(usuarioASerRetornado, userID) {
