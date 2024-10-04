@@ -60,6 +60,7 @@ const userInteractQueries = {
    async aceitaSolicitacaoQuery (userID,inviteID) {
     const conn = await connection();
     try{
+
       if(userID && inviteID) {
         const verifyExistenceInvite = await conn.query("select * from solicitacaocontato WHERE IDDestinatario = ? && ID=?",[userID,inviteID]);
         if(verifyExistenceInvite[0].length >=1) {
