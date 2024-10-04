@@ -86,7 +86,10 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
   router.get("/MinhasSolicitacoes",verificadorDoToken,userInteractController.minhasSolicitacoes);
 
   //Rota para aceitar uma solicitação de amizade enviada para o usuário logado
-  router.get("/AceitaSolicitacaoAmizade",verificadorDoToken,userInteractController.aceitaSolicitacao)
+  router.post("/AceitaSolicitacaoAmizade",verificadorDoToken,userInteractController.aceitaSolicitacao)
+
+  //Rota para tirar um outro usuário da lista de contatos do usuário logado.
+  router.delete("/RemoveUsuarioDaListaDeContatos",verificadorDoToken,userInteractController.removeUsuarioDaListaDeContatos)
 
   //Rota para obter dados de perfil de usuários do site (chamar quando quiser ver o perfil de um usuário, ou ver o seu próprio perfil).
   router.get("/ProfileUser",verificadorDoToken,userInteractController.profileUser);
