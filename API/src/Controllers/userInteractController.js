@@ -151,6 +151,39 @@ const userInteractController = {
     }catch(e) {
       res.json({error:e.message})
     }
+  },
+
+
+  mensagensContato: async(req,res) => {
+    const {ID} = req.dataUser;
+    const {IDContato} = req.body;
+    try {
+      if(ID && IDContato) {
+        const getMessagesWithMyContact = await userInteractQueries.mensagensContatoQuery(ID,IDContato)
+        res.json(getMessagesWithMyContact)
+      }else {
+        res.json({error:"não foi informado os dados necessários para retornar mensagens com este contato"})
+      }
+      
+    }catch(e) {
+      res.json({error:e.message})
+    }
+  },
+
+  enviaMensagem: async (req,res) => {
+    const {ID} = req.dataUser;
+    const {IDContato,Remocao,Texto} = req.body;
+    const DataDeEnvio = new Date();
+    try{
+      if(ID && IDContato) {
+       const sendRequestMessageToUser = await userInteractQueries.enviaMensagemQuery(DataDeEnvio,ID,IDContato,Remocao,Texto)
+      res.json(sendRequestMessageToUser)
+      }else {
+        res.json({error:"não foi informado todos dados necessários para fazer o envio da mensagem"})
+      }
+    }catch(e) {
+      res.json({error:e.message})
+    }
   }
 }
 

@@ -184,13 +184,119 @@ const userInteractQueries = {
 
    async meusContatosQuery (userID) {
     const conn = await connection();
+ 
+
     try{
-      const getingMyContacts = await conn.query("select u.Nome, m.Texto,c.ID  FROM usuario as u JOIN messagem as m JOIN contato as c WHERE u.ID=? AND c.IDSolicitante = ? AND m.IDContato = c.ID ",[userID,userID])
-      const getingMyContactsWhereIAcceptedInvite = await conn.query("select u.Nome, m.Texto,c.ID  FROM usuario as u JOIN messagem as m JOIN contato as c WHERE u.ID=? AND c.IDDestinatario = ? AND m.IDContato = c.ID",[userID,userID])
+      const getingMyContacts = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ? ",[userID,userID ,0])
+      
+      const getingMyContactsWhereIAcceptedInvite = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDDestinatario=? AND c.Interessado = ?",[userID,userID ,0])
+      
+      let unifyResultsNotInterest = []
+
+      if(getingMyContacts[0].length >= 1) {
+         getingMyContacts[0].forEach(e => {
+         unifyResultsNotInterest.push(e)
+         })
+      }
+      if(getingMyContactsWhereIAcceptedInvite[0].length >=1) {
+        console.log("entrou")
+        getingMyContactsWhereIAcceptedInvite[0].forEach(e => {
+        console.log("entrou 2")
+         unifyResultsNotInterest.push(e)
+        })
+      }
+      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ?",[userID,userID ,1])
+      const getingMyContactsWhereIAcceptedInviteInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDDestinatario=? AND c.Interessado = ?",[userID,userID ,1])
+      
+      let unifyResultsInterestedsContacts = []
+
+  
+      if(getingMyContactsInterestedsInMyPet[0].length >=1) {
+        getingMyContactsInterestedsInMyPet[0].forEach(e => {
+          unifyResultsInterestedsContacts.push(e)
+      })
+      }
+     
+      if(getingMyContactsWhereIAcceptedInviteInterestedsInMyPet[0].length >= 1) {
+         getingMyContactsWhereIAcceptedInviteInterestedsInMyPet[0].forEach(e => {
+          unifyResultsInterestedsContacts.push(e)
+        })
+      }
+
+
+
+     const returnedMessages =  unifyResultsInterestedsContacts.map(async e => {
+        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? limit 1;",[e.contatoID])
+        if(takeLastMessage[0].length >=1) {
+          console.log(e)
+          e.ultimaMensagem = takeLastMessage[0][0].Texto
+          return e
+        }else {
+          e.ultimaMensagem = "não tem mensagens"
+          return e
+        }
+      })
+
+      const returnedMessagesNotInterest = unifyResultsNotInterest.map(async e => {
+        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? limit 1;",[e.contatoID])
+        if(takeLastMessage[0].length >=1) {
+          e.ultimaMensagem = takeLastMessage[0][0].Texto
+          return e
+        }else {
+          e.ultimaMensagem = "não tem mensagens"
+          return e
+        }
+      })
+
+      unifyResultsInterestedsContacts= await Promise.all(returnedMessages)
+      unifyResultsNotInterest = await Promise.all(returnedMessagesNotInterest)
+     
+      if(unifyResultsInterestedsContacts.length >= 1 || unifyResultsNotInterest.length >=1) {
+        return {sucess: "retornando dados de todos seus contatos para o front end", contatosDeInteresses:unifyResultsInterestedsContacts, contatosSemInteresses:unifyResultsNotInterest}
+      }
+
+      return {error:"não há nenhum contato para ser retornado!"}
+      
     }catch(e) {
       return{error:e.message}
     }
-   }
+   },
+
+   async mensagensContatoQuery (userID, contactID) {
+    const conn = await connection();
+    try {
+      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
+      if(verifyIfUserAreInContact[0].length >=1) {
+        const getingMessages = await conn.query("select * from messagem WHERE IDContato = ? AND Remocao = ?",[contactID,0])
+        if(getingMessages[0].length >= 1) {
+          getingMessages[0].sort(a,b => {
+            return a - b
+          }
+        ) 
+        console.log(getingMessages[0])
+        }
+      }else {
+        return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
+      }
+    }catch(e) {
+      return{error:e.message}
+    }
+   },
+
+  async enviaMensagemQuery (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) {
+    const conn = await connection();
+    try {
+      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[IDContato,IDRemetente,IDContato,IDRemetente])
+      if(verifyIfUserAreInContact[0].length >=1) {
+        const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,Remocao,Texto])
+        if(sendingMessage[0].affectedRows >=1) {
+          return {sucess:"mensagem enviada com sucesso"}
+        }
+      }  return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
+  } catch(e) {
+    return {error:e.message}
+  }
+  }
 }
 
 module.exports = userInteractQueries;

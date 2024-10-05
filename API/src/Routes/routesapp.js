@@ -6,9 +6,13 @@ const accountManagement = require ('../Controllers/accountController');
 const petManagement = require("../Controllers/petController");
 const userInteractController = require("../Controllers/userInteractController");
 
+const app = express();
+
 
 function verificadorDoToken(req, res, next){
-  const token = req.headers['authorization'];
+  // const token = req.headers['authorization'];
+
+  const token = req.cookies.token;
   if (!token) return res.status(401).json({ auth: false, message: 'Não foi informado nenhum token.' });
   
   jwt.verify(token, process.env.SECRET, function(err, decoded) {
@@ -101,5 +105,14 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
   router.put("/EditaDados",verificadorDoToken, userInteractController.editaDadosCadastrais);
 
 
-  // router.get("/MensagensContato",verificadorDoToken, userInteractController.mensagensContato)
+  //Rota para puxar dados de todos em minha lista de contato
+  router.get("/MeusContatos",verificadorDoToken, userInteractController.meusContatos)
+
+  //Rota para puxar as mensagens que tiveram entre o contato selecionado.
+  router.get("/MensagensContato",verificadorDoToken, userInteractController.mensagensContato);
+
+
+  //Rota para enviar uma mensagem para o contato selecionado
+  router.post("/EnviaMensagem",verificadorDoToken, userInteractController.enviaMensagem)
+
 module.exports = router;

@@ -77,7 +77,15 @@ const accountManagement = {
 
           if (testRegex === true) {
             const verifyExistence = await AccountManagementQueries.autenticaUsuarioQuery(Email, Senha);
-            res.json(verifyExistence)
+          
+
+            res.cookie('token', verifyExistence.token, {
+              secure: true, // O cookie só será enviado em conexões HTTP
+              httpOnly: true, // O cookie não será acessível via JavaScript no navegador
+              maxAge: 3600000 // Tempo de vida do cookie em milissegundos (1 hora)
+            })
+            res.json({sucess:verifyExistence.sucess,auth:verifyExistence.auth})
+         
           } else {
             res.json({ error: "o valor inserido no campo Email, não corresponde a um Email valido", auth: false })
           }
@@ -91,7 +99,7 @@ const accountManagement = {
 
     }
     catch (e) {
-      res.json({ error: e, auth: false })
+      res.json({ error: e.message, auth: false })
     }
 
   }

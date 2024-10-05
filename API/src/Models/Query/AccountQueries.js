@@ -14,7 +14,7 @@ const AccountManagementQueries = {
         }
       }
       catch (e) {
-        return {error:"houve um erro ao tentar completar o envio de dados: " & e }
+        return {error:"houve um erro ao tentar completar o envio de dados: " & e.message }
       }
   },
   async verificaExistenciaUsuarioQuery (Email) {
@@ -28,7 +28,7 @@ const AccountManagementQueries = {
         return {sucess:"Usuário apto a prosseguir com cadastro."}
       }
     }catch(e) {
-      console.error(e)
+      return{error:e.message}
     }
   },
   async autenticaUsuarioQuery (Email,Senha) {
@@ -40,9 +40,14 @@ const AccountManagementQueries = {
         const authVerify = await bcrypt.compare(Senha,authResponse[0][0].Senha)
         if(authVerify === true) {
           
+
+
+
           const token = jwt.sign({ ID: authResponse[0][0].ID, Nome:authResponse[0][0].Nome,CEP:authResponse[0][0].CEP,Rua:authResponse[0][0].Rua,Numero:authResponse[0][0].Numero,Bairro:authResponse[0][0].Bairro,Estado:authResponse[0][0].Estado,DataNasc:authResponse[0][0].DataNasc,Email:authResponse[0][0].Email,Administrador:authResponse[0][0].Administrador,Cidade:authResponse[0][0].Cidade}, process.env.SECRET, {
             expiresIn: 10000 // tempo em que o token irá expirar em segundos
           });
+
+        
 
           return ({sucess:"Usuário logado com sucesso",auth:true,token:token})
           
@@ -55,7 +60,7 @@ const AccountManagementQueries = {
       }
     }
     catch (e) {
-      console.error(e)
+      return{error:e.message}
     }
   }
 }
