@@ -113,6 +113,9 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
 
 
   //Rota para enviar uma mensagem para o contato selecionado
-  router.post("/EnviaMensagem",verificadorDoToken, userInteractController.enviaMensagem)
+  router.post("/EnviaMensagem",verificadorDoToken, userInteractController.enviaMensagem);
+
+
+  router.put("/DeletaMensagemEnviada", verificadorDoToken, userInteractController.deletaMensagemEnviada)
 
 module.exports = router;

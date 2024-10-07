@@ -188,10 +188,8 @@ const userInteractQueries = {
  
 
     try{
-      const getingMyContacts = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ? ",[userID,userID ,0])
-      
-      const getingMyContactsWhereIAcceptedInvite = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDDestinatario=? AND c.Interessado = ?",[userID,userID ,0])
-      
+      const getingMyContacts = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ? OR u.ID=? AND c.IDDestinatario=? AND c.Interessado = ? ",[userID,userID ,0,userID,userID ,0])
+
       let unifyResultsNotInterest = []
 
       if(getingMyContacts[0].length >= 1) {
@@ -199,15 +197,7 @@ const userInteractQueries = {
          unifyResultsNotInterest.push(e)
          })
       }
-      if(getingMyContactsWhereIAcceptedInvite[0].length >=1) {
-        console.log("entrou")
-        getingMyContactsWhereIAcceptedInvite[0].forEach(e => {
-        console.log("entrou 2")
-         unifyResultsNotInterest.push(e)
-        })
-      }
-      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ?",[userID,userID ,1])
-      const getingMyContactsWhereIAcceptedInviteInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDDestinatario=? AND c.Interessado = ?",[userID,userID ,1])
+      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ? OR u.ID=? AND c.IDDestinatario=? AND c.Interessado = ?",[userID,userID ,1,userID,userID ,1])
       
       let unifyResultsInterestedsContacts = []
 
@@ -217,17 +207,9 @@ const userInteractQueries = {
           unifyResultsInterestedsContacts.push(e)
       })
       }
-     
-      if(getingMyContactsWhereIAcceptedInviteInterestedsInMyPet[0].length >= 1) {
-         getingMyContactsWhereIAcceptedInviteInterestedsInMyPet[0].forEach(e => {
-          unifyResultsInterestedsContacts.push(e)
-        })
-      }
-
-
 
      const returnedMessages =  unifyResultsInterestedsContacts.map(async e => {
-        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? limit 1;",[e.contatoID])
+        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
         if(takeLastMessage[0].length >=1) {
           console.log(e)
           e.ultimaMensagem = takeLastMessage[0][0].Texto
@@ -239,7 +221,7 @@ const userInteractQueries = {
       })
 
       const returnedMessagesNotInterest = unifyResultsNotInterest.map(async e => {
-        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? limit 1;",[e.contatoID])
+        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
         if(takeLastMessage[0].length >=1) {
           e.ultimaMensagem = takeLastMessage[0][0].Texto
           return e
@@ -268,13 +250,22 @@ const userInteractQueries = {
     try {
       const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
       if(verifyIfUserAreInContact[0].length >=1) {
-        const getingMessages = await conn.query("select * from messagem WHERE IDContato = ? AND Remocao = ?",[contactID,0])
+        const getingMessages = await conn.query("select ID as IDMensagem, DataDeEnvio, IDRemetente as quemEnviouAMensagem , Texto from mensagem WHERE IDContato = ? AND Remocao = ?",[contactID,0])
         if(getingMessages[0].length >= 1) {
-          getingMessages[0].sort(a,b => {
+          getingMessages[0].sort((a,b) => {
             return a - b
           }
         ) 
-        console.log(getingMessages[0])
+        getingMessages[0].forEach(e => {
+          if(e.quemEnviouAMensagem === userID) {
+            e.quemEnviouAMensagem = "Você Enviou"
+          }else {
+            e.quemEnviouAMensagem = "Enviado pelo contato"
+          }
+        })
+        return {sucess:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
+        }else {
+          return{error:"não possui nenhuma mensagem com o contato especificado"}
         }
       }else {
         return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
@@ -284,12 +275,12 @@ const userInteractQueries = {
     }
    },
 
-  async enviaMensagemQuery (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) {
+  async enviaMensagemQuery (DataDeEnvio,IDRemetente,IDContato,Texto) {
     const conn = await connection();
     try {
       const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[IDContato,IDRemetente,IDContato,IDRemetente])
       if(verifyIfUserAreInContact[0].length >=1) {
-        const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,Remocao,Texto])
+        const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,0,Texto])
         if(sendingMessage[0].affectedRows >=1) {
           return {sucess:"mensagem enviada com sucesso"}
         }
@@ -297,6 +288,18 @@ const userInteractQueries = {
   } catch(e) {
     return {error:e.message}
   }
+  },
+
+
+  async deletaMensagemEnviadaQuery (userID,MessageID) {
+    const conn = await connection();
+    try{
+      const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=?",[MessageID,userID])
+      if(deletingMessageRequisited[0].affectedRows >=1) return{sucess:"mensagem removida com sucesso"}
+      return{error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
+    }catch(e) {
+      return {error:e.message}
+    }
   }
 }
 

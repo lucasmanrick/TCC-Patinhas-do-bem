@@ -176,11 +176,22 @@ const userInteractController = {
     const DataDeEnvio = new Date();
     try{
       if(ID && IDContato) {
-       const sendRequestMessageToUser = await userInteractQueries.enviaMensagemQuery(DataDeEnvio,ID,IDContato,Remocao,Texto)
+       const sendRequestMessageToUser = await userInteractQueries.enviaMensagemQuery(DataDeEnvio,ID,IDContato,Texto)
       res.json(sendRequestMessageToUser)
       }else {
         res.json({error:"não foi informado todos dados necessários para fazer o envio da mensagem"})
       }
+    }catch(e) {
+      res.json({error:e.message})
+    }
+  },
+
+  deletaMensagemEnviada: async (req,res) => {
+    const {ID} = req.dataUser;
+    const {MessageID} = req.body;
+    try {
+       if(!ID,!MessageID) return res.json({error:"não foi informado todos dados necessários para exlusão da mensagem"})
+       res.json(await userInteractQueries.deletaMensagemEnviadaQuery(ID,MessageID))
     }catch(e) {
       res.json({error:e.message})
     }

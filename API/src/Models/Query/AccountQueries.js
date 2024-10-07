@@ -39,28 +39,22 @@ const AccountManagementQueries = {
       if(authResponse[0].length > 0) {
         const authVerify = await bcrypt.compare(Senha,authResponse[0][0].Senha)
         if(authVerify === true) {
-          
-
-
-
           const token = jwt.sign({ ID: authResponse[0][0].ID, Nome:authResponse[0][0].Nome,CEP:authResponse[0][0].CEP,Rua:authResponse[0][0].Rua,Numero:authResponse[0][0].Numero,Bairro:authResponse[0][0].Bairro,Estado:authResponse[0][0].Estado,DataNasc:authResponse[0][0].DataNasc,Email:authResponse[0][0].Email,Administrador:authResponse[0][0].Administrador,Cidade:authResponse[0][0].Cidade}, process.env.SECRET, {
             expiresIn: 10000 // tempo em que o token irá expirar em segundos
           });
 
-        
-
-          return ({sucess:"Usuário logado com sucesso",auth:true,token:token})
+          return{sucess:"Usuário logado com sucesso",auth:true,token:token}
           
         } else {
-          return ({error:"Email ou senha incorreta.",auth:false})
+          return {error:"Email ou senha incorreta.",auth:false}
         }
    
       }else {
-        return{error:"não foi identificado nenhum usuário com essas credenciais"}
+        return {error:"não foi identificado nenhum usuário com essas credenciais"}
       }
     }
     catch (e) {
-      return{error:e.message}
+      return {error:e.message}
     }
   }
 }
