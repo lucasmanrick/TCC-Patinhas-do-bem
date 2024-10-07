@@ -1,120 +1,136 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Certifique-se de ter o pacote instalado
-import api from '../../Service/tokenService'; // Supondo que seu serviço de API esteja configurado
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Image,
+  KeyboardAvoidingView,
+  Platform, 
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"; // Correção no import
+import * as ImagePicker from 'expo-image-picker'; // Importação do ImagePicker
+import api from "../../Service/tokenService"; // Certifique-se que esse caminho está correto para sua API configurada
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Para armazenamento do token
 
-const CadastroPet = ({ navigation }) => {
-  const [TipoAnimal, setTipoAnimal] = useState('');
-  const [Linhagem, setLinhagem] = useState('');
-  const [Idade, setIdade] = useState('');
-  const [Sexo, setSexo] = useState('');
-  const [Cor, setCor] = useState('');
-  const [Descricao, setDescricao] = useState('');
+const CadastroPet = ({ navigation, route }) => {
+  const [TipoAnimal, setTipoAnimal] = useState("");
+  const [Linhagem, setLinhagem] = useState("");
+  const [Idade, setIdade] = useState("");
+  const [Sexo, setSexo] = useState("");
+  const [Cor, setCor] = useState("");
+  const [Descricao, setDescricao] = useState("");
+  const [imagemSelecionada, setImagemSelecionada] = useState(null);
 
-  const cadastrarPet = async () => {
-    // Validações dos campos
+  useEffect(() => {
+    if (route.params?.imagemSelecionada) {
+      setImagemSelecionada(route.params.imagemSelecionada);
+    }
+  }, [route.params?.imagemSelecionada]);
+
+
+
+  const handleCadastroPet = async () => {
+    // Validação das entradas
     if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
-      Alert.alert('Atenção', 'Todos os campos são obrigatórios.');
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
       return;
     }
 
-    if (isNaN(Idade)) {
-      Alert.alert('Erro', 'A idade deve ser um número.');
-      return;
-    }
+    const petData = {
+      TipoAnimal: String(TipoAnimal),
+      Linhagem: String(Linhagem),
+      Idade: String(Idade),
+      Sexo: String(Sexo),
+      Cor: String(Cor),
+      Descricao: String(Descricao),
+    };
+
+    console.log("Dados do pet:", petData);
 
     try {
-      // Obter o token JWT armazenado
       const token = await AsyncStorage.getItem('@CodeApi:token');
 
       if (!token) {
-        Alert.alert('Erro', 'Você precisa estar autenticado para cadastrar um pet.');
+        Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
         return;
       }
 
-      
-      const dataRegistro = new Date().toISOString(); 
-      const IDDoador = token; 
 
-      const response = await api.post(
-        '/CadastraPet',
-        {
-            dataRegistro: new Date().toISOString(), // Certifique-se de que isso está correto
-            TipoAnimal,
-            Linhagem,
-            Idade: Number(Idade), // Assegure-se que a Idade é um número
-            Sexo,
-            Cor,
-            Descricao,
-            IDDoador: token // Certifique-se que este é o ID do doador
-          },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Envia o token JWT nos headers
-          },
-        }
-      );
+      const response = await api.post("/CadastraPet", petData, {
+        headers: {
+          Authorization: token, // Envia o token no cabeçalho
+          "Content-Type": "application/json",
+        },
+      }).then(e => (
+        Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
+        navigation.goBack()
+      ));
 
-      // Verificar a resposta do backend
-      if (response.data.success) {
-        Alert.alert('Sucesso', response.data.success);
-        navigation.navigate('Home'); // Navega para a tela principal
-      } else {
-        Alert.alert('Erro', response.data.error || 'Não foi possível cadastrar o pet.');
-      }
     } catch (error) {
-      console.log('Erro:', error); // Exibir o erro no console para ajudar na depuração
-      if (error.response) {
-        Alert.alert('Erro', `Erro do servidor: ${error.response.data.message}`);
-      } else {
-        Alert.alert('Erro', 'Erro ao conectar com o servidor.');
-      }
+      console.error("Erro ao cadastrar pet:", error);
+      Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
     }
   };
 
+
+
+  const renderInput = (placeholder, iconName, value, onChangeText) => (
+    <View style={styles.inputContainer}>
+      <MaterialIcons name={iconName} size={24} color="#B0BEC5" />
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+      />
+    </View>
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Cadastro de Pet</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Tipo de Animal"
-        value={TipoAnimal}
-        onChangeText={setTipoAnimal}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Linhagem"
-        value={Linhagem}
-        onChangeText={setLinhagem}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Idade"
-        value={Idade}
-        onChangeText={setIdade}
-        keyboardType="numeric"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Sexo"
-        value={Sexo}
-        onChangeText={setSexo}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Cor"
-        value={Cor}
-        onChangeText={setCor}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Descrição"
-        value={Descricao}
-        onChangeText={setDescricao}
-        multiline
-      />
-      <Button title="Cadastrar Pet" onPress={cadastrarPet} />
+    <KeyboardAvoidingView 
+    style={{ flex: 1 }} 
+    behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    keyboardVerticalOffset={0} // Ajuste conforme necessário
+  >
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <View style={styles.container}>
+        {/* Botão de Voltar */}
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={24} color="#000" />
+          <Text style={styles.backButtonText}>Voltar</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.header}>Cadastrar Pet</Text>
+
+        <TouchableOpacity style={styles.avatar} onPress={() => navigation.navigate("Biblioteca")}>
+          {imagemSelecionada ? (
+            <Image
+              source={{ uri: imagemSelecionada }}
+              style={{ width: 250, height: 300, borderRadius: 50 }}
+            />
+          ) : (
+            <Ionicons name="add-outline" size={40} color="#fff" style={{ marginTop: 6 }} />
+          )}
+        </TouchableOpacity>
+
+        {renderInput("Tipo do Animal", "pets", TipoAnimal, setTipoAnimal)}
+        {renderInput("Linhagem", "category", Linhagem, setLinhagem)}
+        {renderInput("Idade", "calendar-today", Idade, setIdade)}
+        {renderInput("Sexo", "person", Sexo, setSexo)}
+        {renderInput("Cor", "palette", Cor, setCor)}
+        {renderInput("Descrição", "description", Descricao, setDescricao)}
+
+        <TouchableOpacity style={styles.button} onPress={handleCadastroPet}>
+          <Text style={styles.buttonText}>Enviar</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -122,23 +138,72 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#fff",
   },
-  title: {
+  header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
-    color: '#134973',
+    textAlign: "center",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#B0BEC5",
+    marginBottom: 15,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 15,
-    borderRadius: 5,
-    backgroundColor: '#fff',
+    flex: 1,
+    height: 40,
+    fontSize: 16,
+    marginLeft: 10,
+    color: "#333",
+  },
+  button: {
+    backgroundColor: "#134973",
+    padding: 15,
+    borderRadius: 15,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  avatar: {
+    width: 250,
+    height: 300,
+    borderRadius: 50,
+    backgroundColor: "#E1E2E6",
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    padding:20
+  },
+  imageAvatar: {
+    width: 250,
+    height: 300,
+    borderRadius: 50,
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    position: 'absolute',
+    top: 15,
+    left: 10,
+    zIndex: 1,
+  },
+  backButtonText: {
+    color: '#000',
+    fontSize: 18,
+    marginLeft: 5,
   },
 });
+
 
 export default CadastroPet;

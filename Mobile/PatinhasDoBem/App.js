@@ -15,6 +15,7 @@ import TelaDePerfil from './Src/Pages/Profile/TelaDePerfil';
 import TelaDePost from './Src/Pages/Post/TelaPost';
 import TelaDePets from './Src/Pages/Animals/VisualizarPet';
 import CadastroPet from './Src/Pages/CadastroPet/Cadastro';
+import TelaBiblioteca from './Src/Pages/Biblioteca/telaBiblioteca';
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -112,6 +113,13 @@ export default function App() {
           component={CadastroPet}
           options={{ headerShown: false }} // Oculta o header
         />
+
+        <Stack.Screen
+          name="Biblioteca"
+          component={TelaBiblioteca}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
 
         {/* Tela Home agora usa Bottom Tabs */}
         <Stack.Screen
