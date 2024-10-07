@@ -22,8 +22,10 @@ const userInteractQueries = {
       }else {
         const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)",[UserID,0,IDDestinatario])
         if(sendInviteToNewFriend[0].affectedRows >= 1) {
+          await conn.query ("insert into Notificacao (Texto,IDDestinatario,Recebimento) VALUES (?,?,?)",["Você acaba de receber uma nova solicitação de amizade",IDDestinatario,0])
           return {sucess:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
         }
+        return {error:"não foi feito a solicitação de amizade, pois não foi afetado nenhuma linha do banco de dados"}
       }
     }catch (e) {
       return {error:e.message}
@@ -296,7 +298,7 @@ const userInteractQueries = {
     try{
       const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=?",[MessageID,userID])
       if(deletingMessageRequisited[0].affectedRows >=1) return{sucess:"mensagem removida com sucesso"}
-      return{error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
+      return {error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
     }catch(e) {
       return {error:e.message}
     }
