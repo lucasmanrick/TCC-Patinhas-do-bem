@@ -9,13 +9,15 @@ import {
   Alert,
   Image,
   KeyboardAvoidingView,
-  Platform, 
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons"; // Correção no import
-import * as ImagePicker from 'expo-image-picker'; // Importação do ImagePicker
-import api from "../../Service/tokenService"; // Certifique-se que esse caminho está correto para sua API configurada
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import api from "../../Service/tokenService";
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Para armazenamento do token
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Importações do Firebase Storage
+import { storage } from "../../Firebase/FirebaseConfig";
+import * as ImageManipulator from 'expo-image-manipulator';
 
 const CadastroPet = ({ navigation, route }) => {
   const [TipoAnimal, setTipoAnimal] = useState("");
@@ -29,73 +31,72 @@ const CadastroPet = ({ navigation, route }) => {
   useEffect(() => {
     if (route.params?.imagemSelecionada) {
       setImagemSelecionada(route.params.imagemSelecionada);
+
     }
   }, [route.params?.imagemSelecionada]);
 
 
+const handleCadastroPet = async () => {
+  // Validação das entradas
+  if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
+    Alert.alert("Erro", "Por favor, preencha todos os campos.");
+    return;
+  }
 
-  const handleCadastroPet = async () => {
-    // Validação das entradas
-    if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+  const petData = {
+    TipoAnimal: String(TipoAnimal),
+    Linhagem: String(Linhagem),
+    Idade: String(Idade),
+    Sexo: String(Sexo),
+    Cor: String(Cor),
+    Descricao: String(Descricao),
+  };
+
+  console.log("Dados do pet:", petData);
+
+
+  try {
+    const token = await AsyncStorage.getItem('@CodeApi:token');
+
+    if (!token) {
+      Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
       return;
     }
 
-    const petData = {
-      TipoAnimal: String(TipoAnimal),
-      Linhagem: String(Linhagem),
-      Idade: String(Idade),
-      Sexo: String(Sexo),
-      Cor: String(Cor),
-      Descricao: String(Descricao),
-    };
-
-    console.log("Dados do pet:", petData);
-
-    try {
-      const token = await AsyncStorage.getItem('@CodeApi:token');
-
-      if (!token) {
-        Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
-        return;
-      }
-
-
-      const response = await api.post("/CadastraPet", petData, {
-        headers: {
-          Authorization: token, // Envia o token no cabeçalho
-          "Content-Type": "application/json",
-        },
-      }).then(e => (
-        Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
-        navigation.goBack()
-      ));
-
-    } catch (error) {
-      console.error("Erro ao cadastrar pet:", error);
-      Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
-    }
-  };
+    const response = await api.post("/CadastraPet", petData, {
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+    }).then(e => (
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
+      navigation.goBack()
+    ));
+  } catch (error) {
+    console.error("Erro ao cadastrar pet:", error);
+    Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
+  }
+};
 
 
 
-  const renderInput = (placeholder, iconName, value, onChangeText) => (
-    <View style={styles.inputContainer}>
-      <MaterialIcons name={iconName} size={24} color="#B0BEC5" />
-      <TextInput
-        style={styles.input}
-        placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
-      />
-    </View>
-  );
+const renderInput = (placeholder, iconName, value, onChangeText) => (
+  <View style={styles.inputContainer}>
+    <MaterialIcons name={iconName} size={24} color="#B0BEC5" />
+    <TextInput
+      style={styles.input}
+      placeholder={placeholder}
+      value={value}
+      onChangeText={onChangeText}
+    />
+  </View>
+);
 
-  return (
-    <KeyboardAvoidingView 
-    style={{ flex: 1 }} 
-    behavior={Platform.OS === "ios" ? "padding" : "height"} 
-    keyboardVerticalOffset={0} // Ajuste conforme necessário
+return (
+  <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    keyboardVerticalOffset={0}
   >
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.container}>
@@ -130,8 +131,8 @@ const CadastroPet = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
     </ScrollView>
-    </KeyboardAvoidingView>
-  );
+  </KeyboardAvoidingView>
+);
 };
 
 const styles = StyleSheet.create({
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
-    padding:20
+    padding: 20
   },
   imageAvatar: {
     width: 250,
