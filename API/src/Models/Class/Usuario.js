@@ -23,7 +23,7 @@ class Usuario {
         const uRes = await conn.query("INSERT INTO Usuario (Nome, CEP, Rua, Numero, Bairro, Estado, DataNasc, Email, Senha, Administrador,Cidade) VALUES (?,?,?,?,?,?,?,?,?,?,?)",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,0,this.Cidade]);
           console.log(uRes)
         if(uRes[0].affectedRows >=1) {
-          return {sucess:"você conseguiu se cadastrar com sucesso!!"}
+          return {success: "você conseguiu se cadastrar com sucesso!!"}
         }else {
           return {error:"não foi possivel cadastrar o usuário no nosso sistema tente novamente!"}
         }
@@ -41,7 +41,7 @@ class Usuario {
       if(existenceReturn[0].length > 0) {
         return {error:"Um usuário com esse Email já está registrado em nosso sistema, tente utilizar outro!"}
       }else {
-        return {sucess:"Usuário apto a prosseguir com cadastro."}
+        return {success: "Usuário apto a prosseguir com cadastro."}
       }
     }catch(e) {
       return{error:e.message}
@@ -60,7 +60,7 @@ class Usuario {
             expiresIn: 10000 // tempo em que o token irá expirar em segundos
           });
 
-          return{sucess:"Usuário logado com sucesso",auth:true,token:token}
+          return{success: "Usuário logado com sucesso",auth:true,token:token}
           
         } else {
           return {error:"Email ou senha incorreta.",auth:false}

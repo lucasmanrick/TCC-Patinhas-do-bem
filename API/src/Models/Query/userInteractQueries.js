@@ -23,7 +23,7 @@ const userInteractQueries = {
         const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)",[UserID,0,IDDestinatario])
         if(sendInviteToNewFriend[0].affectedRows >= 1) {
           await conn.query ("insert into Notificacao (Texto,IDDestinatario,Recebimento) VALUES (?,?,?)",["Você acaba de receber uma nova solicitação de amizade",IDDestinatario,0])
-          return {sucess:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
+          return {success:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
         }
         return {error:"não foi feito a solicitação de amizade, pois não foi afetado nenhuma linha do banco de dados"}
       }
@@ -37,7 +37,7 @@ const userInteractQueries = {
     try {
       const removingInvite = await conn.query("delete from solicitacaocontato where id=?", [solicitacaoID])
       if(removingInvite[0].affectedRows >=1) {
-        return{sucess:"solicitação de amizade removida com sucesso, se o usuário tem interesse em algum pet desse usuário o interesse irá permanecer."}
+        return{success:"solicitação de amizade removida com sucesso, se o usuário tem interesse em algum pet desse usuário o interesse irá permanecer."}
       }
         return {error:"não foi retirado a solicitação de amizade especificada, a mesma pode não existir ou já ter sido removida tente novamente"}
       
@@ -50,7 +50,7 @@ const userInteractQueries = {
     try {
      const myInvites = await conn.query("select sc.ID,sc.IDSolicitante,sc.Interessado, u.Nome from solicitacaocontato as sc JOIN usuario as u WHERE IDDestinatario = ? AND u.ID = sc.IDSolicitante",[UserID,])
     if(myInvites[0].length >=1) {
-      return {sucess:"retornando todas solicitações de contato enviadas para mim", invites:myInvites[0]}
+      return {success:"retornando todas solicitações de contato enviadas para mim", invites:myInvites[0]}
     }else {
       return{error:"não foi identificado nenhuma solicitação de contato ou houve algum problema durante o processo."}
     }
@@ -71,7 +71,7 @@ const userInteractQueries = {
           if(acceptInvite[0].affectedRows >= 1) {
             const deleteInviteExistence = await conn.query("DELETE from solicitacaocontato WHERE ID=?",[verifyExistenceInvite[0][0].ID])
             if(deleteInviteExistence[0].affectedRows >=1) {
-              return{sucess:"você aceitou a solicitação de amizade com sucesso!"}
+              return{success:"você aceitou a solicitação de amizade com sucesso!"}
             }else {
               return{error:"não foi possivel aceitar a solicitação de amizade, tente novamente!"}
             }
@@ -99,7 +99,7 @@ const userInteractQueries = {
 
 
       if(returnDataCleaned[0].length >=1) {
-       return {sucess:"retornando dados do seu perfil para uso", dadosUsuario: returnDataCleaned[0][0],dadosPetsUsuario:returnPetsUser.dataResponse}
+       return {success:"retornando dados do seu perfil para uso", dadosUsuario: returnDataCleaned[0][0],dadosPetsUsuario:returnPetsUser.dataResponse}
       }else {
         return{error:"não foi possivel retornar dados do seu perfil, tente novamente por favor"}
       }
@@ -125,7 +125,7 @@ const userInteractQueries = {
       }
 
       if(returnAnotherUserProfile[0].length >=1) {
-        return {sucess: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente}
+        return {success: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente}
       } else {
         return {error:"não foi possivel retornar dados do perfil do usuário especificado"}
       }
@@ -139,12 +139,12 @@ const userInteractQueries = {
         const deletingSomeUser = await conn.query("DELETE FROM usuario WHERE ID=?",[UsuarioASerRemovido]);
        
         if(deletingSomeUser[0].affectedRows >=1) {
-          return {sucess:"usuário removido por completo do sistema"}
+          return {success:"usuário removido por completo do sistema"}
         }
       } else if (UsuarioRequisitorID && !UsuarioASerRemovido) {
         const deletingYourselfProfile = await conn.query("DELETE FROM usuario WHERE id=?",[UsuarioRequisitorID])
         if(deletingYourselfProfile[0].affectedRows >=1) {
-          return {sucess:"seu perfil foi deletado com sucesso de nosso sistema!."}
+          return {success:"seu perfil foi deletado com sucesso de nosso sistema!."}
         }
       }
     }catch(e) {
@@ -157,7 +157,7 @@ const userInteractQueries = {
     try{                                               
       const sendToDBRefreshUserData = await conn.query("UPDATE usuario SET Nome = ?, CEP=?, Rua=?, Numero=?, Bairro=?, Estado=?, DataNasc=?, Email=?, Senha=?,Cidade=? WHERE ID=?",[userForm.NomeUsuario,userForm.Cep,userForm.Rua,userForm.Numero,userForm.Bairro,userForm.Estado,userForm.DataNasc,userForm.Email,userForm.Senha,userForm.Cidade,userForm.ID])
       if(sendToDBRefreshUserData[0].affectedRows >=1) {
-        return{sucess:"atualizado os dados do usuário com sucesso"}
+        return{success:"atualizado os dados do usuário com sucesso"}
       }else {
         return{error:"não foi possivel atualizar os dados do usuário, tente novamente!"}
       }
@@ -173,7 +173,7 @@ const userInteractQueries = {
       if(verifyIfUserAreInContact[0].length >=1) {
         const removingContact = await conn.query("delete from contato WHERE ID=?",[contactID])
         if(removingContact[0].affectedRows >=1) {
-          return{sucess:"contato removido da sua lista de contatos com sucesso."}
+          return{success:"contato removido da sua lista de contatos com sucesso."}
         }else {
           return{error:"não foi possivel remover o contato da sua lista, tente novamente!"}
         }
@@ -237,7 +237,7 @@ const userInteractQueries = {
       unifyResultsNotInterest = await Promise.all(returnedMessagesNotInterest)
      
       if(unifyResultsInterestedsContacts.length >= 1 || unifyResultsNotInterest.length >=1) {
-        return {sucess: "retornando dados de todos seus contatos para o front end", contatosDeInteresses:unifyResultsInterestedsContacts, contatosSemInteresses:unifyResultsNotInterest}
+        return {success: "retornando dados de todos seus contatos para o front end", contatosDeInteresses:unifyResultsInterestedsContacts, contatosSemInteresses:unifyResultsNotInterest}
       }
 
       return {error:"não há nenhum contato para ser retornado!"}
@@ -265,7 +265,7 @@ const userInteractQueries = {
             e.quemEnviouAMensagem = "Enviado pelo contato"
           }
         })
-        return {sucess:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
+        return {success:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
         }else {
           return{error:"não possui nenhuma mensagem com o contato especificado"}
         }
@@ -284,7 +284,7 @@ const userInteractQueries = {
       if(verifyIfUserAreInContact[0].length >=1) {
         const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,0,Texto])
         if(sendingMessage[0].affectedRows >=1) {
-          return {sucess:"mensagem enviada com sucesso"}
+          return {success:"mensagem enviada com sucesso"}
         }
       }  return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
   } catch(e) {
@@ -297,7 +297,7 @@ const userInteractQueries = {
     const conn = await connection();
     try{
       const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=?",[MessageID,userID])
-      if(deletingMessageRequisited[0].affectedRows >=1) return{sucess:"mensagem removida com sucesso"}
+      if(deletingMessageRequisited[0].affectedRows >=1) return{success:"mensagem removida com sucesso"}
       return {error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
     }catch(e) {
       return {error:e.message}
