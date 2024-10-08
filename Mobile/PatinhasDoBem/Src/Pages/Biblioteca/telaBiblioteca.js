@@ -4,15 +4,12 @@ import * as MediaLibrary from 'expo-media-library';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 
-// Obtendo a largura da tela para ajustar as imagens
 const windowWidth = Dimensions.get('window').width;
 
 export default function TelaBiblioteca({ navigation }) {
   const [galleryImages, setGalleryImages] = useState([]);
   const [permission, setPermission] = useState(null);
-  const [image, setImage] = useState(null);
 
-  // Solicita permissão e carrega as imagens da galeria
   const loadGalleryImages = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     setPermission(status === 'granted');
@@ -33,10 +30,10 @@ export default function TelaBiblioteca({ navigation }) {
       setGalleryImages(imageUris);
     } else {
       console.log('Permissão para acessar galeria negada');
+      Alert.alert("Atenção", "Permissão para acessar a galeria negada.");
     }
   };
 
-  // Função para tirar foto com a câmera e salvar na galeria
   const takePhoto = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status === 'granted') {
@@ -45,35 +42,27 @@ export default function TelaBiblioteca({ navigation }) {
         aspect: [4, 3],
         quality: 1,
       });
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-        await MediaLibrary.saveToLibraryAsync(result.assets[0].uri); // Salva na galeria
+      if (!result.cancelled) {
+        await MediaLibrary.saveToLibraryAsync(result.assets[0].uri);
         setGalleryImages([result.assets[0].uri, ...galleryImages]);
+        Alert.alert("Sucesso", "Foto salva na galeria.");
       }
     } else {
       console.log('Permissão para usar a câmera negada');
+      Alert.alert("Atenção", "Permissão para usar a câmera negada.");
     }
   };
 
-  // Função para selecionar a imagem e navegar para a tela de cadastro
   const selectImageForProfile = (uri) => {
     Alert.alert(
       'Selecionar Foto',
       'Deseja usar esta foto como perfil?',
       [
-        {
-          text: 'Cancelar',
-          style: 'cancel',
-        },
-        {
-          text: 'Usar como perfil',
-          onPress: () => {
-            setImage(uri); // Define a foto selecionada como perfil
-            // Navega para a tela de cadastro de pet e passa a imagem
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Usar como perfil', onPress: () => {
             navigation.navigate('Pet', { imagemSelecionada: uri });
             Alert.alert('Foto de perfil atualizada!');
-          },
-        },
+          }},
       ],
       { cancelable: true }
     );
@@ -91,7 +80,6 @@ export default function TelaBiblioteca({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Botão de Voltar */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#fff" />
         <Text style={styles.backButtonText}>Voltar</Text>
@@ -99,18 +87,16 @@ export default function TelaBiblioteca({ navigation }) {
 
       <Text style={styles.headerText}>Adicionar Foto</Text>
 
-      {/* Botão para tirar foto */}
       <TouchableOpacity style={styles.cameraButton} onPress={takePhoto}>
         <Ionicons name="camera" size={32} color="white" />
       </TouchableOpacity>
 
-      {/* Galeria de Imagens */}
       {permission ? (
         <FlatList
           data={galleryImages}
           keyExtractor={(item, index) => index.toString()}
           renderItem={renderItem}
-          numColumns={4} // Agora são 4 colunas
+          numColumns={4}
         />
       ) : (
         <Text style={styles.permissionText}>
@@ -148,7 +134,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
-    marginTop: 60, // Ajuste para o título ficar abaixo do botão de voltar
+    marginTop: 60,
   },
   cameraButton: {
     alignSelf: 'center',
@@ -168,8 +154,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   image: {
-    width: (windowWidth / 4) - 10, // Ajusta para dividir o espaço uniformemente
-    height: (windowWidth / 4) - 10, // Mantém a proporção quadrada
+    width: (windowWidth / 4) - 10,
+    height: (windowWidth / 4) - 10,
     margin: 5,
     borderRadius: 10,
   },

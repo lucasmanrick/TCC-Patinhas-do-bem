@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 
 const accountManagement = {
   cadastraUsuario: async (req, res) => {
+    console.log(req.body);
+
 
     try {
       const { NomeUsuario, DataNasc, Email, Senha, Cep, Rua, Numero, Bairro, Estado, Cidade } = req.body
@@ -34,16 +36,19 @@ const accountManagement = {
         const re = /\S+@\S+\.\S+/;
         const testRegex = re.test(Email);
 
+
         if(testRegex === false) {
          return res.json({error:"seu e-mail é invalido verifique se está correto e tente novamente."})
         } 
         const hashedPassword = await bcrypt.hash(Senha, 10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
         let newUser = new Usuario(null,NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
 
+
         const validaCadastroAnterior = await newUser.verificaExistenciaUsuarioQuery()
         if (validaCadastroAnterior.error) {
           return res.json(validaCadastroAnterior)
         } else {
+
           const sendingData = await newUser.cadastraUsuarioQuery()
           return res.json(sendingData)
         }
@@ -55,6 +60,7 @@ const accountManagement = {
 
     catch (e) {
       return res.json({ error: e.message})
+
     }
 
   },

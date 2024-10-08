@@ -96,6 +96,12 @@ class TelaRegistro extends Component {
       return;
     }
 
+    const numeroFormatado = parseInt(Numero, 10);
+    if (isNaN(numeroFormatado)) {
+      Alert.alert("Erro", "O campo Número deve ser um valor numérico.");
+      return;
+    }
+
 
     const formattedDate = dataNascimento.toISOString().split('T')[0];
 
@@ -107,14 +113,14 @@ class TelaRegistro extends Component {
       Senha,
       Cep,
       Rua,
-      Numero,
+      Numero:numeroFormatado ,
       Bairro,
       Cidade,
       Estado,
     });
 
 
-    
+
 
     try {
       const response = await api.post('/Cadastro', {
@@ -124,16 +130,21 @@ class TelaRegistro extends Component {
         Senha,
         Cep,
         Rua,
-        Numero,
+        Numero: numeroFormatado,
         Bairro,
         Cidade,
         Estado,
       }).then(e => (
+        console.log(e.data),
+
         Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
-        this.props.navigation.navigate('Home')
+        this.props.navigation.navigate('Login')
+      )).catch(error => (
+        console.log(error)
+
       ));
 
-     
+
     } catch (error) {
       if (error.response) {
         console.error("Response Error:", error.response.data);
@@ -146,7 +157,7 @@ class TelaRegistro extends Component {
     }
   };
 
-  
+
   showDatepicker = () => {
     this.setState({ showDatePicker: true });
   };
@@ -196,12 +207,12 @@ class TelaRegistro extends Component {
           style={{ marginTop: -100, width: 460, height: 350 }}
         />
         {this.state.fontLoaded && (
-          <Text style={styles.greeting}>{`Bem-vindo ao\nPatinhas do Bem`}</Text>
+          <Text style={styles.greeting}>{"Bem-vindo ao\nPatinhas do Bem"}</Text>
         )}
 
         <TouchableOpacity style={styles.avatar}>
           <Ionicons
-            name="add-outline" // Corrigir o nome do ícone
+            name="add-outline" //
             size={40}
             color="#fff"
             style={{ marginTop: 6 }}
