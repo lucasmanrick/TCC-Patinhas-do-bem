@@ -13,12 +13,12 @@ const userInteractController = {
 
       if(ID && IDDestinatario && typeof(IDDestinatario) === 'number') {
         const requestInvite = await userInteractQueries.enviarSolicitacaoDeAmizadeQuery(ID,IDDestinatario);
-        res.json(requestInvite)
+        return res.json(requestInvite)
       }
 
     }
     catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -28,12 +28,12 @@ const userInteractController = {
 
       if(inviteID) {
         const sendRemoveRequisition = await userInteractQueries.removeSolicitacaoDeAmizadeQuery(inviteID);
-        res.json(sendRemoveRequisition)
+        return res.json(sendRemoveRequisition)
       }else {
-        res.json({error:"você não especificou uma solicitação de amizade que há de ser excluida."})
+        return res.json({error:"você não especificou uma solicitação de amizade que há de ser excluida."})
       }
     }catch (e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -43,11 +43,11 @@ const userInteractController = {
 
       if(ID) {
         const getMyInvites = await userInteractQueries.minhasSolicitacoesQuery(ID)
-        res.json(getMyInvites)
+        return res.json(getMyInvites)
       }
     }
     catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -57,12 +57,12 @@ const userInteractController = {
     try {
       if(ID && inviteID) {
         const acceptInviteRequest = await userInteractQueries.aceitaSolicitacaoQuery(ID,inviteID);
-        res.json(acceptInviteRequest)
+        return res.json(acceptInviteRequest)
       }else {
-        res.json({error:"faltam informações para que a solicitação de amizade desejada seja aceita"})
+        return res.json({error:"faltam informações para que a solicitação de amizade desejada seja aceita"})
       }
     }catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -74,14 +74,14 @@ const userInteractController = {
 
       if(userBeReturnedID) {
         const dataReturnUserEspecified = await userInteractQueries.profileUserQuery(userBeReturnedID,ID)
-        res.json(dataReturnUserEspecified)
+        return res.json(dataReturnUserEspecified)
       }else {
         const dataReturnUser = await userInteractQueries.profileUserQuery(null,ID)
-        res.json(dataReturnUser)
+        return res.json(dataReturnUser)
       }
     }
     catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -95,16 +95,16 @@ const userInteractController = {
 
       if(userToBeDeletedID && Administrador === 1) {
         const sendingRequestRemoveUser = await userInteractQueries.removeDadosUsuarioQuery(ID,userToBeDeletedID);
-        res.json(sendingRequestRemoveUser)
+        return res.json(sendingRequestRemoveUser)
       } 
       else {
-        const sendingRequestToDeletYourself = await userInteractQueries.removeDadosFuncionarioQuery(ID);
-        res.json(sendingRequestToDeletYourself)
+        const sendingRequestToDeletYourself = await userInteractQueries.removeDadosUsuarioQuery(ID);
+        return res.json(sendingRequestToDeletYourself)
       }
 
     }
     catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -117,12 +117,12 @@ const userInteractController = {
         const hashedNewPassword = await bcrypt.hash(Senha, 10); 
         const newUserGenerate = new Usuario(ID,NomeUsuario,DataNasc,Email,hashedNewPassword,Cep,Rua,Numero,Bairro,Estado,Cidade)
         const sendingDataEdited = await userInteractQueries.editaDadosCadastraisQuery(newUserGenerate)
-        res.json(sendingDataEdited)
+        return res.json(sendingDataEdited)
       }else {
-        res.json({error:"falta informações para ser enviado "})
+        return res.json({error:"falta informações para ser enviado "})
       }
     }catch (e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -133,12 +133,12 @@ const userInteractController = {
 
       if(ID && IDContato) {
         const sendRequestRemoveContact = await userInteractQueries.removeUsuarioDaListaDeContatosQuery(IDContato,ID)
-        res.json(sendRequestRemoveContact)
+        return res.json(sendRequestRemoveContact)
       }else {
-        res.json({error:"não foi possivel remover o usuário da lista de contato pois não falta informações para ser feito a requisição"})
+        return res.json({error:"não foi possivel remover o usuário da lista de contato pois não falta informações para ser feito a requisição"})
       }
     }catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -147,9 +147,9 @@ const userInteractController = {
     try {
       if(!ID) return res.json({error:"não é possivel puxar os contatos, pois não foi especificado o Usuário"})
        const takeUsersOnMyContacts = await userInteractQueries.meusContatosQuery(ID);
-       res.json(takeUsersOnMyContacts)
+       return res.json(takeUsersOnMyContacts)
     }catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -160,13 +160,13 @@ const userInteractController = {
     try {
       if(ID && IDContato) {
         const getMessagesWithMyContact = await userInteractQueries.mensagensContatoQuery(ID,IDContato)
-        res.json(getMessagesWithMyContact)
+        return res.json(getMessagesWithMyContact)
       }else {
-        res.json({error:"não foi informado os dados necessários para retornar mensagens com este contato"})
+        return res.json({error:"não foi informado os dados necessários para retornar mensagens com este contato"})
       }
       
     }catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -177,12 +177,12 @@ const userInteractController = {
     try{
       if(ID && IDContato) {
        const sendRequestMessageToUser = await userInteractQueries.enviaMensagemQuery(DataDeEnvio,ID,IDContato,Texto)
-      res.json(sendRequestMessageToUser)
+      return res.json(sendRequestMessageToUser)
       }else {
-        res.json({error:"não foi informado todos dados necessários para fazer o envio da mensagem"})
+        return res.json({error:"não foi informado todos dados necessários para fazer o envio da mensagem"})
       }
     }catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   },
 
@@ -191,9 +191,9 @@ const userInteractController = {
     const {MessageID} = req.body;
     try {
        if(!ID,!MessageID) return res.json({error:"não foi informado todos dados necessários para exlusão da mensagem"})
-       res.json(await userInteractQueries.deletaMensagemEnviadaQuery(ID,MessageID))
+       return res.json(await userInteractQueries.deletaMensagemEnviadaQuery(ID,MessageID))
     }catch(e) {
-      res.json({error:e.message})
+      return res.json({error:e.message})
     }
   }
 }

@@ -35,7 +35,7 @@ const petManagement = {
       }
     }
     catch(e) {
-      res.json ({error:e})
+      res.json ({error:e.message})
     }
   },
 
@@ -45,7 +45,6 @@ const petManagement = {
       const {PetID,VerifyForm} = req.body
 
       if(IDDoador,PetID,VerifyForm) {
-        const petForm = new Pet();
         const sendValidations = await Pet.removePetDaAdocaoQuery(IDDoador,PetID,VerifyForm)
         res.json(sendValidations)
       } else {
@@ -53,7 +52,7 @@ const petManagement = {
       }
     }
     catch(e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   },
 
@@ -66,7 +65,7 @@ const petManagement = {
       }
     }
     catch (e) {
-      res.json({error:e})
+      res.json({error:e.message})
     }
   },
 
@@ -77,15 +76,15 @@ const petManagement = {
       console.log(Estado,ID)
       if(Estado,ID) {
         const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID);
-        res.json(receivePets)
+        return res.json(receivePets)
       }
       else {
-        res.json({error:"não foi possivel identificar a localidade do usuário para puxar pets da proximidade"})
+        return res.json({error:"não foi possivel identificar a localidade do usuário para puxar pets da proximidade"})
       }
 
     }
     catch (e) {
-      res.json({error:e})
+      return res.json({error:e.message})
     }
   },
 
@@ -94,17 +93,15 @@ const petManagement = {
       const {ID} = req.dataUser;
       const {PetID} = req.body;
 
-      console.log(req.dataUser)
-
       if(ID,PetID) {
         const intrest = await Pet.demonstrarInteresseEmPetQuery(ID,PetID)
-        res.json(intrest)
+        return res.json(intrest)
       }else{
-        res.json({error:"não foi informado todos dados necessários para demonstrar interesse em um pet"})
+        return res.json({error:"não foi informado todos dados necessários para demonstrar interesse em um pet"})
       }
     }
     catch(e) {
-      res.json({error:e})
+      return res.json({error:e.message})
     }
   },
 
@@ -114,16 +111,16 @@ const petManagement = {
 
      if(MeuPetID) {
       const analyzeIntrest = await Pet.interessadosMeuPetQuery(MeuPetID);
-      res.json(analyzeIntrest)
+      return res.json(analyzeIntrest)
      }else {
-      res.json({error:"não foi informado o id do pet para identificar os interessados no mesmo."})
+      return res.json({error:"não foi informado o id do pet para identificar os interessados no mesmo."})
      }
 
      
 
     }
     catch(e) {
-      res.json ({error:e})
+     return res.json ({error:e.message})
     }
   },
 
@@ -131,10 +128,10 @@ const petManagement = {
     try {
       const {ID} = req.dataUser;
       const myInterests = await Pet.meusInteressesQuery(ID)
-      res.json(myInterests)
+      return res.json(myInterests)
     }
     catch (e) {
-      res.json({error:e})
+      return res.json({error:e.message})
     }
   },
 
@@ -143,10 +140,10 @@ const petManagement = {
       const {ID} = req.dataUser;
       const {PetID} = req.body;
       const removeInterest = await Pet.removerInteressePetQuery(PetID,ID);
-      res.json({removeInterest})
+      return res.json({removeInterest})
     }
     catch (e) {
-      res.json({error:e})
+      return res.json({error:e.message})
     }
   }
 }
