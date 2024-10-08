@@ -45,6 +45,7 @@ const petManagement = {
       const {PetID,VerifyForm} = req.body
 
       if(IDDoador,PetID,VerifyForm) {
+        const petForm = new Pet();
         const sendValidations = await Pet.removePetDaAdocaoQuery(IDDoador,PetID,VerifyForm)
         res.json(sendValidations)
       } else {
