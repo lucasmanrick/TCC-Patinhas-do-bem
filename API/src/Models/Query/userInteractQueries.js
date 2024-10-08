@@ -22,8 +22,10 @@ const userInteractQueries = {
       }else {
         const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)",[UserID,0,IDDestinatario])
         if(sendInviteToNewFriend[0].affectedRows >= 1) {
+          await conn.query ("insert into Notificacao (Texto,IDDestinatario,Recebimento) VALUES (?,?,?)",["Você acaba de receber uma nova solicitação de amizade",IDDestinatario,0])
           return {sucess:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
         }
+        return {error:"não foi feito a solicitação de amizade, pois não foi afetado nenhuma linha do banco de dados"}
       }
     }catch (e) {
       return {error:e.message}
@@ -185,13 +187,122 @@ const userInteractQueries = {
 
    async meusContatosQuery (userID) {
     const conn = await connection();
+ 
+
     try{
-      const getingMyContacts = await conn.query("select u.Nome, m.Texto,c.ID  FROM usuario as u JOIN messagem as m JOIN contato as c WHERE u.ID=? AND c.IDSolicitante = ? AND m.IDContato = c.ID ",[userID,userID])
-      const getingMyContactsWhereIAcceptedInvite = await conn.query("select u.Nome, m.Texto,c.ID  FROM usuario as u JOIN messagem as m JOIN contato as c WHERE u.ID=? AND c.IDDestinatario = ? AND m.IDContato = c.ID",[userID,userID])
+      const getingMyContacts = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ? OR u.ID=? AND c.IDDestinatario=? AND c.Interessado = ? ",[userID,userID ,0,userID,userID ,0])
+
+      let unifyResultsNotInterest = []
+
+      if(getingMyContacts[0].length >= 1) {
+         getingMyContacts[0].forEach(e => {
+         unifyResultsNotInterest.push(e)
+         })
+      }
+      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE u.ID=? AND c.IDSolicitante=? AND c.Interessado = ? OR u.ID=? AND c.IDDestinatario=? AND c.Interessado = ?",[userID,userID ,1,userID,userID ,1])
+      
+      let unifyResultsInterestedsContacts = []
+
+  
+      if(getingMyContactsInterestedsInMyPet[0].length >=1) {
+        getingMyContactsInterestedsInMyPet[0].forEach(e => {
+          unifyResultsInterestedsContacts.push(e)
+      })
+      }
+
+     const returnedMessages =  unifyResultsInterestedsContacts.map(async e => {
+        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
+        if(takeLastMessage[0].length >=1) {
+          console.log(e)
+          e.ultimaMensagem = takeLastMessage[0][0].Texto
+          return e
+        }else {
+          e.ultimaMensagem = "não tem mensagens"
+          return e
+        }
+      })
+
+      const returnedMessagesNotInterest = unifyResultsNotInterest.map(async e => {
+        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
+        if(takeLastMessage[0].length >=1) {
+          e.ultimaMensagem = takeLastMessage[0][0].Texto
+          return e
+        }else {
+          e.ultimaMensagem = "não tem mensagens"
+          return e
+        }
+      })
+
+      unifyResultsInterestedsContacts= await Promise.all(returnedMessages)
+      unifyResultsNotInterest = await Promise.all(returnedMessagesNotInterest)
+     
+      if(unifyResultsInterestedsContacts.length >= 1 || unifyResultsNotInterest.length >=1) {
+        return {sucess: "retornando dados de todos seus contatos para o front end", contatosDeInteresses:unifyResultsInterestedsContacts, contatosSemInteresses:unifyResultsNotInterest}
+      }
+
+      return {error:"não há nenhum contato para ser retornado!"}
+      
     }catch(e) {
       return{error:e.message}
     }
-   }
+   },
+
+   async mensagensContatoQuery (userID, contactID) {
+    const conn = await connection();
+    try {
+      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
+      if(verifyIfUserAreInContact[0].length >=1) {
+        const getingMessages = await conn.query("select ID as IDMensagem, DataDeEnvio, IDRemetente as quemEnviouAMensagem , Texto from mensagem WHERE IDContato = ? AND Remocao = ?",[contactID,0])
+        if(getingMessages[0].length >= 1) {
+          getingMessages[0].sort((a,b) => {
+            return a - b
+          }
+        ) 
+        getingMessages[0].forEach(e => {
+          if(e.quemEnviouAMensagem === userID) {
+            e.quemEnviouAMensagem = "Você Enviou"
+          }else {
+            e.quemEnviouAMensagem = "Enviado pelo contato"
+          }
+        })
+        return {sucess:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
+        }else {
+          return{error:"não possui nenhuma mensagem com o contato especificado"}
+        }
+      }else {
+        return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
+      }
+    }catch(e) {
+      return{error:e.message}
+    }
+   },
+
+  async enviaMensagemQuery (DataDeEnvio,IDRemetente,IDContato,Texto) {
+    const conn = await connection();
+    try {
+      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[IDContato,IDRemetente,IDContato,IDRemetente])
+      if(verifyIfUserAreInContact[0].length >=1) {
+        const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,0,Texto])
+        if(sendingMessage[0].affectedRows >=1) {
+          return {sucess:"mensagem enviada com sucesso"}
+        }
+      }  return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
+  } catch(e) {
+    return {error:e.message}
+  }
+  },
+
+
+  async deletaMensagemEnviadaQuery (userID,MessageID) {
+    const conn = await connection();
+    try{
+      const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=?",[MessageID,userID])
+      if(deletingMessageRequisited[0].affectedRows >=1) return{sucess:"mensagem removida com sucesso"}
+      return {error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
+    }catch(e) {
+      return {error:e.message}
+    }
+  }
 }
 
 module.exports = userInteractQueries;

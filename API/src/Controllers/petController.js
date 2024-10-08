@@ -1,5 +1,4 @@
 const Pet = require("../Models/Class/Pet.js")
-const petQueries = require ("../Models/Query/petQueries.js")
 
 const petManagement = {
   cadastraPet: async (req, res) => {
@@ -9,14 +8,14 @@ const petManagement = {
 
     if (TipoAnimal && Linhagem && Idade && Sexo && Cor && Descricao) {
       const createPetForm = new Pet(new Date(), TipoAnimal, Linhagem, null, Idade, Sexo, Cor, Descricao, IDDoador);
-      const newPetCreate = await petQueries.cadastraPetQuery(createPetForm);
+      const newPetCreate = await createPetForm.cadastraPetQuery();
       res.json(newPetCreate);
     } else {
       console.log("Não passou");
       res.json({ error: "Não foi possível fazer o cadastro do pet, faltam informações a respeito do pet." });
     }
   } catch (e) {
-    console.error("Erro no cadastro de pet:", e);
+    console.log(e.message)
     res.status(500).json({ error: "Erro ao cadastrar pet." });
   }
 },
@@ -28,7 +27,7 @@ const petManagement = {
       const {TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,PetID} = req.body;
       if(TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador,PetID) {
         const petFormDataEdit = new Pet (new Date(),TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador,PetID);
-        const editDataPet = await petQueries.editPetInfoQuery(petFormDataEdit)
+        const editDataPet = await petFormDataEdit.editPetInfoQuery(petFormDataEdit)
 
         res.json (editDataPet)
       }else {
@@ -46,7 +45,8 @@ const petManagement = {
       const {PetID,VerifyForm} = req.body
 
       if(IDDoador,PetID,VerifyForm) {
-        const sendValidations = await petQueries.removePetDaAdocaoQuery(IDDoador,PetID,VerifyForm)
+        const petForm = new Pet();
+        const sendValidations = await Pet.removePetDaAdocaoQuery(IDDoador,PetID,VerifyForm)
         res.json(sendValidations)
       } else {
         res.json({error:"está faltando informações para a remoção do pet da adoção."})
@@ -61,7 +61,7 @@ const petManagement = {
     try {
       const {UserID} = req.body  //ATENTE-SE O USERID ESTÁ SENDO PASSADO NO BODY NESSA REQUISIÇÃO
       if(UserID && typeof(UserID) !== 'string') {
-        const callBackRequisition = await petQueries.petsDeUmUsuarioQuery(UserID)
+        const callBackRequisition = await Pet.petsDeUmUsuarioQuery(UserID)
         res.json(callBackRequisition)
       }
     }
@@ -76,7 +76,7 @@ const petManagement = {
 
       console.log(Estado,ID)
       if(Estado,ID) {
-        const receivePets = await petQueries.petsParaAdocaoQuery(Estado,ID);
+        const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID);
         res.json(receivePets)
       }
       else {
@@ -97,7 +97,7 @@ const petManagement = {
       console.log(req.dataUser)
 
       if(ID,PetID) {
-        const intrest = await petQueries.demonstrarInteresseEmPetQuery(ID,PetID)
+        const intrest = await Pet.demonstrarInteresseEmPetQuery(ID,PetID)
         res.json(intrest)
       }else{
         res.json({error:"não foi informado todos dados necessários para demonstrar interesse em um pet"})
@@ -113,7 +113,7 @@ const petManagement = {
      const {MeuPetID} = req.body;
 
      if(MeuPetID) {
-      const analyzeIntrest = await petQueries.interessadosMeuPetQuery(MeuPetID);
+      const analyzeIntrest = await Pet.interessadosMeuPetQuery(MeuPetID);
       res.json(analyzeIntrest)
      }else {
       res.json({error:"não foi informado o id do pet para identificar os interessados no mesmo."})
@@ -130,7 +130,7 @@ const petManagement = {
   meusInteresses: async(req,res) => {
     try {
       const {ID} = req.dataUser;
-      const myInterests = await petQueries.meusInteressesQuery(ID)
+      const myInterests = await Pet.meusInteressesQuery(ID)
       res.json(myInterests)
     }
     catch (e) {
@@ -142,7 +142,7 @@ const petManagement = {
     try {
       const {ID} = req.dataUser;
       const {PetID} = req.body;
-      const removeInterest = await petQueries.removerInteressePetQuery(PetID,ID);
+      const removeInterest = await Pet.removerInteressePetQuery(PetID,ID);
       res.json({removeInterest})
     }
     catch (e) {

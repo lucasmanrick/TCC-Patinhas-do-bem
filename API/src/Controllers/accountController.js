@@ -1,5 +1,4 @@
 const Usuario = require("../Models/Class/Usuario")
-const AccountManagementQueries = require("../Models/Query/AccountQueries")
 const bcrypt = require('bcrypt');
 
 
@@ -38,21 +37,15 @@ const accountManagement = {
         if(testRegex === false) {
           res.json({error:"seu e-mail é invalido verifique se está correto e tente novamente."})
         } 
+        const hashedPassword = await bcrypt.hash(Senha, 10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
+        let newUser = new Usuario(null,NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
 
-        const validaCadastroAnterior = await AccountManagementQueries.verificaExistenciaUsuarioQuery(Email)
-
+        const validaCadastroAnterior = await newUser.verificaExistenciaUsuarioQuery()
         if (validaCadastroAnterior.error) {
           res.json(validaCadastroAnterior)
         } else {
-          const hashedPassword = await bcrypt.hash(Senha, 10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
-
-          const newUser = new Usuario(NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
-          //verificar se o Email passado já não existe no nosso banco de dados.
-
-          const sendingData = await AccountManagementQueries.cadastraUsuarioQuery(newUser)
-          
-
-          res.json({sendingData})
+          const sendingData = await newUser.cadastraUsuarioQuery()
+          res.json(sendingData)
         }
 
       } else {
@@ -76,8 +69,24 @@ const accountManagement = {
           const testRegex = re.test(Email);
 
           if (testRegex === true) {
-            const verifyExistence = await AccountManagementQueries.autenticaUsuarioQuery(Email, Senha);
+
+            const newUser = new Usuario ();
+            newUser.Email = Email
+            newUser.Senha = Senha
+            const verifyExistence = await newUser.autenticaUsuarioQuery();
+        
+            if(verifyExistence.auth === true) {
+              res.cookie('token', verifyExistence.token, {
+                secure: true, // O cookie só será enviado em conexões HTTP
+                httpOnly: true, // O cookie não será acessível via JavaScript no navegador
+                maxAge: 3600000 // Tempo de vida do cookie em milissegundos (1 hora)
+              })
+             return res.json({sucess:verifyExistence.sucess,auth:verifyExistence.auth})
+            }
+
             res.json(verifyExistence)
+            
+         
           } else {
             res.json({ error: "o valor inserido no campo Email, não corresponde a um Email valido", auth: false })
           }
@@ -91,7 +100,7 @@ const accountManagement = {
 
     }
     catch (e) {
-      res.json({ error: e, auth: false })
+      res.json({ error: e.message, auth: false })
     }
 
   }
