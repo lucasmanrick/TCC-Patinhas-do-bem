@@ -1,5 +1,4 @@
 const Usuario = require("../Models/Class/Usuario")
-const AccountManagementQueries = require("../Models/Query/AccountQueries")
 const bcrypt = require('bcrypt');
 
 
@@ -14,7 +13,7 @@ const accountManagement = {
       const { NomeUsuario, DataNasc, Email, Senha, Cep, Rua, Numero, Bairro, Estado, Cidade } = req.body
 
       if (NomeUsuario, DataNasc, Email, Senha, Cep, Rua, Numero, Bairro, Estado, Cidade) {
-        if (typeof (Email) == 'number') {
+        if (typeof (Email) !== 'string') {
           return res.json({ error: "O Campo Email não pode ser numero" })
         } else if (typeof (NomeUsuario) !== 'string') {
           return res.json({ error: "O Campo Nome não pode ser diferente de texto" })
@@ -37,24 +36,21 @@ const accountManagement = {
         const re = /\S+@\S+\.\S+/;
         const testRegex = re.test(Email);
 
-        if (testRegex === false) {
-          return res.json({ error: "seu e-mail é invalido verifique se está correto e tente novamente." })
-        }
 
-        const validaCadastroAnterior = await AccountManagementQueries.verificaExistenciaUsuarioQuery(Email)
+        if(testRegex === false) {
+         return res.json({error:"seu e-mail é invalido verifique se está correto e tente novamente."})
+        } 
+        const hashedPassword = await bcrypt.hash(Senha, 10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
+        let newUser = new Usuario(null,NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
 
+
+        const validaCadastroAnterior = await newUser.verificaExistenciaUsuarioQuery()
         if (validaCadastroAnterior.error) {
           return res.json(validaCadastroAnterior)
         } else {
-          const hashedPassword = await bcrypt.hash(Senha, 10); // aki ocorre a criptografia da parte da qual queremos, e determinamos que seja 10 apos o campo que queremos criptografar para que 10 mil registros com a mesma senha tenha criptografias diferentes, ou seja se 30 pessoas tiverem a mesma senha as 30 terão criptografias diferentes.
 
-          const newUser = new Usuario(NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
-          //verificar se o Email passado já não existe no nosso banco de dados.
-
-          const sendingData = await AccountManagementQueries.cadastraUsuarioQuery(newUser)
-
-
-          return res.json({ sendingData })
+          const sendingData = await newUser.cadastraUsuarioQuery()
+          return res.json(sendingData)
         }
 
       } else {
@@ -63,9 +59,8 @@ const accountManagement = {
     }
 
     catch (e) {
-      console.log(e.message);
+      return res.json({ error: e.message})
 
-      return res.json({ error: "houve um problema no tratamento de seus dados: " })
     }
 
   },
@@ -80,22 +75,38 @@ const accountManagement = {
           const testRegex = re.test(Email);
 
           if (testRegex === true) {
-            const verifyExistence = await AccountManagementQueries.autenticaUsuarioQuery(Email, Senha);
-            res.json(verifyExistence)
+
+            const newUser = new Usuario ();
+            newUser.Email = Email
+            newUser.Senha = Senha
+            const verifyExistence = await newUser.autenticaUsuarioQuery();
+        
+            if(verifyExistence.auth === true) {
+              res.cookie('token', verifyExistence.token, {
+                secure: true, // O cookie só será enviado em conexões HTTP
+                httpOnly: true, // O cookie não será acessível via JavaScript no navegador
+                maxAge: 3600000 // Tempo de vida do cookie em milissegundos (1 hora)
+              })
+             return res.json({sucess:verifyExistence.sucess,auth:verifyExistence.auth})
+            }
+
+            return res.json(verifyExistence)
+            
+         
           } else {
-            res.json({ error: "o valor inserido no campo Email, não corresponde a um Email valido", auth: false })
+            return res.json({ error: "o valor inserido no campo Email, não corresponde a um Email valido", auth: false })
           }
 
         } else {
-          res.json({ error: "O Email e a senha estão sendo enviados com tipos de dados divergentes do necessário. Contate um Suporte para correção do problema", auth: false })
+          return res.json({ error: "O Email e a senha estão sendo enviados com tipos de dados divergentes do necessário. Contate um Suporte para correção do problema", auth: false })
         }
       } else {
-        res.json({ error: "Não foram encaminhados Email e Senha", auth: false })
+        return res.json({ error: "Não foram encaminhados Email e Senha", auth: false })
       }
 
     }
     catch (e) {
-      res.json({ error: e, auth: false })
+     return res.json({ error: e.message, auth: false })
     }
 
   }
