@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Cria uma instância do Apisauce
 const api = create({
   baseURL: 'http://10.0.3.252:5000',
- 
 });
 
 // Adiciona transformação de requisição
