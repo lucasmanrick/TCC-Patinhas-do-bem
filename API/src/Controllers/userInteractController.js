@@ -85,47 +85,6 @@ const userInteractController = {
     }
   },
 
-  removeDadosUsuario : async (req,res) => {
-    try {
-      const {ID,Administrador} = req.dataUser;
-      const {userToBeDeletedID} = req.body;
-
-      console.log(userToBeDeletedID)
-      console.log(Administrador)
-
-      if(userToBeDeletedID && Administrador === 1) {
-        const sendingRequestRemoveUser = await userInteractQueries.removeDadosUsuarioQuery(ID,userToBeDeletedID);
-        return res.json(sendingRequestRemoveUser)
-      } 
-      else {
-        const sendingRequestToDeletYourself = await userInteractQueries.removeDadosUsuarioQuery(ID);
-        return res.json(sendingRequestToDeletYourself)
-      }
-
-    }
-    catch(e) {
-      return res.json({error:e.message})
-    }
-  },
-
-
-  editaDadosCadastrais: async (req,res) => {
-    const {ID} = req.dataUser;
-    const {NomeUsuario,DataNasc,Email,Senha,Cep,Rua,Numero,Bairro,Estado,Cidade} = req.body;
-    try {
-      if(ID) {
-        const hashedNewPassword = await bcrypt.hash(Senha, 10); 
-        const newUserGenerate = new Usuario(ID,NomeUsuario,DataNasc,Email,hashedNewPassword,Cep,Rua,Numero,Bairro,Estado,Cidade)
-        const sendingDataEdited = await userInteractQueries.editaDadosCadastraisQuery(newUserGenerate)
-        return res.json(sendingDataEdited)
-      }else {
-        return res.json({error:"falta informações para ser enviado "})
-      }
-    }catch (e) {
-      return res.json({error:e.message})
-    }
-  },
-
   removeUsuarioDaListaDeContatos:async (req,res) => {
     try {
       const {ID} = req.dataUser;

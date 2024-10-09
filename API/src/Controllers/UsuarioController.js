@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 
 
-const accountManagement = {
+const UsuarioController = {
   cadastraUsuario: async (req, res) => {
     console.log(req.body);
 
@@ -44,7 +44,7 @@ const accountManagement = {
         let newUser = new Usuario(null,NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
 
 
-        const validaCadastroAnterior = await newUser.verificaExistenciaUsuarioQuery(Email)
+        const validaCadastroAnterior = await Usuario.verificaExistenciaUsuarioQuery(Email)
         if (validaCadastroAnterior.error) {
           return res.json(validaCadastroAnterior)
         } else {
@@ -67,8 +67,7 @@ const accountManagement = {
   autenticaUsuario: async (req, res) => {
     const { Email, Senha } = req.body;
 
-    const verifyMobileOrWeb = req.header.platform;
-
+    const verifyMobileOrWeb = req.headers.platform;
     try {
       if (Email, Senha) {
         if (typeof (Email) === 'string' && typeof (Senha) === 'string') {
@@ -85,14 +84,14 @@ const accountManagement = {
 
             if(verifyExistence.auth === true) {
               if(verifyMobileOrWeb === "mobile") {
-                return res.json({sucess:verifyExistence.sucess,auth:verifyExistence.auth, token:verifyExistence.token})
+                return res.json({sucess:verifyExistence.success,auth:verifyExistence.auth, token:verifyExistence.token})
               }
               res.cookie('token', verifyExistence.token, {
                 secure: true, // O cookie só será enviado em conexões HTTP
                 httpOnly: true, // O cookie não será acessível via JavaScript no navegador
                 maxAge: 3600000 // Tempo de vida do cookie em milissegundos (1 hora)
               })
-             return res.json({sucess:verifyExistence.sucess,auth:verifyExistence.auth})
+             return res.json({sucess:verifyExistence.success,auth:verifyExistence.auth})
             }
 
             return res.json(verifyExistence)
@@ -114,8 +113,47 @@ const accountManagement = {
      return res.json({ error: e.message, auth: false })
     }
 
+  },
+
+
+  removeDadosUsuario : async (req,res) => {
+    try {
+      const {ID,Administrador} = req.dataUser;
+      const {userToBeDeletedID} = req.body;
+
+      if(userToBeDeletedID && Administrador === 1) {
+        const sendingRequestRemoveUser = await Usuario.removeDadosUsuarioQuery(ID,userToBeDeletedID);
+        return res.json(sendingRequestRemoveUser)
+      } 
+      else {
+        const sendingRequestToDeletYourself = await Usuario.removeDadosUsuarioQuery(ID);
+        return res.json(sendingRequestToDeletYourself)
+      }
+
+    }
+    catch(e) {
+      return res.json({error:e.message})
+    }
+  },
+
+
+  editaDadosCadastrais: async (req,res) => {
+    const {ID} = req.dataUser;
+    const {NomeUsuario,DataNasc,Email,Senha,Cep,Rua,Numero,Bairro,Estado,Cidade} = req.body;
+    try {
+      if(ID) {
+        const hashedNewPassword = await bcrypt.hash(Senha, 10); 
+        const newUserGenerate = new Usuario(ID,NomeUsuario,DataNasc,Email,hashedNewPassword,Cep,Rua,Numero,Bairro,Estado,Cidade)
+        const sendingDataEdited = await newUserGenerate.editaDadosCadastraisQuery()
+        return res.json(sendingDataEdited)
+      }else {
+        return res.json({error:"falta informações para ser enviado "})
+      }
+    }catch (e) {
+      return res.json({error:e.message})
+    }
   }
 }
 
 
-module.exports = accountManagement
+module.exports = UsuarioController

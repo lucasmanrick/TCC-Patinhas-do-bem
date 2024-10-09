@@ -2,7 +2,7 @@ require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
-const accountManagement = require ('../Controllers/accountController');
+const UsuarioController = require ('../Controllers/UsuarioController');
 const petManagement = require("../Controllers/petController");
 const userInteractController = require("../Controllers/userInteractController");
 
@@ -38,11 +38,11 @@ function verificadorDoToken(req, res, next){
 
 
 // rota para o usuário fazer um cadastro no site.
-router.post("/Cadastro",accountManagement.cadastraUsuario)
+router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
 //Rota para o usuário logar no site (será retornado um token ao mesmo)
- router.post('/Login' ,accountManagement.autenticaUsuario) 
+ router.post('/Login' ,UsuarioController.autenticaUsuario) 
 
 
 //Rota para cadastrar os dados de um novo pet 
@@ -104,10 +104,10 @@ router.post("/Cadastro",accountManagement.cadastraUsuario)
   router.get("/ProfileUser",verificadorDoToken,userInteractController.profileUser);
 
   //Rota para o ADM Remover um usuário do sistema, ou o próprio usuário se remover do sistema permanentemente
-  router.delete("/RemoveDadosUsuario",verificadorDoToken,userInteractController.removeDadosUsuario);
+  router.delete("/RemoveDadosUsuario",verificadorDoToken,UsuarioController.removeDadosUsuario);
 
   //Rota para o Usuário conseguir alterar seus dados cadastrais
-  router.put("/EditaDados",verificadorDoToken, userInteractController.editaDadosCadastrais);
+  router.put("/EditaDados",verificadorDoToken, UsuarioController.editaDadosCadastrais);
 
 
   //Rota para puxar dados de todos em minha lista de contato
