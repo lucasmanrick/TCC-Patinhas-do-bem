@@ -44,7 +44,7 @@ const accountManagement = {
         let newUser = new Usuario(null,NomeUsuario, DataNasc, Email, hashedPassword, Cep, Rua, Numero, Bairro, Estado, Cidade)
 
 
-        const validaCadastroAnterior = await newUser.verificaExistenciaUsuarioQuery()
+        const validaCadastroAnterior = await newUser.verificaExistenciaUsuarioQuery(Email)
         if (validaCadastroAnterior.error) {
           return res.json(validaCadastroAnterior)
         } else {
@@ -67,6 +67,7 @@ const accountManagement = {
   autenticaUsuario: async (req, res) => {
     const { Email, Senha } = req.body;
 
+    const verifyMobileOrWeb = req.header.platform;
 
     try {
       if (Email, Senha) {
@@ -80,8 +81,12 @@ const accountManagement = {
             newUser.Email = Email
             newUser.Senha = Senha
             const verifyExistence = await newUser.autenticaUsuarioQuery();
-        
+            
+
             if(verifyExistence.auth === true) {
+              if(verifyMobileOrWeb === "mobile") {
+                return res.json({sucess:verifyExistence.sucess,auth:verifyExistence.auth, token:verifyExistence.token})
+              }
               res.cookie('token', verifyExistence.token, {
                 secure: true, // O cookie só será enviado em conexões HTTP
                 httpOnly: true, // O cookie não será acessível via JavaScript no navegador

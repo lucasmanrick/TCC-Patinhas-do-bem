@@ -10,9 +10,14 @@ const app = express();
 
 
 function verificadorDoToken(req, res, next){
-  // const token = req.headers['authorization'];
+  let token;
+  if(req.header.authorization) {
+    token = req.headers['authorization'];
+  }else if (req.cookies.token) {
+    token = req.cookies.token;
+  }
 
-  const token = req.cookies.token;
+  
   if (!token) return res.status(401).json({ auth: false, message: 'Não foi informado nenhum token.' });
   
   jwt.verify(token, process.env.SECRET, function(err, decoded) {
