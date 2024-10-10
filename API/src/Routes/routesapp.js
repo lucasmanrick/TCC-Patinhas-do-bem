@@ -5,6 +5,7 @@ const router = express.Router();
 const UsuarioController = require ('../Controllers/UsuarioController');
 const petManagement = require("../Controllers/petController");
 const userInteractController = require("../Controllers/userInteractController");
+const solicitacaoContatoController = require("../Controllers/solicitacaoContatoController");
 
 const app = express();
 
@@ -67,7 +68,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
   //Rota que pode-se demonstrar interesse em um pet
-  router.post ("/DemonstrarInteressePet", verificadorDoToken, petManagement.demonstrarInteresseEmPet)
+  // router.post ("/DemonstrarInteressePet", verificadorDoToken, petManagement.demonstrarInteresseEmPet)
 
 
   //Rota para ver todos animais que eu demonstrei interesse
@@ -85,17 +86,17 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
   //Rota para Solicitar amizade de um usuário sem que haja interesse em algum de seus pets.
 
-  router.post ("/SolicitaAmizade", verificadorDoToken, userInteractController.enviarSolicitacaoDeAmizade)
+  router.post ("/SolicitaAmizade", verificadorDoToken, solicitacaoContatoController.enviarSolicitacaoDeAmizade)
 
 
   //Rota para remover uma solicitação de amizade que enviamos a algum usuário.
-  router.delete ("/RemoveSolicitacao", verificadorDoToken, userInteractController.removeSolicitacaoDeAmizade)
+  router.delete ("/RemoveSolicitacao", verificadorDoToken, solicitacaoContatoController.removeSolicitacaoDeAmizade)
 
  //Rota para ver solicitações de amizades enviadas para mim
-  router.get("/MinhasSolicitacoes",verificadorDoToken,userInteractController.minhasSolicitacoes);
+  router.get("/MinhasSolicitacoes",verificadorDoToken,solicitacaoContatoController.minhasSolicitacoes);
 
   //Rota para aceitar uma solicitação de amizade enviada para o usuário logado
-  router.post("/AceitaSolicitacaoAmizade",verificadorDoToken,userInteractController.aceitaSolicitacao)
+  router.post("/AceitaSolicitacaoAmizade",verificadorDoToken,solicitacaoContatoController.aceitaSolicitacao)
 
   //Rota para tirar um outro usuário da lista de contatos do usuário logado.
   router.delete("/RemoveUsuarioDaListaDeContatos",verificadorDoToken,userInteractController.removeUsuarioDaListaDeContatos)
@@ -120,7 +121,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //Rota para enviar uma mensagem para o contato selecionado
   router.post("/EnviaMensagem",verificadorDoToken, userInteractController.enviaMensagem);
 
-
+  //Rota para deletar/inativar uma mensagem enviada, para que não seja mais demonstrada ao outro usuário.
   router.put("/DeletaMensagemEnviada", verificadorDoToken, userInteractController.deletaMensagemEnviada)
 
 module.exports = router;

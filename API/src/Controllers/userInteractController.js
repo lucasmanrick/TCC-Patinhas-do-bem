@@ -4,67 +4,12 @@ const bcrypt = require('bcrypt');
 
 
 const userInteractController = {
-  enviarSolicitacaoDeAmizade: async (req,res) => {
-    try{
-      const {ID} = req.dataUser;
-      const {IDDestinatario} = req.body;
 
-      console.log(IDDestinatario)
+  
 
-      if(ID && IDDestinatario && typeof(IDDestinatario) === 'number') {
-        const requestInvite = await userInteractQueries.enviarSolicitacaoDeAmizadeQuery(ID,IDDestinatario);
-        return res.json(requestInvite)
-      }
+ 
 
-    }
-    catch(e) {
-      return res.json({error:e.message})
-    }
-  },
-
-  removeSolicitacaoDeAmizade: async (req,res) => {
-    try{
-      const {inviteID} = req.body;
-
-      if(inviteID) {
-        const sendRemoveRequisition = await userInteractQueries.removeSolicitacaoDeAmizadeQuery(inviteID);
-        return res.json(sendRemoveRequisition)
-      }else {
-        return res.json({error:"você não especificou uma solicitação de amizade que há de ser excluida."})
-      }
-    }catch (e) {
-      return res.json({error:e.message})
-    }
-  },
-
-  minhasSolicitacoes: async(req,res) => {
-    try{
-      const {ID} = req.dataUser;
-
-      if(ID) {
-        const getMyInvites = await userInteractQueries.minhasSolicitacoesQuery(ID)
-        return res.json(getMyInvites)
-      }
-    }
-    catch(e) {
-      return res.json({error:e.message})
-    }
-  },
-
-  aceitaSolicitacao: async(req,res) => {
-    const {ID} = req.dataUser;
-    const {inviteID} = req.body;
-    try {
-      if(ID && inviteID) {
-        const acceptInviteRequest = await userInteractQueries.aceitaSolicitacaoQuery(ID,inviteID);
-        return res.json(acceptInviteRequest)
-      }else {
-        return res.json({error:"faltam informações para que a solicitação de amizade desejada seja aceita"})
-      }
-    }catch(e) {
-      return res.json({error:e.message})
-    }
-  },
+  
 
   profileUser: async(req,res) => {
     const {ID} = req.dataUser;
