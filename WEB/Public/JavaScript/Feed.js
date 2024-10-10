@@ -1,213 +1,128 @@
-// Sidebar
-const menuItems = document.querySelectorAll('.menu-item');
+function showContent(menuId) {
+    // Esconde todos os conteúdos
+    document.getElementById('mural-content').style.display = 'none';
+    document.getElementById('notifications-content').style.display = 'none';
+    document.getElementById('view-animals-content').style.display = 'none';
 
-// Messages 
-const messageNotification = document.querySelector('#messages-notifications');
-const messages = document.querySelector('.messages');
-const message = messages.querySelectorAll('.message');
-const messageSearch = document.querySelector('#message-search');
-
-//Theme
-const theme = document.querySelector('#theme');
-const themeModal = document.querySelector('.customize-theme');
-const fontSize = document.querySelectorAll('.choose-size span');
-var root = document.querySelector(':root');
-const colorPalette = document.querySelectorAll('.choose-color span');
-const Bg1 = document.querySelector('.bg-1');
-const Bg2 = document.querySelector('.bg-2');
-const Bg3 = document.querySelector('.bg-3');
-
-
-// ============== SIDEBAR ============== 
-
-// Remove active class from all menu items
-const changeActiveItem = () => {
-    menuItems.forEach(item => {
-        item.classList.remove('active');
-    })
-}
-
-menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-        changeActiveItem();
-        item.classList.add('active');
-        if(item.id != 'notifications') {
-            document.querySelector('.notifications-popup').
-            style.display = 'none';
-        } else {
-            document.querySelector('.notifications-popup').
-            style.display = 'block';
-            document.querySelector('#notifications .notification-count').
-            style.display = 'none';
-        }
-    })
-})
-
-// ============== MESSAGES ============== 
-
-//Searches messages
-const searchMessage = () => {
-    const val = messageSearch.value.toLowerCase();
-    message.forEach(user => {
-        let name = user.querySelector('h5').textContent.toLowerCase();
-        if(name.indexOf(val) != -1) {
-            user.style.display = 'flex'; 
-        } else {
-            user.style.display = 'none';
-        }
-    })
-}
-
-//Search for messages
-messageSearch.addEventListener('keyup', searchMessage);
-
-//Highlight messages card when messages menu item is clicked
-messageNotification.addEventListener('click', () => {
-    messages.style.boxShadow = '0 0 1rem var(--color-primary)';
-    messageNotification.querySelector('.notification-count').style.display = 'none';
-    setTimeout(() => {
-        messages.style.boxShadow = 'none';
-    }, 2000);
-})
-
-// ============== THEME / DISPLAY CUSTOMIZATION ============== 
-
-// Opens Modal
-const openThemeModal = () => {
-    themeModal.style.display = 'grid';
-}
-
-// Closes Modal
-const closeThemeModal = (e) => {
-    if(e.target.classList.contains('customize-theme')) {
-        themeModal.style.display = 'none';
+    // Mostra o conteúdo selecionado
+    if (menuId === 'mural') {
+        document.getElementById('mural-content').style.display = 'block';
+    } else if (menuId === 'notifications') {
+        document.getElementById('notifications-content').style.display = 'block';
+    } else if (menuId === 'view-animals') {
+        document.getElementById('view-animals-content').style.display = 'block';
     }
 }
 
-themeModal.addEventListener('click', closeThemeModal);
-theme.addEventListener('click', openThemeModal);
 
 
-// ============== FONT SIZE ============== 
+function publishPost() {
+    const title = document.getElementById('post-title').value;
+    const content = document.getElementById('post-content').value;
+    const postsContainer = document.getElementById('posts-container');
 
-// remove active class from spans or font size selectors
-const removeSizeSelectors = () => {
-    fontSize.forEach(size => {
-        size.classList.remove('active');
-    })
+    // Verifica se os campos não estão vazios
+    if (title.trim() === '' || content.trim() === '') {
+        alert('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    // Cria um novo elemento de postagem
+    const post = document.createElement('div');
+    post.classList.add('post');
+
+    // Adiciona o conteúdo da postagem
+    post.innerHTML = `
+        <h4>${title}</h4>
+        <p>${content}</p>
+    `;
+
+    // Adiciona a postagem ao container
+    postsContainer.prepend(post); // Insere no início para mostrar as mais recentes primeiro
+
+    // Limpa os campos de entrada
+    document.getElementById('post-title').value = '';
+    document.getElementById('post-content').value = '';
 }
 
-fontSize.forEach(size => { 
-   size.addEventListener('click', () => {
-        removeSizeSelectors();
-        let fontSize;
-        size.classList.toggle('active');
+function openPublishModal() {
+    document.getElementById('publish-modal').style.display = 'block';
+}
 
-        if(size.classList.contains('font-size-1')) { 
-            fontSize = '10px';
-            root.style.setProperty('----sticky-top-left', '5.4rem');
-            root.style.setProperty('----sticky-top-right', '5.4rem');
-        } else if(size.classList.contains('font-size-2')) { 
-            fontSize = '13px';
-            root.style.setProperty('----sticky-top-left', '5.4rem');
-            root.style.setProperty('----sticky-top-right', '-7rem');
-        } else if(size.classList.contains('font-size-3')) {
-            fontSize = '16px';
-            root.style.setProperty('----sticky-top-left', '-2rem');
-            root.style.setProperty('----sticky-top-right', '-17rem');
-        } else if(size.classList.contains('font-size-4')) {
-            fontSize = '19px';
-            root.style.setProperty('----sticky-top-left', '-5rem');
-            root.style.setProperty('----sticky-top-right', '-25rem');
-        } else if(size.classList.contains('font-size-5')) {
-            fontSize = '22px';
-            root.style.setProperty('----sticky-top-left', '-12rem');
-            root.style.setProperty('----sticky-top-right', '-35rem');
+function closePublishModal() {
+    document.getElementById('publish-modal').style.display = 'none';
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('publish-modal');
+    if (event.target === modal) {
+        closePublishModal();
+    }
+}
+
+function publishPost() {
+    const title = document.getElementById('post-title').value;
+    const content = document.getElementById('post-content').value;
+    const imageInput = document.getElementById('post-image');
+    const postsContainer = document.getElementById('posts-container');
+
+    if (title && content) {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post';
+
+        // Adiciona o título
+        const postTitle = document.createElement('h4');
+        postTitle.innerText = title;
+        postDiv.appendChild(postTitle);
+
+        // Adiciona a imagem, se houver
+        if (imageInput.files && imageInput.files[0]) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(imageInput.files[0]);
+            img.style.width = '100%'; // Ajusta a largura da imagem
+            img.style.maxWidth = '500px'; // Largura máxima
+            postDiv.appendChild(img);
         }
 
-        // change font size of the root html element
-        document.querySelector('html').style.fontSize = fontSize;
-   })
-})
+        // Adiciona o conteúdo
+        const postContent = document.createElement('p');
+        postContent.innerText = content;
+        postDiv.appendChild(postContent);
 
-// Remove active class from colors
-const changeActiveColorClass = () => {
-    colorPalette.forEach(colorPicker => {
-        colorPicker.classList.remove('active');
-    })
+        // Adiciona a nova postagem ao container
+        postsContainer.prepend(postDiv); // Adiciona ao início da lista de postagens
+
+        // Limpa os campos
+        document.getElementById('post-title').value = '';
+        document.getElementById('post-content').value = '';
+        imageInput.value = ''; // Limpa o campo de imagem
+
+        closePublishModal(); // Fecha o modal
+    } else {
+        alert('Por favor, preencha todos os campos!');
+    }
 }
+let currentChatUser = '';
 
-// Change color primary
-colorPalette.forEach(color => {
-    color.addEventListener('click', () => {
-        let primary;
-        changeActiveColorClass(); 
 
-        if(color.classList.contains('color-1')) {
-            primaryHue = 252;
-        } else if(color.classList.contains('color-2')) {
-            primaryHue = 52;
-        } else if(color.classList.contains('color-3')) {
-            primaryHue = 352;
-        } else if(color.classList.contains('color-4')) {
-            primaryHue = 152;
-        } else if(color.classList.contains('color-5')) {
-            primaryHue = 202;
+
+function showMessages(type) {
+    const messagesContent = document.getElementById('messages-content');
+    
+    // Adiciona classe "loading" e fade out
+    messagesContent.classList.remove('visible');
+    messagesContent.innerHTML = '<p class="loading">Carregando...</p>';
+
+    // Simula um tempo de carregamento e então exibe as mensagens com animação
+    setTimeout(() => {
+        if (type === 'friends') {
+            messagesContent.innerHTML = "<ul><li>Amigo 1: Oi!</li><li>Amigo 2: Vamos sair hoje?</li></ul>";
+        } else {
+            messagesContent.innerHTML = "<ul><li>Mensagem do Sistema: Sua conta foi atualizada.</li><li>Mensagem 2: Novo evento disponível!</li></ul>";
         }
-
-        color.classList.add('active');
-        root.style.setProperty('--primary-color-hue', primaryHue);
-    })
-})
-
-//Theme Background Values
-let lightColorLightness;
-let whiteColorLightness;
-let darkColorLightness;
-
-// Changes background color
-const changeBG = () => {
-    root.style.setProperty('--light-color-lightness', lightColorLightness);
-    root.style.setProperty('--white-color-lightness', whiteColorLightness);
-    root.style.setProperty('--dark-color-lightness', darkColorLightness);
+        
+        // Adiciona a classe "visible" para o fade in
+        messagesContent.classList.add('visible');
+    }, 500); // Simula um pequeno delay de carregamento
 }
-
-Bg1.addEventListener('click', () => {
-    // add active class
-    Bg1.classList.add('active');
-    // remove active class from the others
-    Bg2.classList.remove('active');
-    Bg3.classList.remove('active');
-    //remove customized changes from local storage
-    window.location.reload();
-});
-
-Bg2.addEventListener('click', () => {
-    darkColorLightness = '95%';
-    whiteColorLightness = '20%';
-    lightColorLightness = '15%';
-
-    // add active class
-    Bg2.classList.add('active');
-    // remove active class from the others
-    Bg1.classList.remove('active');
-    Bg3.classList.remove('active');
-    changeBG();
-});
-
-Bg3.addEventListener('click', () => {
-    darkColorLightness = '95%';
-    whiteColorLightness = '10%';
-    lightColorLightness = '0%';
-
-    // add active class
-    Bg3.classList.add('active');
-    // remove active class from the others
-    Bg1.classList.remove('active');
-    Bg2.classList.remove('active');
-    changeBG();
-});
-
-
-
 

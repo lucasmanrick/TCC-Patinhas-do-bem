@@ -36,7 +36,7 @@ body {
 .content::before {
     content: "";
     position: absolute;
-    background-color: #56A2E1;
+    background-color: #9BA8AB;
     width: 45%;
     height: 100%;
     border-top-left-radius: 15px;
@@ -62,7 +62,7 @@ margin-left: 10px;
 }
 
 .title-second {
-    color: #56A2E1;
+    color: #9BA8AB;
     margin-top: 35PX;
 }
 
@@ -70,7 +70,7 @@ margin-left: 10px;
 /* ---------------------------PARTE ESQUERDA DA TELA -------------------------- */
 
 .title-second-1 {
-    color: #56A2E1;
+    color: #9BA8AB;
     margin-top: 65px;
     margin-left: 210px;
     
@@ -109,24 +109,24 @@ margin-left: 10px;
     color: #56A2E1;
 }
 .btn-second {
-    background-color: #56A2E1;
-    border: 1px solid #56A2E1;
+    background-color: #9BA8AB;
+    border: 1px solid #9BA8AB;
     transition: background-color .5s;
     margin-top: 65px;
     margin-left: 200px;
 }
 
 .btn-second1 {
-    background-color: #56A2E1;
-    border: 1px solid #56A2E1;
+    background-color: #9BA8AB;
+    border: 1px solid #9BA8AB;
     transition: background-color .5s;
     margin-top: 15px;
     margin-left: 20px;
 }
 .btn-second:hover {
     background-color: #ffffff;
-    border: 1px solid #56A2E1;
-    color: #56A2E1;
+    border: 1px solid #9BA8AB;
+    color: #9BA8AB;
 }
 .first-content {
     display: flex;
@@ -161,9 +161,9 @@ margin-left: 10px;
     transition: background-color .5s;
 }
 .link-social-media:hover .item-social-media{
-    background-color: #56A2E1;
+    background-color: #9BA8AB;
     color: #fff;
-    border-color: #56A2E1;
+    border-color: #9BA8AB;
 }
 .list-social-media {
     display: flex;
@@ -460,7 +460,7 @@ footer {
 position: fixed;
     margin-top: -10px;
     display: block;
-    background: #56A2E1;
+    background: #4A5C6A;
     color: #fff;
     text-align: center;
     font-size: 14px;
