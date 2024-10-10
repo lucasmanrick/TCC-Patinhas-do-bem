@@ -6,6 +6,7 @@ const UsuarioController = require ('../Controllers/UsuarioController');
 const petManagement = require("../Controllers/petController");
 const userInteractController = require("../Controllers/userInteractController");
 const solicitacaoContatoController = require("../Controllers/solicitacaoContatoController");
+const interesseController = require("../Controllers/interesseController");
 
 const app = express();
 
@@ -72,15 +73,15 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
   //Rota para ver todos animais que eu demonstrei interesse
-  router.get ("/InteressadosMeuPet", verificadorDoToken, petManagement.interessadosMeuPet)
+  router.get ("/InteressadosMeuPet", verificadorDoToken, interesseController.interessadosMeuPet)
 
 
   //Rota para ver os pets no qual eu demonstrei interesse
-  router.get ("/MeusInteresses", verificadorDoToken, petManagement.meusInteresses)
+  router.get ("/MeusInteresses", verificadorDoToken, interesseController.meusInteresses)
 
 
   //Rota para tirar interesse em algum pet
-  router.delete ("/RemoverInteressePet", verificadorDoToken, petManagement.removerInteressePet);
+  router.delete ("/RemoverInteressePet", verificadorDoToken, interesseController.removerInteressePet);
 
 
 

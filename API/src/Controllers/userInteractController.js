@@ -1,14 +1,9 @@
-const Usuario = require("../Models/Class/Usuario");
+
 const userInteractQueries = require("../Models/Query/userInteractQueries");
 const bcrypt = require('bcrypt');
 
 
 const userInteractController = {
-
-  
-
- 
-
   
 
   profileUser: async(req,res) => {
