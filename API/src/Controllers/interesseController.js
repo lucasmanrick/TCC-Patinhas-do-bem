@@ -30,9 +30,6 @@ const interesseController = {
      }else {
       return res.json({error:"não foi informado o id do pet para identificar os interessados no mesmo."})
      }
-
-     
-
     }
     catch(e) {
      return res.json ({error:e.message})
