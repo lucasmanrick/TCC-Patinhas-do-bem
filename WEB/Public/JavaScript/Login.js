@@ -98,3 +98,77 @@ const pesquisarCep = async () => {
 // Adiciona um evento ao campo de CEP para pesquisar o CEP quando o usuário terminar de digitar (ao perder o foco do campo)
 document.getElementById('cep')
     .addEventListener('focusout', pesquisarCep);
+
+    
+
+    
+//--------------------- FUNÇÃO PARA VALIDAR O EMAIL E A SENHA QUE FOR DIGITADO ----------------------------------------//
+
+      function validateLogin(event) {
+        event.preventDefault(); // Evita o envio automático do formulário
+        
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        // E-mail e senha corretos (estáticos para este exemplo)
+        const correctEmail = 'user@example.com';
+        const correctPassword = '123456';
+
+        if (email === correctEmail && password === correctPassword) {
+            window.location.href = 'file:///c%3A/Users/3SEMESTRENOITE/Desktop/TCC%20FINAL/PatinhasDoBem/WEB/View/Pages/Feed.html?'; // Redireciona para a página desejada
+        } else {
+            alert('E-mail ou senha incorretos!');
+        }
+    }
+
+    //--------------------------------------------------- FIM----------------------------------------------------//
+
+
+
+
+
+
+    //-------------------------------------------- VALIDAÇÃO DE CADASTRO ---------------------------------- //
+
+    function validateForm(event) {
+        event.preventDefault(); // Evita o envio automático do formulário
+        
+        // Campos de informações pessoais
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const birthdate = document.getElementById('birthdate').value;
+
+        // Campos de endereço
+        const cep = document.getElementById('cep').value;
+        const cidade = document.getElementById('cidade').value;
+        const estado = document.getElementById('estado').value;
+        const bairro = document.getElementById('bairro').value;
+        const endereco = document.getElementById('endereco').value;
+        const numero = document.getElementById('numero').value;
+
+        // Verifica se todos os campos de informações pessoais estão preenchidos
+        if (name === "" || email === "" || password === "" || confirmPassword === "" || birthdate === "") {
+            alert('Por favor, preencha todos os campos de informações pessoais!');
+            return false;
+        }
+
+        // Verifica se todos os campos de endereço estão preenchidos
+        if (cep === "" || cidade === "" || estado === "" || bairro === "" || endereco === "" || numero === "") {
+            alert('Por favor, preencha todos os campos de endereço!');
+            return false;
+        }
+
+        // Verifica se as senhas coincidem
+        if (password !== confirmPassword) {
+            alert('As senhas não coincidem!');
+            return false;
+        }
+
+        // Se tudo estiver correto, o formulário será enviado
+        alert('Formulário enviado com sucesso!');
+        return true;
+    }
+
+     //-------------------------------------------- FIM  ------------------------------------------- //

@@ -1,70 +1,10 @@
-const Usuario = require("../Models/Class/Usuario");
+
 const userInteractQueries = require("../Models/Query/userInteractQueries");
 const bcrypt = require('bcrypt');
 
 
 const userInteractController = {
-  enviarSolicitacaoDeAmizade: async (req,res) => {
-    try{
-      const {ID} = req.dataUser;
-      const {IDDestinatario} = req.body;
-
-      console.log(IDDestinatario)
-
-      if(ID && IDDestinatario && typeof(IDDestinatario) === 'number') {
-        const requestInvite = await userInteractQueries.enviarSolicitacaoDeAmizadeQuery(ID,IDDestinatario);
-        return res.json(requestInvite)
-      }
-
-    }
-    catch(e) {
-      return res.json({error:e.message})
-    }
-  },
-
-  removeSolicitacaoDeAmizade: async (req,res) => {
-    try{
-      const {inviteID} = req.body;
-
-      if(inviteID) {
-        const sendRemoveRequisition = await userInteractQueries.removeSolicitacaoDeAmizadeQuery(inviteID);
-        return res.json(sendRemoveRequisition)
-      }else {
-        return res.json({error:"você não especificou uma solicitação de amizade que há de ser excluida."})
-      }
-    }catch (e) {
-      return res.json({error:e.message})
-    }
-  },
-
-  minhasSolicitacoes: async(req,res) => {
-    try{
-      const {ID} = req.dataUser;
-
-      if(ID) {
-        const getMyInvites = await userInteractQueries.minhasSolicitacoesQuery(ID)
-        return res.json(getMyInvites)
-      }
-    }
-    catch(e) {
-      return res.json({error:e.message})
-    }
-  },
-
-  aceitaSolicitacao: async(req,res) => {
-    const {ID} = req.dataUser;
-    const {inviteID} = req.body;
-    try {
-      if(ID && inviteID) {
-        const acceptInviteRequest = await userInteractQueries.aceitaSolicitacaoQuery(ID,inviteID);
-        return res.json(acceptInviteRequest)
-      }else {
-        return res.json({error:"faltam informações para que a solicitação de amizade desejada seja aceita"})
-      }
-    }catch(e) {
-      return res.json({error:e.message})
-    }
-  },
+  
 
   profileUser: async(req,res) => {
     const {ID} = req.dataUser;
@@ -81,47 +21,6 @@ const userInteractController = {
       }
     }
     catch(e) {
-      return res.json({error:e.message})
-    }
-  },
-
-  removeDadosUsuario : async (req,res) => {
-    try {
-      const {ID,Administrador} = req.dataUser;
-      const {userToBeDeletedID} = req.body;
-
-      console.log(userToBeDeletedID)
-      console.log(Administrador)
-
-      if(userToBeDeletedID && Administrador === 1) {
-        const sendingRequestRemoveUser = await userInteractQueries.removeDadosUsuarioQuery(ID,userToBeDeletedID);
-        return res.json(sendingRequestRemoveUser)
-      } 
-      else {
-        const sendingRequestToDeletYourself = await userInteractQueries.removeDadosUsuarioQuery(ID);
-        return res.json(sendingRequestToDeletYourself)
-      }
-
-    }
-    catch(e) {
-      return res.json({error:e.message})
-    }
-  },
-
-
-  editaDadosCadastrais: async (req,res) => {
-    const {ID} = req.dataUser;
-    const {NomeUsuario,DataNasc,Email,Senha,Cep,Rua,Numero,Bairro,Estado,Cidade} = req.body;
-    try {
-      if(ID) {
-        const hashedNewPassword = await bcrypt.hash(Senha, 10); 
-        const newUserGenerate = new Usuario(ID,NomeUsuario,DataNasc,Email,hashedNewPassword,Cep,Rua,Numero,Bairro,Estado,Cidade)
-        const sendingDataEdited = await userInteractQueries.editaDadosCadastraisQuery(newUserGenerate)
-        return res.json(sendingDataEdited)
-      }else {
-        return res.json({error:"falta informações para ser enviado "})
-      }
-    }catch (e) {
       return res.json({error:e.message})
     }
   },
