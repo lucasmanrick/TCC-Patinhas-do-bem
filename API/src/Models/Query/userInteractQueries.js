@@ -261,8 +261,8 @@ const userInteractQueries = {
   async deletaMensagemEnviadaQuery (userID,MessageID) {
     const conn = await connection();
     try{
-      const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=?",[MessageID,userID])
-      if(deletingMessageRequisited[0].affectedRows >=1) return{success:"mensagem removida com sucesso"}
+      const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=? AND Remocao=0",[MessageID,userID])
+      if(deletingMessageRequisited[0].affectedRows >=1)return{success:"mensagem removida com sucesso"}
       return {error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
     }catch(e) {
       return {error:e.message}
