@@ -7,6 +7,7 @@ const petManagement = require("../Controllers/petController");
 const userInteractController = require("../Controllers/userInteractController");
 const solicitacaoContatoController = require("../Controllers/solicitacaoContatoController");
 const interesseController = require("../Controllers/interesseController");
+const contatoController = require("../Controllers/contatoController");
 
 const app = express();
 
@@ -69,7 +70,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
   //Rota que pode-se demonstrar interesse em um pet
-  // router.post ("/DemonstrarInteressePet", verificadorDoToken, petManagement.demonstrarInteresseEmPet)
+  router.post ("/DemonstrarInteressePet", verificadorDoToken, interesseController.demonstrarInteresseEmPet)
 
 
   //Rota para ver todos animais que eu demonstrei interesse
@@ -100,7 +101,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   router.post("/AceitaSolicitacaoAmizade",verificadorDoToken,solicitacaoContatoController.aceitaSolicitacao)
 
   //Rota para tirar um outro usuário da lista de contatos do usuário logado.
-  router.delete("/RemoveUsuarioDaListaDeContatos",verificadorDoToken,userInteractController.removeUsuarioDaListaDeContatos)
+  router.delete("/RemoveUsuarioDaListaDeContatos",verificadorDoToken,contatoController.removeUsuarioDaListaDeContatos)
 
   //Rota para obter dados de perfil de usuários do site (chamar quando quiser ver o perfil de um usuário, ou ver o seu próprio perfil).
   router.get("/ProfileUser",verificadorDoToken,userInteractController.profileUser);
@@ -113,7 +114,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
   //Rota para puxar dados de todos em minha lista de contato
-  router.get("/MeusContatos",verificadorDoToken, userInteractController.meusContatos)
+  router.get("/MeusContatos",verificadorDoToken, contatoController.meusContatos)
 
   //Rota para puxar as mensagens que tiveram entre o contato selecionado.
   router.get("/MensagensContato",verificadorDoToken, userInteractController.mensagensContato);
