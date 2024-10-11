@@ -52,7 +52,7 @@ const interesseController = {
       const {ID} = req.dataUser;
       const {PetID} = req.body;
       const removeInterest = await Interesse.removerInteressePetQuery(PetID,ID);
-      return res.json({removeInterest})
+      return res.json(removeInterest)
     }
     catch (e) {
       return res.json({error:e.message})

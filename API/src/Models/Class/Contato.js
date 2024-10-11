@@ -1,53 +1,16 @@
-const {connection} = require('../../Config/db');
-const Pet = require("../Class/Pet")
+const { connection } = require(`../../Config/db`);
 
-const userInteractQueries = {
- 
-
-   async profileUserQuery(usuarioASerRetornado, userID) {
-    const conn = await connection();
-
-    if (userID && !usuarioASerRetornado) { // se o usuário solicitou analise de algum perfil e não passou id será retornado as informações dele mesmo, caso ele passe id sera pego os dados do usuário solicitado.
-      //returnDataCleaned pega os dados (que podem ser vistos) do usuário que será visto o perfil.
-      const returnDataCleaned = await conn.query("select u.Nome, u.CEP, u.Rua, u.Numero, u.Bairro, u.Estado, u.DataNasc,u.Cidade, u.Email  from usuario As u WHERE id=? ",[userID]);   
-      const returnPetsUser = await Pet.petsDeUmUsuarioQuery(userID);
+class Contato {
+  constructor (ID,Data,IDSolicitante,Interessado,IDDestinatario) {
+    this.ID = ID;
+    this.Data = Data;
+    this.IDSolicitante = IDSolicitante;
+    this.Interessado = Interessado;
+    this.IDDestinatario = IDDestinatario;
+  }
 
 
-      if(returnDataCleaned[0].length >=1) {
-       return {success:"retornando dados do seu perfil para uso", dadosUsuario: returnDataCleaned[0][0],dadosPetsUsuario:returnPetsUser.dataResponse}
-      }else {
-        return{error:"não foi possivel retornar dados do seu perfil, tente novamente por favor"}
-      }
-
-    } else { // se o usuário quiser ver o perfil de outra pessoa
-      const returnAnotherUserProfile = await conn.query ("select u.Nome, u.Bairro, u.Estado, u.DataNasc,u.Cidade from usuario As u WHERE id=? ",[usuarioASerRetornado]);
-      const returnPetsOfThisUser = await Pet.petsDeUmUsuarioQuery(usuarioASerRetornado);
-      const verifyContactVinculate = await conn.query("select * from contato WHERE IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=?",[userID,usuarioASerRetornado,usuarioASerRetornado,userID])
-      const verifyInviteExistence = await conn.query("select * from solicitacaocontato where IDSolicitante =? AND IDDestinatario = ? OR IDDestinatario=? AND IDSolicitante = ?",[userID,usuarioASerRetornado,usuarioASerRetornado,userID])
-
-      let saoAmigos;
-      let envioAmizadePendente;
-      if(verifyContactVinculate[0].length >=1) {
-        saoAmigos = true;
-      }else {
-        saoAmigos = false
-      }
-
-      if(verifyInviteExistence[0].length >=1) {
-        envioAmizadePendente = true;
-      }else {
-        envioAmizadePendente = false;
-      }
-
-      if(returnAnotherUserProfile[0].length >=1) {
-        return {success: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente}
-      } else {
-        return {error:"não foi possivel retornar dados do perfil do usuário especificado"}
-      }
-    }
-   },
-
-   async removeUsuarioDaListaDeContatosQuery (contactID,userID) {
+ static async removeUsuarioDaListaDeContatosQuery (contactID,userID) {
     const conn = await connection();
     try{
       const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
@@ -64,9 +27,9 @@ const userInteractQueries = {
     }catch(e) {
       return{error:e.message}
     }
-   },
+   }
 
-   async meusContatosQuery (userID) {
+  static async meusContatosQuery (userID) {
     const conn = await connection();
  
 
@@ -126,9 +89,65 @@ const userInteractQueries = {
     }catch(e) {
       return{error:e.message}
     }
-   },
+   }
 
-   
+   static async mensagensContatoQuery (userID, contactID) {
+    const conn = await connection();
+    try {
+      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
+      if(verifyIfUserAreInContact[0].length >=1) {
+        const getingMessages = await conn.query("select ID as IDMensagem, DataDeEnvio, IDRemetente as quemEnviouAMensagem , Texto from mensagem WHERE IDContato = ? AND Remocao = ?",[contactID,0])
+        if(getingMessages[0].length >= 1) {
+          getingMessages[0].sort((a,b) => {
+            return a - b
+          }
+        ) 
+        getingMessages[0].forEach(e => {
+          if(e.quemEnviouAMensagem === userID) {
+            e.quemEnviouAMensagem = "Você Enviou"
+          }else {
+            e.quemEnviouAMensagem = "Enviado pelo contato"
+          }
+        })
+        return {success:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
+        }else {
+          return{error:"não possui nenhuma mensagem com o contato especificado"}
+        }
+      }else {
+        return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
+      }
+    }catch(e) {
+      return{error:e.message}
+    }
+   }
+
+   static async enviaMensagemQuery (DataDeEnvio,IDRemetente,IDContato,Texto) {
+    const conn = await connection();
+    try {
+      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[IDContato,IDRemetente,IDContato,IDRemetente])
+      if(verifyIfUserAreInContact[0].length >=1) {
+        const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,0,Texto])
+        if(sendingMessage[0].affectedRows >=1) {
+          return {success:"mensagem enviada com sucesso"}
+        }
+      }  return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
+  } catch(e) {
+    return {error:e.message}
+  }
+  }
+
+
+  static async deletaMensagemEnviadaQuery (userID,MessageID) {
+    const conn = await connection();
+    try{
+      const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=? AND Remocao=0",[MessageID,userID])
+      if(deletingMessageRequisited[0].affectedRows >=1)return{success:"mensagem removida com sucesso"}
+      return {error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
+    }catch(e) {
+      return {error:e.message}
+    }
+  }
 }
 
-module.exports = userInteractQueries;
+
+module.exports = Contato
