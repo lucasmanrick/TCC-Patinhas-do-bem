@@ -15,7 +15,7 @@ class Notificacao {
   async minhasNotificacoesQuery (userID) {
     const conn = await connection();
     try {
-        
+        const getMyNotifications = await conn.query("select * from notificacoes WHERE IDDestinatario = ?",[userID])
     }catch(e) {
       return {error:e.message}
     }
