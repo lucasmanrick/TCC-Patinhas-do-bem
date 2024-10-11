@@ -8,6 +8,7 @@ const userInteractController = require("../Controllers/userInteractController");
 const solicitacaoContatoController = require("../Controllers/solicitacaoContatoController");
 const interesseController = require("../Controllers/interesseController");
 const contatoController = require("../Controllers/contatoController");
+const mensagemController = require("../Controllers/mensagemController")
 
 const app = express();
 
@@ -117,13 +118,17 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   router.get("/MeusContatos",verificadorDoToken, contatoController.meusContatos)
 
   //Rota para puxar as mensagens que tiveram entre o contato selecionado.
-  router.get("/MensagensContato",verificadorDoToken, userInteractController.mensagensContato);
+  router.get("/MensagensContato",verificadorDoToken,mensagemController.mensagensContato);
 
 
   //Rota para enviar uma mensagem para o contato selecionado
-  router.post("/EnviaMensagem",verificadorDoToken, userInteractController.enviaMensagem);
+  router.post("/EnviaMensagem",verificadorDoToken,mensagemController.enviaMensagem);
 
   //Rota para deletar/inativar uma mensagem enviada, para que não seja mais demonstrada ao outro usuário.
-  router.put("/DeletaMensagemEnviada", verificadorDoToken, userInteractController.deletaMensagemEnviada)
+  router.put("/DeletaMensagemEnviada", verificadorDoToken,mensagemController.deletaMensagemEnviada)
+
+
+  router.get ("/Notificações", verificadorDoToken,  )
+
 
 module.exports = router;
