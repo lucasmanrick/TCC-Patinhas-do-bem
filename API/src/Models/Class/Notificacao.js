@@ -1,3 +1,6 @@
+const { connection } = require("../../Config/db");
+const { connect } = require("../../Routes/routesapp");
+
 class Notificacao {
   constructor (ID,Texto,IDDestinatario,IDComentario,IDPostagem,Recebimento) {
     this.ID = ID;
@@ -9,6 +12,14 @@ class Notificacao {
   }
 
 
+  async minhasNotificacoesQuery (userID) {
+    const conn = await connection();
+    try {
+      
+    }catch(e) {
+      return {error:e.message}
+    }
+  }
 
 }
 
