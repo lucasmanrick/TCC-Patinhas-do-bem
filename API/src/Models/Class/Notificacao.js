@@ -15,7 +15,7 @@ class Notificacao {
   async minhasNotificacoesQuery (userID) {
     const conn = await connection();
     try {
-      
+        
     }catch(e) {
       return {error:e.message}
     }
