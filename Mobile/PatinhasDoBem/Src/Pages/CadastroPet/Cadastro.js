@@ -36,103 +36,182 @@ const CadastroPet = ({ navigation, route }) => {
   }, [route.params?.imagemSelecionada]);
 
 
-const handleCadastroPet = async () => {
-  // Validação das entradas
-  if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
-    Alert.alert("Erro", "Por favor, preencha todos os campos.");
-    return;
-  }
+  // const handleCadastroPet = async () => {
+  //   // Validação das entradas
+  //   if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
+  //     Alert.alert("Erro", "Por favor, preencha todos os campos.");
+  //     return;
+  //   }
 
-  const petData = {
-    TipoAnimal: String(TipoAnimal),
-    Linhagem: String(Linhagem),
-    Idade: String(Idade),
-    Sexo: String(Sexo),
-    Cor: String(Cor),
-    Descricao: String(Descricao),
-  };
+  //   const petData = {
+  //     TipoAnimal: String(TipoAnimal),
+  //     Linhagem: String(Linhagem),
+  //     Idade: String(Idade),
+  //     Sexo: String(Sexo),
+  //     Cor: String(Cor),
+  //     Descricao: String(Descricao),
+  //   };
 
-  console.log("Dados do pet:", petData);
+  //   console.log("Dados do pet:", petData);
 
+  //   try {
+  //     // Recupera o token armazenado
+  //     const token = await AsyncStorage.getItem('token');
 
-  try {
-    const token = await AsyncStorage.getItem('@CodeApi:token');
+  //     console.log(token);
+      
+  //     // Verifica se o token está disponível
+  //     if (!token) {
+  //       Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+  //       return;
+  //     }
+       
 
-    if (!token) {
-      Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+  //     // Enviando a requisição com o token no cabeçalho
+  //     const response = await api.post("/CadastraPet", petData, {
+  //       headers: {
+  //         authorization: token, // Envia o token no formato adequado
+  //       },
+  //     });
+
+  //     // Caso a requisição tenha sucesso
+  //     Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+  //     console.log(response.data);
+      
+  //     navigation.goBack();
+  //   } catch (error) {
+  //     console.error("Erro ao cadastrar pet:", error);
+  //     Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
+  //   }
+  // };
+
+  const handleCadastroPet = async () => {
+    // Validação das entradas
+    if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
       return;
     }
+  
+    if (!imagemSelecionada) {
+      Alert.alert("Erro", "Por favor, selecione uma imagem.");
+      return;
+    }
+  
+    try {
+      // Recupera o token armazenado
+      const token = await AsyncStorage.getItem('token');
+  
+      if (!token) {
+        Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+        return;
+      }
+  
+      // Primeiro, cadastra o pet no backend
+      const petData = {
+        TipoAnimal: String(TipoAnimal),
+        Linhagem: String(Linhagem),
+        Idade: String(Idade),
+        Sexo: String(Sexo),
+        Cor: String(Cor),
+        Descricao: String(Descricao),
+      };
+  
+      // Enviando os dados do pet para o backend
+      const responseApi = await api.post("/CadastraPet", petData, {
+        headers: {
+          authorization: token, // Envia o token no cabeçalho
+        },
+      }).then(e => {
+        
+      })
+  
+      // Verifica se a requisição foi bem-sucedida
+       console.log(responseApi.data.idDoPet); // Obter o ID do pet retornado pela API
+  
+      if (!idDoPet) {
+        throw new Error("Erro ao obter ID do pet.");
+      }
+  
+      // Redimensionar a imagem antes do upload (opcional)
+      const manipResult = await ImageManipulator.manipulateAsync(
+        imagemSelecionada,
+        [{ resize: { width: 800 } }], // Redimensionar a imagem para largura de 800px
+        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+      );
+  
+      // Converter a imagem para blob
+      const responseImage = await fetch(manipResult.uri);
+      const blob = await responseImage.blob();
+  
+      // Nomear a imagem com o ID do pet
+      const imageRef = ref(storage, `pets/${idDoPet}.jpg`);
+  
+      // Faz o upload da imagem para o Firebase Storage
+      await uploadBytes(imageRef, blob);
+  
+      // Caso a requisição e upload tenham sucesso
+      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+      navigation.goBack();
+    } catch (error) {
+      console.error("Erro ao cadastrar pet:", error);
+      Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
+    }
+  };
 
-    const response = await api.post("/CadastraPet", petData, {
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-    }).then(e => (
-      Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
-      navigation.goBack()
-    ));
-  } catch (error) {
-    console.error("Erro ao cadastrar pet:", error);
-    Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
-  }
-};
 
+  const renderInput = (placeholder, iconName, value, onChangeText) => (
+    <View style={styles.inputContainer}>
+      <MaterialIcons name={iconName} size={24} color="#B0BEC5" />
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+      />
+    </View>
+  );
 
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={0}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={styles.container}>
+          {/* Botão de Voltar */}
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={24} color="#000" />
+            <Text style={styles.backButtonText}>Voltar</Text>
+          </TouchableOpacity>
 
-const renderInput = (placeholder, iconName, value, onChangeText) => (
-  <View style={styles.inputContainer}>
-    <MaterialIcons name={iconName} size={24} color="#B0BEC5" />
-    <TextInput
-      style={styles.input}
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-    />
-  </View>
-);
+          <Text style={styles.header}>Cadastrar Pet</Text>
 
-return (
-  <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : "height"}
-    keyboardVerticalOffset={0}
-  >
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <View style={styles.container}>
-        {/* Botão de Voltar */}
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="#000" />
-          <Text style={styles.backButtonText}>Voltar</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.avatar} onPress={() => navigation.navigate("Biblioteca")}>
+            {imagemSelecionada ? (
+              <Image
+                source={{ uri: imagemSelecionada }}
+                style={{ width: 250, height: 300, borderRadius: 50 }}
+              />
+            ) : (
+              <Ionicons name="add-outline" size={40} color="#fff" style={{ marginTop: 6 }} />
+            )}
+          </TouchableOpacity>
 
-        <Text style={styles.header}>Cadastrar Pet</Text>
+          {renderInput("Tipo do Animal", "pets", TipoAnimal, setTipoAnimal)}
+          {renderInput("Linhagem", "category", Linhagem, setLinhagem)}
+          {renderInput("Idade", "calendar-today", Idade, setIdade)}
+          {renderInput("Sexo", "person", Sexo, setSexo)}
+          {renderInput("Cor", "palette", Cor, setCor)}
+          {renderInput("Descrição", "description", Descricao, setDescricao)}
 
-        <TouchableOpacity style={styles.avatar} onPress={() => navigation.navigate("Biblioteca")}>
-          {imagemSelecionada ? (
-            <Image
-              source={{ uri: imagemSelecionada }}
-              style={{ width: 250, height: 300, borderRadius: 50 }}
-            />
-          ) : (
-            <Ionicons name="add-outline" size={40} color="#fff" style={{ marginTop: 6 }} />
-          )}
-        </TouchableOpacity>
-
-        {renderInput("Tipo do Animal", "pets", TipoAnimal, setTipoAnimal)}
-        {renderInput("Linhagem", "category", Linhagem, setLinhagem)}
-        {renderInput("Idade", "calendar-today", Idade, setIdade)}
-        {renderInput("Sexo", "person", Sexo, setSexo)}
-        {renderInput("Cor", "palette", Cor, setCor)}
-        {renderInput("Descrição", "description", Descricao, setDescricao)}
-
-        <TouchableOpacity style={styles.button} onPress={handleCadastroPet}>
-          <Text style={styles.buttonText}>Enviar</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
-  </KeyboardAvoidingView>
-);
+          <TouchableOpacity style={styles.button} onPress={handleCadastroPet}>
+            <Text style={styles.buttonText}>Enviar</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
 };
 
 const styles = StyleSheet.create({

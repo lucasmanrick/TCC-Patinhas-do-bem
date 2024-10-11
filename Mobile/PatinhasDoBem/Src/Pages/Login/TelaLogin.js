@@ -30,10 +30,6 @@ class LoginScreen extends Component {
   async componentDidMount() {
     await this.loadFonts(); // Carrega as fontes
    
-      if (user) {
-        this.setState({ loggedInUser: user.email }); // Armazena o email do usuário logado
-      }
-    
   }
 
   // Função para carregar a fonte
@@ -56,19 +52,27 @@ class LoginScreen extends Component {
       const response = await api.post('/Login', {
         Email,
         Senha,
+      }, {
+        headers: {
+          platform: "mobile",
+        }
       });
 
-      console.log('Resposta do backend:', response.data); // Verifique a resposta do backend aqui
+      console.log('Resposta do backend:', response.data.token); // Verifique a resposta do backend aqui
 
-      if (response.data.auth) {
-        console.log("feito login");
+      if (response.data.token) {
+        console.log("Login bem-sucedido, token recebido:", response.data.token);
         
-
-          this.props.navigation.navigate('Home');
-        } else {
-          this.setState({ errorMessage: 'Usuarío inválido.' });
-          console.log('Login invalido');
-        }
+        // Armazena o token no AsyncStorage para persistência do login
+         await AsyncStorage.setItem('token',response.data.token);
+  
+        // Navega para a tela "Home"
+        this.props.navigation.navigate('Home');
+      } else {
+        // Se o token não for retornado, exibe mensagem de erro
+        this.setState({ errorMessage: 'Usuário inválido.' });
+        console.log('Login inválido');
+      }
       
     } catch (error) {
       console.log('Erro ao fazer login:', error);
