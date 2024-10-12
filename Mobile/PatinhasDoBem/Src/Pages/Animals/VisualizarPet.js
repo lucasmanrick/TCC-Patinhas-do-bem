@@ -203,6 +203,13 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Centraliza o conteúdo horizontalmente
     elevation: 5, // Sombra para dar um efeito elevado (opcional)
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+  },
+  
 
 });
 

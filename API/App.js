@@ -20,7 +20,11 @@ app.use(express.json());
 //   optionsSuccessStatus: 204
 // }
 
-
+app.use((req,res,next) => {
+    console.log(req.cookies);
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next()
+  })
  app.use('/', router)
 
 

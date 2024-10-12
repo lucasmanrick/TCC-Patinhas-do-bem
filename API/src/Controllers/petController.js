@@ -2,8 +2,10 @@ const Pet = require("../Models/Class/Pet.js")
 
 const petManagement = {
   cadastraPet: async (req, res) => {
+    console.log(req.body);
   try {
     const IDDoador = req.dataUser.ID; // Certifique-se de que o middleware de autenticação está preenchendo req.dataUser
+    console.log(IDDoador);
     const { TipoAnimal, Linhagem, Idade, Sexo, Cor, Descricao } = req.body;
 
     if (TipoAnimal && Linhagem && Idade && Sexo && Cor && Descricao) {
