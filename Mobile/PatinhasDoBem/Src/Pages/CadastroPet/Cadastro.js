@@ -117,46 +117,52 @@ const CadastroPet = ({ navigation, route }) => {
       };
   
       // Enviando os dados do pet para o backend
-      const responseApi = await api.post("/CadastraPet", petData, {
+      api.post("/CadastraPet", petData, {
         headers: {
           authorization: token, // Envia o token no cabeçalho
         },
-      }).then(e => {
-        
       })
+      .then(async (e) => {
+        const idDoPet = e.data.idDoPet; // Obter o ID do pet retornado pela API
   
-      // Verifica se a requisição foi bem-sucedida
-       console.log(responseApi.data.idDoPet); // Obter o ID do pet retornado pela API
+        if (!idDoPet) {
+          throw new Error("Erro ao obter ID do pet.");
+        }
   
-      if (!idDoPet) {
-        throw new Error("Erro ao obter ID do pet.");
-      }
+        // Redimensionar a imagem antes do upload (opcional)
+        const manipResult = await ImageManipulator.manipulateAsync(
+          imagemSelecionada,
+          [{ resize: { width: 800 } }], // Redimensionar a imagem para largura de 800px
+          { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+        );
   
-      // Redimensionar a imagem antes do upload (opcional)
-      const manipResult = await ImageManipulator.manipulateAsync(
-        imagemSelecionada,
-        [{ resize: { width: 800 } }], // Redimensionar a imagem para largura de 800px
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
-      );
+        // Converter a imagem para blob
+        const responseImage = await fetch(manipResult.uri);
+        const blob = await responseImage.blob();
   
-      // Converter a imagem para blob
-      const responseImage = await fetch(manipResult.uri);
-      const blob = await responseImage.blob();
+        // Nomear a imagem com o ID do pet
+        const imageRef = ref(storage, `pets/${idDoPet}.jpg`);
   
-      // Nomear a imagem com o ID do pet
-      const imageRef = ref(storage, `pets/${idDoPet}.jpg`);
+        // Faz o upload da imagem para o Firebase Storage
+        return uploadBytes(imageRef, blob);
+      })
+      .then(() => {
+        // Caso a requisição e upload tenham sucesso
+        Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+        navigation.goBack();
+      })
+      .catch((error) => {
+        console.error("Erro ao cadastrar pet:", error);
+        Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
+      });
   
-      // Faz o upload da imagem para o Firebase Storage
-      await uploadBytes(imageRef, blob);
-  
-      // Caso a requisição e upload tenham sucesso
-      Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-      navigation.goBack();
     } catch (error) {
       console.error("Erro ao cadastrar pet:", error);
       Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
     }
   };
+  
+  
 
 
   const renderInput = (placeholder, iconName, value, onChangeText) => (
