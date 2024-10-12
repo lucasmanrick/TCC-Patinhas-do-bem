@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Usando react-navigation/bottom-tabs
 import { FontAwesome } from "react-native-vector-icons";
 
+
 import TelaLogin from './Src/Pages/Login/TelaLogin';
 import TelaLoading from './Src/Pages/Loading/TelaLoading';
 import TelaInicial from './Src/Pages/Home/TelaInicial';
