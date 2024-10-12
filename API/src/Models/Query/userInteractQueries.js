@@ -27,17 +27,9 @@ const userInteractQueries = {
 
       let saoAmigos;
       let envioAmizadePendente;
-      if(verifyContactVinculate[0].length >=1) {
-        saoAmigos = true;
-      }else {
-        saoAmigos = false
-      }
-
-      if(verifyInviteExistence[0].length >=1) {
-        envioAmizadePendente = true;
-      }else {
-        envioAmizadePendente = false;
-      }
+      verifyContactVinculate[0].length >=1?saoAmigos = true:saoAmigos = false  
+      verifyInviteExistence[0].length >=1?envioAmizadePendente = true:envioAmizadePendente = false
+  
 
       if(returnAnotherUserProfile[0].length >=1) {
         return {success: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente}
@@ -64,69 +56,7 @@ const userInteractQueries = {
     }catch(e) {
       return{error:e.message}
     }
-   },
-
-   async meusContatosQuery (userID) {
-    const conn = await connection();
- 
-
-    try{
-      const getingMyContacts = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR  c.IDDestinatario=? AND c.Interessado = ? AND u.ID= c.IDSolicitante ",[userID ,0,userID ,0])
-
-      let unifyResultsNotInterest = []
-
-      if(getingMyContacts[0].length >= 1) {
-         getingMyContacts[0].forEach(e => {
-         unifyResultsNotInterest.push(e)
-         })
-      }
-      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR c.IDDestinatario=? AND c.Interessado = ? AND u.ID = C.IDSolicitante",[userID ,1,userID ,1])
-      
-      let unifyResultsInterestedsContacts = []
-
-  
-      if(getingMyContactsInterestedsInMyPet[0].length >=1) {
-        getingMyContactsInterestedsInMyPet[0].forEach(e => {
-          unifyResultsInterestedsContacts.push(e)
-      })
-      }
-
-     const returnedMessages =  unifyResultsInterestedsContacts.map(async e => {
-        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
-        if(takeLastMessage[0].length >=1) {
-          console.log(e)
-          e.ultimaMensagem = takeLastMessage[0][0].Texto
-          return e
-        }else {
-          e.ultimaMensagem = "não tem mensagens"
-          return e
-        }
-      })
-
-      const returnedMessagesNotInterest = unifyResultsNotInterest.map(async e => {
-        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
-        if(takeLastMessage[0].length >=1) {
-          e.ultimaMensagem = takeLastMessage[0][0].Texto
-          return e
-        }else {
-          e.ultimaMensagem = "não tem mensagens"
-          return e
-        }
-      })
-
-      unifyResultsInterestedsContacts= await Promise.all(returnedMessages)
-      unifyResultsNotInterest = await Promise.all(returnedMessagesNotInterest)
-     
-      if(unifyResultsInterestedsContacts.length >= 1 || unifyResultsNotInterest.length >=1) {
-        return {success: "retornando dados de todos seus contatos para o front end", contatosDeInteresses:unifyResultsInterestedsContacts, contatosSemInteresses:unifyResultsNotInterest}
-      }
-
-      return {error:"não há nenhum contato para ser retornado!"}
-      
-    }catch(e) {
-      return{error:e.message}
-    }
-   },
+   }
 
    
 }

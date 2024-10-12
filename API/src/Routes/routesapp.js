@@ -8,7 +8,8 @@ const userInteractController = require("../Controllers/userInteractController");
 const solicitacaoContatoController = require("../Controllers/solicitacaoContatoController");
 const interesseController = require("../Controllers/interesseController");
 const contatoController = require("../Controllers/contatoController");
-const mensagemController = require("../Controllers/mensagemController")
+const mensagemController = require("../Controllers/mensagemController");
+const notificacaoController = require("../Controllers/NotificacaoController");
 
 const app = express();
 
@@ -128,7 +129,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   router.put("/DeletaMensagemEnviada", verificadorDoToken,mensagemController.deletaMensagemEnviada)
 
 
-  router.get ("/Notificações", verificadorDoToken,  )
+  router.get ("/Notificacoes", verificadorDoToken, notificacaoController.MinhasNotificacoes  )
 
 
 module.exports = router;
