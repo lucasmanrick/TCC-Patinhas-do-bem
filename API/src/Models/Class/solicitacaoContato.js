@@ -1,4 +1,5 @@
 const { connection } = require(`../../Config/db`);
+const Notificacao = require("./Notificacao");
 
 class SolicitacaoContato {
   constructor(ID,IDSolicitante,Interessado,IDDestinatario) {
@@ -9,7 +10,7 @@ class SolicitacaoContato {
   }
 
  
- static  async enviarSolicitacaoDeAmizadeQuery (UserID,IDDestinatario) {
+ static  async enviarSolicitacaoDeAmizadeQuery (UserID,IDDestinatario, NomeDoSolicitante) {
     const conn = await connection();
 
     try {
@@ -29,7 +30,8 @@ class SolicitacaoContato {
       }else {
         const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)",[UserID,0,IDDestinatario])
         if(sendInviteToNewFriend[0].affectedRows >= 1) {
-          await conn.query ("insert into Notificacao (Texto,IDDestinatario,Recebimento) VALUES (?,?,?)",["Você acaba de receber uma nova solicitação de amizade",IDDestinatario,0])
+          const notifyInvite = new Notificacao(null,`Você recebeu uma solicitação de amizade de ${NomeDoSolicitante} `,IDDestinatario);
+          await notifyInvite.criarNotificação();
           return {success:"solicitação de amizade enviada ao usuário solicitado com sucesso"}
         }
         return {error:"não foi feito a solicitação de amizade, pois não foi afetado nenhuma linha do banco de dados"}

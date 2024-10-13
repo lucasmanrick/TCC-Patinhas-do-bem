@@ -75,7 +75,6 @@ const petManagement = {
     try {
       const {ID,Estado} = req.dataUser;
 
-      console.log(Estado,ID)
       if(Estado,ID) {
         const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID);
         return res.json(receivePets)

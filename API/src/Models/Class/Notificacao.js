@@ -2,31 +2,44 @@ const { connection } = require("../../Config/db");
 
 
 class Notificacao {
+  #Texto;
+  #IDDestinatario;
+  #IDComentario;
+  #IDPostagem;
+  #Recebimento
   constructor (ID,Texto,IDDestinatario,IDComentario,IDPostagem,Recebimento) {
-    this.ID = ID;
-    this.Texto = Texto;
-    this.IDDestinatario = IDDestinatario;
-    this.IDComentario = IDComentario;
-    this.IDPostagem = IDPostagem;
-    this.Recebimento = Recebimento
+    this.ID = ID?ID:null;
+    this.#Texto = Texto;
+    this.#IDDestinatario = IDDestinatario;
+    this.#IDComentario = IDComentario?IDComentario:null;
+    this.#IDPostagem = IDPostagem?IDPostagem:null;
+    this.#Recebimento = Recebimento?Recebimento:0;
+  }
+
+
+  async criarNotificação () {
+    const conn = await connection();
+    try {
+      if(this.#Texto,this.#IDDestinatario) {
+
+        const sendingNotify = await conn.query("INSERT INTO notificacao (Texto,IDDestinatario,IDComentario,IDPostagem,Recebimento) VALUES (?,?,?,?,?)", [this.#Texto,this.#IDDestinatario,this.#IDComentario,this.#IDPostagem,this.#Recebimento])
+        if(sendingNotify[0].affectedRows >=1) return {success:"notificação registrada com sucesso"}
+        return {error:"não foi feito a inserção da notificação por favor tente novamente."}
+      }
+    } 
+    catch(e) {
+      return {error:e.message}
+    }
   }
 
 
  static async minhasNotificacoesQuery (userID) {
     const conn = await connection();
-    console.log("teste")
     try {
-      console.log(userID)
         const getMyNotifications = await conn.query("select ID as IDNotificacao, Texto, IDComentario, IDPostagem from notificacao WHERE IDDestinatario = ? AND Recebimento =? ",[userID,0])
-        console.log(getMyNotifications)
         if(getMyNotifications[0].length >=1) {
-          console.log("entrou")
-          const updatingView = await conn.query("UPDATE notificacao SET Recebimento = ? WHERE IDDestinatario = ? ",[1,userID])
-          if(updatingView[0].affectedRows >=1) {
+            await this.marcarNotificacoesComoVisualizadasQuery(userID);
             return {success:"retornando as notificações do usuário", notifications: getMyNotifications[0]}
-          }else {
-            return {error:"não é possivel retornar as notificações por uma falha no processo"} //não sofreu o update
-          }
         }else {
           return {error:"não foi identificado notificações pendentes"}
         }
@@ -34,6 +47,19 @@ class Notificacao {
       return {error:e.message}
     }
   }
+
+  static async marcarNotificacoesComoVisualizadasQuery (userID) {
+    const conn = await connection();
+    try {
+      const updatingView = await conn.query("UPDATE notificacao SET Recebimento = ? WHERE IDDestinatario = ? ",[1,userID])
+      if(updatingView[0].affectedRows >=1) return {success:"notificações marcadas como visualizada"}
+      return {error:"o usuário não tem notificações não vistas."}
+    }
+    catch(e) {
+      return {error:e.message}
+    }
+  }
+
 
 }
 
