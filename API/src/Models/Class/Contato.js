@@ -34,7 +34,7 @@ class Contato {
  
 
     try{
-      const getingMyContacts = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR  c.IDDestinatario=? AND c.Interessado = ? AND u.ID= c.IDSolicitante ",[userID ,0,userID ,0])
+      const getingMyContacts = await conn.query("SELECT u.ID as IDUsuario, u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR  c.IDDestinatario=? AND c.Interessado = ? AND u.ID= c.IDSolicitante ",[userID ,0,userID ,0])
 
       let unifyResultsNotInterest = []
 
@@ -43,7 +43,7 @@ class Contato {
          unifyResultsNotInterest.push(e)
          })
       }
-      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR c.IDDestinatario=? AND c.Interessado = ? AND u.ID = C.IDSolicitante",[userID ,1,userID ,1])
+      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.ID as IDUsuario,u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR c.IDDestinatario=? AND c.Interessado = ? AND u.ID = C.IDSolicitante",[userID ,1,userID ,1])
       
       let unifyResultsInterestedsContacts = []
 

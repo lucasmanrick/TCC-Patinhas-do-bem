@@ -95,7 +95,7 @@ class Pet {
   static async petsParaAdocaoQuery(Estado, ID) { // pega todos os pets e informações do dono do mesmo estado do usuário que estão para adoção desde que não seja do proprio usuário. 
     const conn = await connection();
     try {
-      const verifyUsersClose = await conn.query("select p.ID as petID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade, p.Sexo, p.Cor, p.Descricao from pet as p join usuario as u WHERE u.estado = ? AND u.ID <> ? AND p.Status = 1 LIMIT 50", [Estado, ID]);
+      const verifyUsersClose = await conn.query("select p.ID as petID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade, p.Sexo, p.Cor, p.Descricao from pet as p join usuario as u on u.ID = p.IDDoador WHERE u.estado = ? AND u.ID <> ? AND p.Status = 1 LIMIT 50", [Estado, ID]);
       if(verifyUsersClose[0].length >= 1)  return { success: "retornando todos pets da proximidade do usuário, disponiveis para adoção.", dataResponse: verifyUsersClose[0] }
       
       return {error:"não foi possivel trazer informações de pets para adoção, pois não possui nenhum pet em sua região"}
