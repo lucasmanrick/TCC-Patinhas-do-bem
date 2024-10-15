@@ -21,7 +21,6 @@ app.use(express.json());
 // }
 
 app.use((req,res,next) => {
-    console.log(req.cookies);
     res.header('Access-Control-Allow-Credentials', 'true');
     next()
   })

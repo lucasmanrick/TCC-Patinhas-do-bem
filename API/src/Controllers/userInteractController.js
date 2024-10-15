@@ -11,7 +11,6 @@ const userInteractController = {
     try {
       const {userBeReturnedID} = req.body;
 
-
       if(userBeReturnedID) {
         const dataReturnUserEspecified = await userInteractQueries.profileUserQuery(userBeReturnedID,ID)
         return res.json(dataReturnUserEspecified)

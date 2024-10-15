@@ -1,11 +1,13 @@
 const {connection} = require('../../Config/db');
+const {ref, uploadBytesResumable} = require (`firebase/storage`)
+const {storage} = require (`../../Config/firebase`)
 const Pet = require("../Class/Pet")
 
 const userInteractQueries = {
  
 
    async profileUserQuery(usuarioASerRetornado, userID) {
-    const conn = await connection();
+    const conn = await connection(); 
 
     if (userID && !usuarioASerRetornado) { // se o usuário solicitou analise de algum perfil e não passou id será retornado as informações dele mesmo, caso ele passe id sera pego os dados do usuário solicitado.
       //returnDataCleaned pega os dados (que podem ser vistos) do usuário que será visto o perfil.
@@ -14,7 +16,9 @@ const userInteractQueries = {
 
 
       if(returnDataCleaned[0].length >=1) {
-       return {success:"retornando dados do seu perfil para uso", dadosUsuario: returnDataCleaned[0][0],dadosPetsUsuario:returnPetsUser.dataResponse}
+        
+
+       return {success:"retornando dados do seu perfil para uso"  ,dadosUsuario: returnDataCleaned[0][0],dadosPetsUsuario:returnPetsUser.dataResponse}
       }else {
         return{error:"não foi possivel retornar dados do seu perfil, tente novamente por favor"}
       }
@@ -36,25 +40,6 @@ const userInteractQueries = {
       } else {
         return {error:"não foi possivel retornar dados do perfil do usuário especificado"}
       }
-    }
-   },
-
-   async removeUsuarioDaListaDeContatosQuery (contactID,userID) {
-    const conn = await connection();
-    try{
-      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
-      if(verifyIfUserAreInContact[0].length >=1) {
-        const removingContact = await conn.query("delete from contato WHERE ID=?",[contactID])
-        if(removingContact[0].affectedRows >=1) {
-          return{success:"contato removido da sua lista de contatos com sucesso."}
-        }else {
-          return{error:"não foi possivel remover o contato da sua lista, tente novamente!"}
-        }
-      }else {
-        return{error:"o usuário não pode remover o contato, pois não participa deste contato para geri-lo"}
-      }
-    }catch(e) {
-      return{error:e.message}
     }
    }
 
