@@ -1,6 +1,4 @@
 const {connection} = require('../../Config/db');
-const {ref, uploadBytesResumable} = require (`firebase/storage`)
-const {storage} = require (`../../Config/firebase`)
 const Pet = require("../Class/Pet")
 
 const userInteractQueries = {
