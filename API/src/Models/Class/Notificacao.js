@@ -36,7 +36,10 @@ class Notificacao {
  static async minhasNotificacoesQuery (userID) {
     const conn = await connection();
     try {
-        const getMyNotifications = await conn.query("select ID as IDNotificacao, Texto, IDComentario, IDPostagem from notificacao WHERE IDDestinatario = ? AND Recebimento =? ",[userID,0])
+        const getMyNotifications = await conn.query("select ID as IDNotificacao, Texto, IDComentario, IDPostagem, Recebimento as MensagemVisualizada from notificacao WHERE IDDestinatario = ? LIMIT 10",[userID])
+        getMyNotifications[0].forEach (e => {
+          e.MensagemVisualizada === 1?e.MensagemVisualizada = "True":e.MensagemVisualizada = "False"
+        })
         if(getMyNotifications[0].length >=1) {
             await this.marcarNotificacoesComoVisualizadasQuery(userID);
             return {success:"retornando as notificações do usuário", notifications: getMyNotifications[0]}
@@ -59,6 +62,8 @@ class Notificacao {
       return {error:e.message}
     }
   }
+
+
 
 
 }
