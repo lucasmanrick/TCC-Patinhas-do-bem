@@ -1,14 +1,16 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
-*{
+
+*{ /* asterisco (*) = seletor universal, aplica estilos em elementos de qualquer tipo */
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* o tamanho levará em conta até a borda, ou seja, o width: será a soma do conteúdo com a borda e o padding */
     font-family: 'Poppins', sans-serif; /* define o estilo da fonte */
 }
-body{
-    
+
+body{ /* corpo */
     background-color: #ffffff; /*cor de fundo*/
+    /* display: grid; */
 }
 .inicio { /*somente nesta parte o gradiente para que não ocupe o corpo inteiro*/
     position: relative; /* posição relativa (altera sua posição com base na posição inicial) */
@@ -20,11 +22,12 @@ body{
     align-items: center; /* alinhamento de itens */
     background: linear-gradient(180deg, rgba(37,55,69,1) 10%, rgba(74,92,106,1) 60%, rgba(155,168,171,1) 100%); /* cor de fundo com gradiente linear */
 }
-header{
+
+header{ /* cabeçalho */
     position: absolute; /*posição absoluta*/
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100%; /* tamanho */
     display: flex;
     justify-content: space-between; /* espaçamento uniforme dos elementos */
     align-items: center; /* alinhamento de itens */
@@ -49,11 +52,11 @@ header ul li a{
     position: relative;
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* divisão igual de espaço entre os itens */
     align-items: center;
 }
 .textBox{
-    position: relative;
+    position: relative; /* posição relativa */
     max-width: 450px; /*tamanho máximo*/
     align-items: center;
 }
@@ -63,14 +66,16 @@ header ul li a{
     line-height: 1.2em; /*define espaçamento entre as linhas*/
     font-weight: bold; /*deixa a fonte em negrito*/
 }
+
 .textBox p{
     color: #ffffff; /*aqui altera a cor do texto do paragrafo*/
     font-size: 20px;
     font-weight: bold; 
     line-height: 1.2em; 
 }
+
 .textBox a{
-    display: inline-block;
+    display: inline-block; /* elementos com este display vão se manter posicionados um ao lado do outro, sem quebras de linhas */
     margin-top: 20px;
     padding: 8px 20px;
     background: #253745; /*aqui altera a cor do botão acessar*/
@@ -108,12 +113,12 @@ text-align: center; /*alinhamento de texto*/
     position: absolute;
     top: 120;
     right: 140;
-    background: #ffffff;
+    background: #ffffff; /* cor */
     border-radius: 50%;
-    width: 550px;
-    height: 550px;
-    filter: blur(4px);
-    float: right;
+    width: 550px; /* largura */
+    height: 550px; /* altura */
+    filter: blur(4px); /* desfoque */
+    float: right;     /* o elemento flutua a direita do container; */
 }
 .depoiments{
     text-align: center;
@@ -123,6 +128,7 @@ text-align: center; /*alinhamento de texto*/
 text-align: center;
 position: center;
 }
+
 /* aqui altera as imagens das "categorias", tamanho e borda */
 .imagem img{
     max-width: 250px;
@@ -131,16 +137,18 @@ position: center;
     align-items: left;
     object-position: 100% 0;
     width: 200px;
-
 }
-/* aqui altera as imagens da "nossa família", tamanho e borda" */
-.icones img{
+
+.icones img{ /* aqui altera as imagens da "nossa família", tamanho e borda" */
         float: left;
         /* border: transparent thin solid; */
         padding: 10px;
         margin: 0 10px 10px 0;
         max-width: 120px;
         border-radius: 20%;
+    }
+    .familia p, h3 { /* aqui altera o alinhamento dos paragrafos e titulos h3 da "nossa familia" */
+        text-align: left;
     }
 
 .card{
@@ -182,52 +190,41 @@ a {
     justify-content: center;
 }
 
-.depoiments .card-item{
-    background-color: #9BA8AB;
-    margin: 15px;
-    border-radius: 14px;
-    text-align: center;
-    width: 350px;
+.depoiments .card-item{ /* aqui altera os cards dos depoimentos */
+    background-color: #9BA8AB; /* cor de fundo */
+    margin: 15px; /* margem */
+    border-radius: 14px; /* arredondamento da borda */
+    text-align: center; /* alinhamento do texto */
+    width: 350px; /* tamanho */
     color: rgb(0, 0, 0);
+    /* cor de texto */
+    box-shadow: 3px 2px 2px 2px rgb(178, 176, 176); /* sombramento = deslocamento horizontal/deslocamento vertical/ desfoque/espalhamento/cor */
 }
 
-.depoiments .card-item img{
-    border-radius: 100%;
-    display: block;
-    margin: 10px auto;
-}
-.depoiments .card-item .nome-user{
-    font-weight: 600;
-    font-size: 20px;
-    margin-bottom: 15px;
-    transition: 0.5s;
+.depoiments .card-item img{ /* aqui altera as imagens dos cards de depoimentos */
+    border-radius: 100%; /* arredondamento da borda */
+    display: block; /* o elemento ocupara o espaço de uma linha, um "bloco" em fluxo */
+    margin: 30px auto; /* margem */
+    max-width: 100px;
 }
 
-.depoiments .card-item .depoimento-user{
-    font-size: 15px;
-    padding: 0 15px;
-    transition: 0.5s;
-}
-.depoiments .card-item:hover{
-    background-color: #253745;
-    margin-top: -5px;
-    color: white;
+.depoiments .card-item:hover{  /* aqui faz a animação de alteração de cor ao passar o mouse em cima dos depoimentos */
+    background-color: #253745; /* cor de fundo */
+    margin-top: -5px; 
+    color: white;     /* cor do texto */
+    transition: 0.5s; /* tempo de transição*/
 }
 
-.categorias h3{
+.categorias h3{ /* aqui altera os titulos h3 da classe categorias */
     text-align: center;
-}
-
-.servicos .row.card-item{
-    display: flex;
 }
 
 .categorias {
     display: flex;
-    padding: 50px;
+    padding: 50px; /* espaçamento interno do elemento */
 }
 
-h1 {
+h1 { /* alinhamento dos titulos h1 */
     align-items: center;
 }
 
@@ -236,8 +233,9 @@ h1 {
     /* line-height: 4.0em;  */
     margin: 20px;
 }
-
+/* 
 .usuarios img{
 max-width: 100px;
 border-radius: 20%;
-}
+} */
+
