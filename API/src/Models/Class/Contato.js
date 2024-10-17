@@ -34,7 +34,7 @@ class Contato {
  
 
     try{
-      const getingMyContacts = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR  c.IDDestinatario=? AND c.Interessado = ? AND u.ID= c.IDSolicitante ",[userID ,0,userID ,0])
+      const getingMyContacts = await conn.query("SELECT u.ID as IDUsuario, u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR  c.IDDestinatario=? AND c.Interessado = ? AND u.ID= c.IDSolicitante ",[userID ,0,userID ,0])
 
       let unifyResultsNotInterest = []
 
@@ -43,7 +43,7 @@ class Contato {
          unifyResultsNotInterest.push(e)
          })
       }
-      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR c.IDDestinatario=? AND c.Interessado = ? AND u.ID = C.IDSolicitante",[userID ,1,userID ,1])
+      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.ID as IDUsuario,u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = C.IDDestinatario OR c.IDDestinatario=? AND c.Interessado = ? AND u.ID = C.IDSolicitante",[userID ,1,userID ,1])
       
       let unifyResultsInterestedsContacts = []
 
@@ -91,62 +91,8 @@ class Contato {
     }
    }
 
-   static async mensagensContatoQuery (userID, contactID) {
-    const conn = await connection();
-    try {
-      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
-      if(verifyIfUserAreInContact[0].length >=1) {
-        const getingMessages = await conn.query("select ID as IDMensagem, DataDeEnvio, IDRemetente as quemEnviouAMensagem , Texto from mensagem WHERE IDContato = ? AND Remocao = ?",[contactID,0])
-        if(getingMessages[0].length >= 1) {
-          getingMessages[0].sort((a,b) => {
-            return a - b
-          }
-        ) 
-        getingMessages[0].forEach(e => {
-          if(e.quemEnviouAMensagem === userID) {
-            e.quemEnviouAMensagem = "Você Enviou"
-          }else {
-            e.quemEnviouAMensagem = "Enviado pelo contato"
-          }
-        })
-        return {success:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
-        }else {
-          return{error:"não possui nenhuma mensagem com o contato especificado"}
-        }
-      }else {
-        return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
-      }
-    }catch(e) {
-      return{error:e.message}
-    }
-   }
 
-   static async enviaMensagemQuery (DataDeEnvio,IDRemetente,IDContato,Texto) {
-    const conn = await connection();
-    try {
-      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[IDContato,IDRemetente,IDContato,IDRemetente])
-      if(verifyIfUserAreInContact[0].length >=1) {
-        const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,0,Texto])
-        if(sendingMessage[0].affectedRows >=1) {
-          return {success:"mensagem enviada com sucesso"}
-        }
-      }  return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
-  } catch(e) {
-    return {error:e.message}
-  }
-  }
-
-
-  static async deletaMensagemEnviadaQuery (userID,MessageID) {
-    const conn = await connection();
-    try{
-      const deletingMessageRequisited = await conn.query("UPDATE Mensagem SET Remocao=1 WHERE ID=? AND IDRemetente=? AND Remocao=0",[MessageID,userID])
-      if(deletingMessageRequisited[0].affectedRows >=1)return{success:"mensagem removida com sucesso"}
-      return {error:"não foi removida a mensagem solicitada, pois ela não pertence a você, ou já foi removida"}
-    }catch(e) {
-      return {error:e.message}
-    }
-  }
+   
 }
 
 

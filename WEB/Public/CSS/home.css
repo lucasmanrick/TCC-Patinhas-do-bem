@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+
 *{ /* asterisco (*) = seletor universal, aplica estilos em elementos de qualquer tipo */
     margin: 0;
     padding: 0;
@@ -128,7 +129,8 @@ text-align: center;
 position: center;
 }
 
-.imagem img{ /* aqui altera as imagens das "categorias", tamanho e borda */
+/* aqui altera as imagens das "categorias", tamanho e borda */
+.imagem img{
     max-width: 250px;
     border-radius: 150px;
     background-color: #CCD0CF;
@@ -145,7 +147,6 @@ position: center;
         max-width: 120px;
         border-radius: 20%;
     }
-
     .familia p, h3 { /* aqui altera o alinhamento dos paragrafos e titulos h3 da "nossa familia" */
         text-align: left;
     }
@@ -237,3 +238,4 @@ h1 { /* alinhamento dos titulos h1 */
 max-width: 100px;
 border-radius: 20%;
 } */
+

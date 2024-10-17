@@ -4,11 +4,11 @@ const SolicitacaoContato = require("../Models/Class/solicitacaocontato");
 const solicitacaoContatoController = {
   enviarSolicitacaoDeAmizade: async (req,res) => {
     try{
-      const {ID} = req.dataUser;
+      const {ID,Nome} = req.dataUser;
       const {IDDestinatario} = req.body;
 
       if(ID && IDDestinatario && typeof(IDDestinatario) === 'number') {
-        const requestInvite = await SolicitacaoContato.enviarSolicitacaoDeAmizadeQuery(ID,IDDestinatario);
+        const requestInvite = await SolicitacaoContato.enviarSolicitacaoDeAmizadeQuery(ID,IDDestinatario,Nome);
         return res.json(requestInvite)
       }else {
         return res.json ({error:"faltam informações para que seja feita a solicitação de amizade, por favor tente novamente"})

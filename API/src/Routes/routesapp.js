@@ -8,18 +8,23 @@ const userInteractController = require("../Controllers/userInteractController");
 const solicitacaoContatoController = require("../Controllers/solicitacaoContatoController");
 const interesseController = require("../Controllers/interesseController");
 const contatoController = require("../Controllers/contatoController");
-const mensagemController = require("../Controllers/mensagemController")
+const mensagemController = require("../Controllers/mensagemController");
+const notificacaoController = require("../Controllers/NotificacaoController");
+const UsuariosBloqueadosController = require("../Controllers/UsuariosBloqueadosController");
+const { denunciarPostagem } = require("../Controllers/denunciaController");
+const denunciaController = require("../Controllers/denunciaController");
 
 const app = express();
 
 
 function verificadorDoToken(req, res, next){
   let token;
-  if(req.header.authorization) {
+  if(req.headers.authorization) {
     token = req.headers['authorization'];
   }else if (req.cookies.token) {
     token = req.cookies.token;
   }
+
 
   
   if (!token) return res.status(401).json({ auth: false, message: 'Não foi informado nenhum token.' });
@@ -127,8 +132,13 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //Rota para deletar/inativar uma mensagem enviada, para que não seja mais demonstrada ao outro usuário.
   router.put("/DeletaMensagemEnviada", verificadorDoToken,mensagemController.deletaMensagemEnviada)
 
+  // rota para receber nossas notificações
+  router.get ("/Notificacoes", verificadorDoToken, notificacaoController.MinhasNotificacoes  )
 
-  router.get ("/Notificações", verificadorDoToken,  )
+  //rota para o ADM BLOQUEAR UM USUÁRIO DO SISTEMA
+  router.post ("/BloquearUsuario", verificadorDoToken, UsuariosBloqueadosController.bloquearUmUsuario)
 
+  // rota para qualquer usuário denunciar uma postagem
+  router.post ("/DenunciarPostagem", verificadorDoToken, denunciaController.denunciarPostagem)
 
 module.exports = router;

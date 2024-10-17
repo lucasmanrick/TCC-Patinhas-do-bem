@@ -29,14 +29,7 @@ class LoginScreen extends Component {
 
   async componentDidMount() {
     await this.loadFonts(); // Carrega as fontes
-    const token = await AsyncStorage.getItem('@CodeApi:token');
-
-    if (token) {
-      const user = auth.currentUser; // Move para cá
-      if (user) {
-        this.setState({ loggedInUser: user.email }); // Armazena o email do usuário logado
-      }
-    }
+   
   }
 
   // Função para carregar a fonte
@@ -59,24 +52,28 @@ class LoginScreen extends Component {
       const response = await api.post('/Login', {
         Email,
         Senha,
+      }, {
+        headers: {
+          platform: "mobile",
+        }
       });
 
-      console.log('Resposta do backend:', response.data); // Verifique a resposta do backend aqui
+      console.log('Resposta do backend:', response.data.token); // Verifique a resposta do backend aqui
 
-      if (response.data.auth) {
-        const { token } = response.data;
-
-        if (token) { // Agora verificamos apenas o token
-          await AsyncStorage.setItem('@CodeApi:token', token); // Armazena o token
-
-          this.props.navigation.navigate('Home');
-        } else {
-          this.setState({ errorMessage: 'Token inválido.' });
-          console.log('Token inválido:', token);
-        }
+      if (response.data.token) {
+        console.log("Login bem-sucedido, token recebido:", response.data.token);
+        
+        // Armazena o token no AsyncStorage para persistência do login
+         await AsyncStorage.setItem('token',response.data.token);
+  
+        // Navega para a tela "Home"
+        this.props.navigation.navigate('Home');
       } else {
-        this.setState({ errorMessage: response.data.error });
+        // Se o token não for retornado, exibe mensagem de erro
+        this.setState({ errorMessage: 'Usuário inválido.' });
+        console.log('Login inválido');
       }
+      
     } catch (error) {
       console.log('Erro ao fazer login:', error);
       this.setState({ errorMessage: 'Erro ao conectar ao servidor. Tente novamente.' });
