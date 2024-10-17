@@ -6,7 +6,7 @@
     --color-white: hsl(252, 30%, var(--white-color-lightness));
     --color-light: hsl(252, 30%, var(--light-color-lightness));
     --color-grey: hsl(252, 15%, 65%);
-    --color-dark: hsl(252, 30%, 20%);
+   
     --color-primary: hsl(220, 90%, 50%);
     --color-secondary: hsl(320, 70%, 60%);
     --card-border-radius: 1rem;
@@ -53,10 +53,10 @@ footer {
 /* =============== Sidebar ============== */
 .sidebar {
     width: 250px;
-    background-color: var(--color-dark);
+    background-color:#4A5C6A;
     height: 79vh;
     padding: 20px;
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     display: flex;
@@ -65,8 +65,8 @@ footer {
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
     margin-top: 80px;
     border-radius: 15px;
-    margin-left: 10px;
-    margin-top: 95px;
+    margin-left: 20px;
+    margin-top: -50px;
 }
 
 .menu-item {
@@ -99,7 +99,7 @@ footer {
     .sidebar {
         width: 200px;
     }
-    
+
     .menu-item h3 {
         font-size: 1rem;
     }
@@ -107,239 +107,299 @@ footer {
 
 
 /* =============== Navbar ============== */
+/* Estilo do Navbar */
 nav {
-    background-color:#4A5C6A;
-    padding: 15px 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #4A5C6A; /* Cor de fundo */
+    padding: 15px 20px; /* Espaçamento interno */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
 .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 1200px;
-    margin: auto;
-    
+    max-width: 1200px; /* Largura máxima */
+    margin: auto; /* Centraliza */
 }
 
+/* Estilo do Logo */
 .logo img {
-    height: 50px; /* ajuste a altura conforme necessário */
-    width: auto;
-    object-fit: contain;
+    width: 45px; /* Largura do logo */
+    height: auto; /* Altura automática */
 }
 
+/* Estilo da Barra de Pesquisa */
 .search-bar {
     display: flex;
     align-items: center;
-    background-color: #f0f0f0;
-    border-radius: 30px;
-    padding: 8px 15px;
-    transition: background-color 0.3s ease;
-    flex-grow: 1; /* permite que a barra de pesquisa se expanda */
-    max-width: 400px; /* largura máxima */
-    margin: 0 20px; /* espaço entre o logo e a barra de pesquisa */
+    background-color: #f0f0f0; /* Cor de fundo */
+    border-radius: 30px; /* Bordas arredondadas */
+    padding: 5px 15px; /* Espaçamento interno */
+    transition: background-color 0.3s ease; /* Transição suave */
+    flex-grow: 1; /* Para expandir */
+    margin: 0 150px; /* Margem lateral */
+    margin-left: 300px;
 }
 
 .search-bar i {
-    color: #888;
-    font-size: 20px;
-    margin-right: 10px;
+    color: #888; /* Cor do ícone */
+    font-size: 20px; /* Tamanho do ícone */
+    margin-right: 10px; /* Espaçamento à direita */
 }
 
 .search-bar input {
-    border: none;
-    background: none;
-    outline: none;
-    font-size: 16px;
-    color: #333;
-    width: 100%;
+    border: none; /* Sem borda */
+    background: none; /* Sem fundo */
+    outline: none; /* Sem contorno */
+    font-size: 16px; /* Tamanho da fonte */
+    color: #333; /* Cor do texto */
+    width: 100%; /* Largura total */
 }
 
 .search-bar:hover {
-    background-color: #e0e0e0; /* mudança de cor ao passar o mouse */
+    background-color: #e0e0e0; /* Cor ao passar o mouse */
+}
+
+/* Estilo do Dropdown */
+.dropdown {
+    position: relative; /* Para posicionamento correto do dropdown */
+    margin-left: 50px;
+}
+
+.profile-dropdown-pic {
+    width: 40px; /* Tamanho da imagem do perfil */
+    height: 40px; /* Tamanho da imagem do perfil */
+    border-radius: 50%; /* Tornar imagem redonda */
+    cursor: pointer; /* Muda o cursor ao passar por cima */
+    margin-left: 50px;
+}
+
+/* Estilo do Menu Dropdown */
+.dropdown-menu {
+    display: none; /* Esconder por padrão */
+    position: absolute; /* Posiciona em relação ao pai */
+    top: 50px; /* Distância do topo */
+    right: 0; /* Alinha à direita */
+    background-color: #fff; /* Cor de fundo */
+    border: 1px solid #ccc; /* Borda */
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+    z-index: 1000; /* Coloca acima de outros elementos */
+}
+
+
+
+/* Estilo dos Itens do Dropdown */
+.dropdown-item {
+    padding: 10px 15px; /* Espaçamento interno */
+    color: #333; /* Cor do texto */
+    text-decoration: none; /* Remove sublinhado */
+    display: block; /* Exibe como bloco */
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0; /* Cor ao passar o mouse */
 }
 
 
 
 .content-area {
-    margin: 0 80px; /* Centraliza a área de conteúdo */
+    margin: 0 80px;
+    /* Centraliza a área de conteúdo */
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
-    height: calc(100vh - 100px); /* Ajusta a altura do conteúdo */
-    overflow-y: auto; /* Rolagem se necessário */
-    flex: 2; /* Aumenta o espaço da área de conteúdo */
+    height: calc(100vh - 100px);
+    /* Ajusta a altura do conteúdo */
+    overflow-y: auto;
+    /* Rolagem se necessário */
+    flex: 2;
+    /* Aumenta o espaço da área de conteúdo */
     margin-left: -150px;
 }
 
 
 .container {
     display: flex;
-    max-width: 1200px; /* Limita a largura total */
+    max-width: 1300px;
+    /* Limita a largura total */
     width: 100%;
-    margin-left: 80px;
+    margin-left: -20px;
 }
 
 .left {
     flex: 1;
-    padding: -40px; /* Adiciona algum espaço */
+    padding: -40px;
+    /* Adiciona algum espaço */
 }
 
-
-.messages-area {
-    width: 300px; /* Largura da área de mensagens */
-    background-color: #fff; /* Fundo branco */
-    border: 1px solid #ccc; /* Borda cinza */
-    border-radius: 15px; /* Bordas arredondadas */
-    padding: 20px; /* Espaçamento interno */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
-    position: fixed; /* Fixa à direita */
-    right: 20px; /* Distância da direita */
-    top: 80px; /* Distância do topo */
-    z-index: 1000; /* Para garantir que fique sobre outros elementos */
-    margin-top: 20px;
-}
-
-.messages-area h3 {
-    font-size: 1.5rem; /* Tamanho da fonte do título */
-    margin-bottom: 15px; /* Espaçamento abaixo do título */
-    color: #333; /* Cor do texto */
-}
-
-.message-options {
-    display: flex; /* Flexbox para os botões */
-    justify-content: space-between; /* Espaçamento entre os botões */
-    margin-bottom: 15px; /* Espaçamento abaixo dos botões */
-}
-
-.message-button {
-    background-color: #007bff; /* Cor do botão */
-    color: white; /* Cor do texto do botão */
-    border: none; /* Sem borda */
-    border-radius: 10px; /* Bordas arredondadas */
-    padding: 10px 15px; /* Espaçamento interno */
-    cursor: pointer; /* Muda o cursor para pointer */
-    transition: background-color 0.3s; /* Transição suave para hover */
-}
-
-.message-button:hover {
-    background-color: #0056b3; /* Cor do botão ao passar o mouse */
-}
-
-#messages-content {
-    font-size: 1rem; /* Tamanho da fonte do conteúdo */
-    color: #555; /* Cor do texto */
-}
 
 
 .post-form {
-    margin-bottom: 20px; /* Espaçamento abaixo do formulário */
+    margin-bottom: 20px;
+    /* Espaçamento abaixo do formulário */
 }
 
-.post-form input, 
+.post-form input,
 .post-form textarea {
-    width: 100%; /* Largura total */
-    padding: 10px; /* Espaçamento interno */
-    margin-bottom: 10px; /* Espaçamento entre campos */
-    border: 1px solid #ccc; /* Borda cinza */
-    border-radius: 5px; /* Bordas arredondadas */
+    width: 100%;
+    /* Largura total */
+    padding: 10px;
+    /* Espaçamento interno */
+    margin-bottom: 10px;
+    /* Espaçamento entre campos */
+    border: 1px solid #ccc;
+    /* Borda cinza */
+    border-radius: 5px;
+    /* Bordas arredondadas */
 }
 
 .post-form button {
-    background-color: #007bff; /* Cor do botão */
-    color: white; /* Cor do texto do botão */
-    border: none; /* Sem borda */
-    border-radius: 5px; /* Bordas arredondadas */
-    padding: 10px 15px; /* Espaçamento interno */
-    cursor: pointer; /* Muda o cursor para pointer */
+    background-color: #007bff;
+    /* Cor do botão */
+    color: white;
+    /* Cor do texto do botão */
+    border: none;
+    /* Sem borda */
+    border-radius: 5px;
+    /* Bordas arredondadas */
+    padding: 10px 15px;
+    /* Espaçamento interno */
+    cursor: pointer;
+    /* Muda o cursor para pointer */
 }
 
 .post-form button:hover {
-    background-color: #0056b3; /* Cor do botão ao passar o mouse */
+    background-color: #0056b3;
+    /* Cor do botão ao passar o mouse */
 }
 
 #posts-container .post {
-    border: 1px solid #ddd; /* Borda das postagens */
-    border-radius: 5px; /* Bordas arredondadas */
-    padding: 15px; /* Espaçamento interno */
-    margin-bottom: 15px; /* Espaçamento entre postagens */
-    background-color: #f9f9f9; /* Fundo das postagens */
+    border: 1px solid #ddd;
+    /* Borda das postagens */
+    border-radius: 5px;
+    /* Bordas arredondadas */
+    padding: 15px;
+    /* Espaçamento interno */
+    margin-bottom: 15px;
+    /* Espaçamento entre postagens */
+    background-color: #f9f9f9;
+    /* Fundo das postagens */
 }
 
 #posts-container .post h4 {
-    margin: 0 0 10px 0; /* Margem do título */
+    margin: 0 0 10px 0;
+    /* Margem do título */
 }
 
 #posts-container .post img {
-    width: 100%; /* Largura total da imagem */
-    max-width: 500px; /* Largura máxima */
-    border-radius: 5px; /* Bordas arredondadas nas imagens */
+    width: 100%;
+    /* Largura total da imagem */
+    max-width: 500px;
+    /* Largura máxima */
+    border-radius: 5px;
+    /* Bordas arredondadas nas imagens */
 }
 
 
 /* Estilo do Modal */
 .modal {
-    display: none; /* Escondido por padrão */
-    position: fixed; /* Fixo na tela */
-    z-index: 1000; /* Acima de outros elementos */
+    display: none;
+    /* Escondido por padrão */
+    position: fixed;
+    /* Fixo na tela */
+    z-index: 1000;
+    /* Acima de outros elementos */
     left: 0;
     top: 0;
-    width: 100%; /* Largura total */
-    height: 100%; /* Altura total */
-    overflow: auto; /* Rolagem se necessário */
-    background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro e transparente */
+    width: 100%;
+    /* Largura total */
+    height: 100%;
+    /* Altura total */
+    overflow: auto;
+    /* Rolagem se necessário */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fundo escuro e transparente */
 }
 
 .modal-content {
-    background-color: #f9f9f9; /* Fundo do modal */
-    margin: 15% auto; /* Margem no centro da tela */
-    padding: 20px; /* Espaçamento interno */
-    border: 1px solid #ccc; /* Borda do modal */
-    border-radius: 5px; /* Bordas arredondadas */
-    width: 80%; /* Largura do modal */
-    max-width: 500px; /* Largura máxima */
+    background-color: #f9f9f9;
+    /* Fundo do modal */
+    margin: 15% auto;
+    /* Margem no centro da tela */
+    padding: 20px;
+    /* Espaçamento interno */
+    border: 1px solid #ccc;
+    /* Borda do modal */
+    border-radius: 5px;
+    /* Bordas arredondadas */
+    width: 80%;
+    /* Largura do modal */
+    max-width: 500px;
+    /* Largura máxima */
 }
 
 .close {
-    color: #aaa; /* Cor do botão de fechar */
-    float: right; /* Alinha à direita */
-    font-size: 28px; /* Tamanho do texto */
-    font-weight: bold; /* Negrito */
+    color: #aaa;
+    /* Cor do botão de fechar */
+    float: right;
+    /* Alinha à direita */
+    font-size: 28px;
+    /* Tamanho do texto */
+    font-weight: bold;
+    /* Negrito */
 }
 
 .close:hover,
 .close:focus {
-    color: black; /* Cor ao passar o mouse */
-    text-decoration: none; /* Sem sublinhado */
-    cursor: pointer; /* Muda o cursor para pointer */
+    color: black;
+    /* Cor ao passar o mouse */
+    text-decoration: none;
+    /* Sem sublinhado */
+    cursor: pointer;
+    /* Muda o cursor para pointer */
 }
 
-.modal input, 
+.modal input,
 .modal textarea {
-    width: 100%; /* Largura total */
-    padding: 10px; /* Espaçamento interno */
-    margin-bottom: 10px; /* Espaçamento entre campos */
-    border: 1px solid #ccc; /* Borda cinza */
-    border-radius: 5px; /* Bordas arredondadas */
+    width: 100%;
+    /* Largura total */
+    padding: 10px;
+    /* Espaçamento interno */
+    margin-bottom: 10px;
+    /* Espaçamento entre campos */
+    border: 1px solid #ccc;
+    /* Borda cinza */
+    border-radius: 5px;
+    /* Bordas arredondadas */
 }
 
 .modal button {
-    background-color: #007bff; /* Cor do botão */
-    color: white; /* Cor do texto do botão */
-    border: none; /* Sem borda */
-    border-radius: 5px; /* Bordas arredondadas */
-    padding: 10px 15px; /* Espaçamento interno */
-    cursor: pointer; /* Muda o cursor para pointer */
+    background-color: #007bff;
+    /* Cor do botão */
+    color: white;
+    /* Cor do texto do botão */
+    border: none;
+    /* Sem borda */
+    border-radius: 5px;
+    /* Bordas arredondadas */
+    padding: 10px 15px;
+    /* Espaçamento interno */
+    cursor: pointer;
+    /* Muda o cursor para pointer */
 }
 
 .modal button:hover {
-    background-color: #0056b3; /* Cor do botão ao passar o mouse */
+    background-color: #0056b3;
+    /* Cor do botão ao passar o mouse */
 }
 
 .post img {
-    border-radius: 5px; /* Bordas arredondadas para as imagens */
-    margin-top: 10px; /* Espaço acima da imagem */
+    border-radius: 5px;
+    /* Bordas arredondadas para as imagens */
+    margin-top: 10px;
+    /* Espaço acima da imagem */
 }
 
 
@@ -348,6 +408,7 @@ nav {
     border: 1px solid #ccc;
     margin: 10px 0;
     padding: 10px;
+
 }
 
 .post-header {
@@ -373,24 +434,243 @@ nav {
 }
 
 .modal {
-    display: none; /* Escondido por padrão */
-    position: fixed; /* Fixo na tela */
-    z-index: 1; /* Acima de outros elementos */
+    display: none;
+    /* Escondido por padrão */
+    position: fixed;
+    /* Fixo na tela */
+    z-index: 1;
+    /* Acima de outros elementos */
     left: 0;
     top: 0;
-    width: 100%; /* Largura total */
-    height: 100%; /* Altura total */
-    overflow: auto; /* Rolagem se necessário */
-    background-color: rgb(0,0,0); /* Cor de fundo */
-    background-color: rgba(0,0,0,0.4); /* Cor de fundo com opacidade */
+    width: 100%;
+    /* Largura total */
+    height: 100%;
+    /* Altura total */
+    overflow: auto;
+    /* Rolagem se necessário */
+    background-color: rgb(0, 0, 0);
+    /* Cor de fundo */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Cor de fundo com opacidade */
 }
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* Centralizado */
+    margin: 15% auto;
+    /* Centralizado */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%; /* Largura do modal */
+    width: 80%;
+    /* Largura do modal */
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+
+#Cadastrar-Pets {
+    display: none;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+    font-family: 'Arial', sans-serif;
+}
+
+#Cadastrar-Pets h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.Cadastro-pets,
+.Cadastro-pets-2 {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.label-animal {
+    font-weight: bold;
+    color: #555;
+}
+
+.animal {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.animal:focus {
+    border-color: #5cb85c;
+    box-shadow: 0 0 8px rgba(92, 184, 92, 0.3);
+    outline: none;
+}
+
+.btn-salvar {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-end;
+    margin-top: -30px;
+}
+
+.btn-salvar:hover {
+    background-color: #4cae4c;
+}
+
+textarea.animal {
+    resize: none;
+    font-family: 'Arial', sans-serif;
+}
+
+select.animal {
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    #Cadastrar-Pets {
+        padding: 15px;
+    }
+
+    .animal {
+        font-size: 14px;
+    }
+
+    .btn-salvar {
+        font-size: 14px;
+    }
+}
+
+
+
+
+
+
+
+
+
+.Cadastro-pets, .Cadastro-pets-2 {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.label-animal {
+    font-weight: bold;
+}
+
+.animal {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.btn-salvar {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-salvar:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+
+.post {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    background-color: #f9f9f9;
+}
+
+.user-info {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.animal-post {
+    flex-shrink: 0;
+    width: 150px; /* Tamanho padrão da imagem */
+    height: 200px; /* Tamanho padrão da imagem */
+    
+}
+
+.animal-photo {
+    width: 200%;
+    height: 250px;
+    border-radius: 8px;
+    margin-left: -250px;
+    
+}
+
+
+.titulo-pet {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.formulario-do-pet {
+    margin-bottom: 10px;
+}
+
+.descrição {
+    margin: 5px 0;
+}
+
+.btn-cadastrar, .btn-interesse {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-interesse {
+    margin-top: 10px;
+}
+
+.btn-cadastrar:hover, .btn-interesse:hover {
+    background-color: #45a049;
 }
 
 
@@ -403,7 +683,200 @@ nav {
 
 
 
+.notifications-container {
+    background-color: #f9f9f9; /* Fundo claro */
+    border: 1px solid #ccc; /* Borda cinza */
+    border-radius: 8px; /* Bordas arredondadas */
+    padding: 20px; /* Espaçamento interno */
+    max-width: 600px; /* Largura máxima */
+    margin: 20px auto; /* Centraliza na tela */
+}
+
+h2 {
+    text-align: center; /* Centraliza o título */
+    margin-bottom: 20px; /* Espaço abaixo do título */
+    color: #333; /* Cor do texto */
+}
+
+.notification {
+    border-bottom: 1px solid #ddd; /* Linha separadora */
+    padding: 10px 0; /* Espaçamento interno */
+}
+
+.notification:last-child {
+    border-bottom: none; /* Remove a linha do último item */
+}
+
+.notification p {
+    margin: 5px 0; /* Espaço entre os parágrafos */
+}
 
 
 
 
+.adc-image{
+    margin-top: -50px;
+}
+
+.botao-salvar{
+    margin-top: 50px;
+    margin-left: 400px;
+    height: 50%;
+}
+
+
+
+
+/*  --------------------------------- Caixa de chat ----------------------------------------- */
+#chat-box {
+    bottom: 0;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    border: 1px solid #ccc;
+    display: none;
+    z-index: 1000;
+    margin-left: 78%;
+    margin-top: -50px;
+}
+
+#chat-header {
+    background-color: #56A2E1;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+}
+
+#chat-body {
+    height: 300px;
+    padding: 10px;
+    overflow-y: scroll;
+}
+
+#chat-footer {
+    padding: 10px;
+}
+
+#chat-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+
+
+
+
+#chat-container {
+    width: 400px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+#chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    border-bottom: 1px solid #ddd;
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+.message p {
+    background-color: #e9e9e9;
+    padding: 10px;
+    border-radius: 5px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+#chat-footer {
+    display: flex;
+    padding: 5px;
+    border-top: 1px solid #ddd;
+    align-items: center;
+}
+
+#chat-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    margin-right: 10px;
+}
+
+#chat-image {
+    display: none;
+}
+
+
+#chat-send {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#chat-send i {
+    margin-right: 5px;
+}
+
+#chat-footer label {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+img {
+    max-width: 200px;
+    border-radius: 5px;
+}
+
+.message .timestamp {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+
+.fa-solid{
+    width:max-content;
+}
+
+
+
+.sidebar1,
+.sidebar1-left {
+    width: 20%;
+    background-color: white;
+    padding: 20px;
+    margin-top: -625px;
+    margin-left: 78%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar1-leftht {
+    margin-left: 20px;
+}
+
+.sidebar1 ul,
+.sidebar1-right ul {
+    list-style: none;
+}
+
+.sidebar1 ul li,
+.sidebar1-left ul li {
+    padding: 20px 0;
+}

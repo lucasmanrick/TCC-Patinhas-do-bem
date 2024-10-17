@@ -1,17 +1,53 @@
+function searchContent() {
+    const query = document.getElementById('search-input').value.toLowerCase();
+    const posts = document.querySelectorAll('.post'); // Selecione todos os posts
+
+    posts.forEach(post => {
+        const title = post.querySelector('.post-title') ? post.querySelector('.post-title').textContent.toLowerCase() : '';
+        const content = post.querySelector('.post-content') ? post.querySelector('.post-content').textContent.toLowerCase() : '';
+        const animalInfo = post.querySelector('.formulario-do-pet') ? post.querySelector('.formulario-do-pet').textContent.toLowerCase() : ''; // Para informações do pet
+        
+        // Verifica se a busca está contida no título, no conteúdo ou nas informações do animal
+        if (title.includes(query) || content.includes(query) || animalInfo.includes(query)) {
+            post.style.display = 'block'; // Mostra o post se a busca corresponder
+        } else {
+            post.style.display = 'none'; // Esconde o post se não corresponder
+        }
+    });
+}
+
+
+function viewProfile() {
+    window.location.href = '/path/to/profile'; // Altere o caminho conforme necessário
+}
+
+function logOff() {
+    window.location.href = '/logout'; // Altere o caminho conforme necessário
+}
+
+
+
 function showContent(menuId) {
     // Esconde todos os conteúdos
     document.getElementById('mural-content').style.display = 'none';
     document.getElementById('notifications-content').style.display = 'none';
     document.getElementById('view-animals-content').style.display = 'none';
+    document.getElementById('Cadastrar-Pets').style.display = 'none'
 
     // Mostra o conteúdo selecionado
     if (menuId === 'mural') {
         document.getElementById('mural-content').style.display = 'block';
-    } else if (menuId === 'notifications') {
+    } 
+    else if (menuId === 'notifications') {
         document.getElementById('notifications-content').style.display = 'block';
-    } else if (menuId === 'view-animals') {
+    } 
+    else if (menuId === 'Cadastro'){
+        document.getElementById('Cadastrar-Pets').style.display = 'block'
+    }
+    else if (menuId === 'view-animals') {
         document.getElementById('view-animals-content').style.display = 'block';
     }
+    
 }
 
 
@@ -60,6 +96,8 @@ window.onclick = function(event) {
     }
 }
 
+
+
 function publishPost() {
     const title = document.getElementById('post-title').value;
     const content = document.getElementById('post-content').value;
@@ -106,23 +144,19 @@ let currentChatUser = '';
 
 
 
-function showMessages(type) {
-    const messagesContent = document.getElementById('messages-content');
-    
-    // Adiciona classe "loading" e fade out
-    messagesContent.classList.remove('visible');
-    messagesContent.innerHTML = '<p class="loading">Carregando...</p>';
+const inputs = document.querySelectorAll('.animal');
+    const btnSalvar = document.querySelector('.btn-salvar');
 
-    // Simula um tempo de carregamento e então exibe as mensagens com animação
-    setTimeout(() => {
-        if (type === 'friends') {
-            messagesContent.innerHTML = "<ul><li>Amigo 1: Oi!</li><li>Amigo 2: Vamos sair hoje?</li></ul>";
-        } else {
-            messagesContent.innerHTML = "<ul><li>Mensagem do Sistema: Sua conta foi atualizada.</li><li>Mensagem 2: Novo evento disponível!</li></ul>";
-        }
-        
-        // Adiciona a classe "visible" para o fade in
-        messagesContent.classList.add('visible');
-    }, 500); // Simula um pequeno delay de carregamento
-}
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            btnSalvar.disabled = !Array.from(inputs).every(input => input.value.trim() !== '');
+        });
+    });
+
+
+
+
+
+    
+
 
