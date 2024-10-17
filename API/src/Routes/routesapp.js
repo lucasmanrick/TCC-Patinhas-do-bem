@@ -10,6 +10,9 @@ const interesseController = require("../Controllers/interesseController");
 const contatoController = require("../Controllers/contatoController");
 const mensagemController = require("../Controllers/mensagemController");
 const notificacaoController = require("../Controllers/NotificacaoController");
+const UsuariosBloqueadosController = require("../Controllers/UsuariosBloqueadosController");
+const { denunciarPostagem } = require("../Controllers/denunciaController");
+const denunciaController = require("../Controllers/denunciaController");
 
 const app = express();
 
@@ -129,8 +132,13 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //Rota para deletar/inativar uma mensagem enviada, para que não seja mais demonstrada ao outro usuário.
   router.put("/DeletaMensagemEnviada", verificadorDoToken,mensagemController.deletaMensagemEnviada)
 
-
+  // rota para receber nossas notificações
   router.get ("/Notificacoes", verificadorDoToken, notificacaoController.MinhasNotificacoes  )
 
+  //rota para o ADM BLOQUEAR UM USUÁRIO DO SISTEMA
+  router.post ("/BloquearUsuario", verificadorDoToken, UsuariosBloqueadosController.bloquearUmUsuario)
+
+  // rota para qualquer usuário denunciar uma postagem
+  router.post ("/DenunciarPostagem", verificadorDoToken, denunciaController.denunciarPostagem)
 
 module.exports = router;

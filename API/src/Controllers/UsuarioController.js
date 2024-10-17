@@ -67,10 +67,7 @@ const UsuarioController = {
   autenticaUsuario: async (req, res) => {
     const { Email, Senha } = req.body;
 
-    console.log("não sei",req.headers);
-
     const verifyMobileOrWeb = req.headers.platform;
-    console.log("cola",verifyMobileOrWeb);
     try {
       if (Email, Senha) {
         if (typeof (Email) === 'string' && typeof (Senha) === 'string') {
