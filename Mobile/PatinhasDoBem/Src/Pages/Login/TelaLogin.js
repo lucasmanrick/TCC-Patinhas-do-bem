@@ -65,6 +65,7 @@ class LoginScreen extends Component {
         
         // Armazena o token no AsyncStorage para persistência do login
          await AsyncStorage.setItem('token',response.data.token);
+         console.log( await AsyncStorage.getItem('token'));
   
         // Navega para a tela "Home"
         this.props.navigation.navigate('Home');
