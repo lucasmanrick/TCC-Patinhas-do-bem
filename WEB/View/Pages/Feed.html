@@ -16,24 +16,13 @@
     <nav>
         <div class="container">
             <h2 class="logo">
-                <img src="../../Public/Image/logo animada.gif" alt="Logo do Site">
+                <img src="../../Public/Image/logo.ofc-removebg-preview (1).png" alt="Logo do Site">
             </h2>
             <div class="search-bar">
                 <i class="uil uil-search"></i>
-                <input type="search" id="search-input" placeholder="Procure usuários, inspirações e doações"
-                    oninput="searchContent()">
+                <input type="search" placeholder="Procure usuários, inspirações e doações">
             </div>
-            <div class="dropdown">
-                <img src="../../Public/Image/logo-1.jpg.png" alt="Perfil" class="profile-dropdown-pic"
-                    data-bs-toggle="dropdown"> <!-- Imagem do perfil -->
-
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="./Login.html" onclick="viewProfile()">Ver Perfil</a></li>
-                    <li><a class="dropdown-item" href="#" onclick="logOff()">Sair</a></li>
-
-
-                </ul>
-            </div>
+            <div class="create"></div>
         </div>
     </nav>
 
@@ -51,7 +40,6 @@
                         <span><i class="uil uil-bell"></i></span>
                         <h3>Notificação</h3>
                     </a>
-
                     <a class="menu-item" id="view-animals" onclick="showContent('view-animals')">
                         <span><i class="uil uil-envelope-alt"></i></span>
                         <h3>Ver Animais</h3>
@@ -64,9 +52,8 @@
             <div class="content-area" id="content-area">
                 <div id="mural-content" style="display:block;">
                     <!-- Botão para abrir o modal -->
-                    <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar
-                        Publicação</button>
-
+                    <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar Publicação</button>
+            
                     <!-- Modal para criar uma publicação -->
                     <div id="publish-modal" class="modal" style="display:none;">
                         <div class="modal-content">
@@ -78,332 +65,66 @@
                             <button onclick="publishPost()">Publicar</button>
                         </div>
                     </div>
-
+            
                     <!-- Seção de publicações -->
                     <div id="posts-container">
                         <!-- Modelo de Postagem (oculto) -->
                         <div id="post-template" class="post" style="display:none;">
                             <div class="post-header">
-                                <img src="../../Public/Image/image.png" alt="User" class="profile-pic">
-                                <!-- Foto do usuário -->
+                                <img src="./Captura de tela 2024-09-01 124522.png" alt="User" class="profile-pic"> <!-- Foto do usuário -->
                                 <h3>Nome do Usuário</h3>
                             </div>
                             <div class="post-body">
                                 <h4 class="post-title"></h4>
                                 <p class="post-content"></p>
-                                <img src="./Captura de tela 2024-09-01 124522.png" alt="Post Image" class="post-image">
-                                <!-- Imagem da postagem -->
+                                <img src="./Captura de tela 2024-09-01 124522.png" alt="Post Image" class="post-image"> <!-- Imagem da postagem -->
                             </div>
                         </div>
                     </div>
                 </div>
-
+            
 
 
 
 
                 <!-- Notifications Content -->
-                <div class="notifications-container" id="notifications-content" style="display: none;">
-                    <h2>Notificações - Patinhas do Bem</h2>
-                    <div class="notification">
-                        <p><strong>Data:</strong> 12 de Outubro de 2024</p>
-                        <p><strong>Notificação:</strong> O evento de adoção será realizado no próximo sábado! Venha
-                            conhecer nossos pets!</p>
-                    </div>
-                    <div class="notification">
-                        <p><strong>Data:</strong> 10 de Outubro de 2024</p>
-                        <p><strong>Notificação:</strong> Novos voluntários foram adicionados à nossa equipe. Seja
-                            bem-vindo!</p>
-                    </div>
-                    <div class="notification">
-                        <p><strong>Data:</strong> 05 de Outubro de 2024</p>
-                        <p><strong>Notificação:</strong> Campanha de arrecadação de ração em andamento. Contribua!</p>
-                    </div>
+                <div id="notifications-content" style="display:none;">
+                    <h2>Notificações</h2>
+                    <p>Aqui estão suas notificações.</p>
                 </div>
 
-
-
-
-                <div id="Cadastrar-Pets" style="display:none;">
-                    <h2>Cadastre seu pet</h2>
-
-                    <div id="view-animals" onclick="showContent('view-animals')">
-                        <button type="button" class="btn-close" disabled aria-label="Close"></button>
-                        </a>
-                    </div>
-
-
-
-                    </button>
-
-                    <div class="Cadastro-pets">
-                        <div>
-                            <h6>Data de nascimento</h6>
-                            <input type="date" class="animal" required>
-                        </div><br>
-
-                        <div>
-                            <label for="tipo-animal" class="label-animal">Tipo de Animal</label>
-                            <select id="tipo-animal" class="animal" name="tipo" required>
-                                <option value="" disabled selected>Selecione o tipo</option>
-                                <option value="Cachorro">Cachorro</option>
-                                <option value="Gato">Gato</option>
-                                <option value="Coelho">Coelho</option>
-                                <option value="Hamster">Hamster</option>
-                                <option value="Porquinho-da-índia">Porquinho-da-índia</option>
-                                <option value="Papagaio">Papagaio</option>
-                                <option value="Calopsita">Calopsita</option>
-                            </select>
-                        </div><br>
-
-                        <div>
-                            <label for="raca" class="label-animal">Raça</label>
-                            <input type="text" id="raca" class="animal" required>
-                        </div><br>
-
-                        <div>
-                            <label for="idade" class="label-animal">Idade</label>
-                            <input type="number" id="idade" class="animal" required>
-                        </div><br>
-
-
-                        <div>
-                            <label for="sexo" class="label-animal">Sexo</label>
-                            <select id="sexo" class="animal" name="sexo" required>
-                                <option value="" disabled selected>Selecione o sexo</option>
-                                <option value="Feminino">Fêmea</option>
-                                <option value="Masculino">Macho</option>
-                            </select>
-                        </div><br>
-
-                        <div>
-                            <label for="cor" class="label-animal">Cor</label>
-                            <input type="text" id="cor" class="animal" required>
-                        </div><br>
-
-                        <div>
-                            <label for="descricao" class="label-animal">Descrição</label>
-                            <textarea id="descricao" class="animal" rows="4" cols="30"
-                                placeholder="Descreva o pet aqui..." required></textarea>
-                        </div><br>
-
-                        <div class="adc-image">
-                            <h3>Adicione a imagem do animal</h3>
-                            <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-                        </div>
-                        <div class="botao-salvar">
-                            <button type="button" class="btn-salvar" disabled>Salvar</button>
-                        </div>
-                    </div>
-                </div>
-
-
-
+                
                 <!-- View Animals Content -->
                 <div id="view-animals-content" style="display:none;">
                     <h2>Ver Animais</h2>
-
-                    <a id="Cadastro" onclick="showContent('Cadastro')">
-                        <button class="btn-cadastrar">Cadastrar Animais</button>
-                    </a>
-
-                    <div class="post">
-                        <div class="user-info">
-                            <div class="titulo-pet">
-                                <p>Informações do pet</p>
-                            </div>
-
-                            <div class="formulario-do-pet">
-                                <p class="descrição"><strong>Tipo de Animal:</strong> Cachorro</p>
-                                <p class="descrição"><strong>Linhagem:</strong> Labrador</p>
-                                <p class="descrição"><strong>Idade:</strong> 3 anos</p>
-                                <p class="descrição"><strong>Sexo:</strong> Macho</p>
-                                <p class="descrição"><strong>Cor:</strong> Branco</p>
-                                <p class="descrição"><strong>Descrição:</strong> Amigável e brincalhão.</p>
-
-                            </div>
-
-                            <button class="btn-interesse">Tenho Interesse</button>
-                        </div>
-                        <div class="animal-post">
-                            <img src="../../Public/Image/image.png" alt="Imagem do animal" class="animal-photo">
-                        </div>
-                    </div>
-
-                    <div class="post">
-                        <div class="user-info">
-                            <div class="titulo-pet">
-                                <p>Informações do pet</p>
-                            </div>
-
-                            <div class="formulario-do-pet">
-                                <p class="descrição"><strong>Tipo de Animal:</strong> Cachorro</p>
-                                <p class="descrição"><strong>Linhagem:</strong> Vira Lata</p>
-                                <p class="descrição"><strong>Idade:</strong> 2 anos</p>
-                                <p class="descrição"><strong>Sexo:</strong> Femêa</p>
-                                <p class="descrição"><strong>Cor:</strong> preto</p>
-                                <p class="descrição"><strong>Descrição:</strong> Quieto e carinhoso.</p>
-                            </div>
-
-                            <button class="btn-interesse">Tenho Interesse</button>
-                        </div>
-
-                    </div>
+                    <p>Aqui você pode ver todos os animais disponíveis!</p>
                 </div>
             </div>
         </div>
 
-
-
-
-
-
-
-
-        <div class="mensagens">
-
-            <aside class="sidebar1-left">
-                <div class="button-container">
-                    <button class="btn btn-toggle" id="btn-amigos" onclick="toggleList('amigos')">Amigos</button>
-                    <button class="btn btn-toggle" id="btn-interessados"
-                        onclick="toggleList('interessados')">Interessados</button>
-                </div>
-                <div id="amigos" class="content-list active">
-                    <ul>
-                        <li class="thiago" onclick="abrirChat('Thiago Antonio')">
-                            <img class="img1" src="ftTeste.jpg" alt="">
-                            Thiago Antonio
-                        </li>
-                        <li class="lucas" onclick="abrirChat('Lucas')">
-                            <img class="img1" src="ftTeste.jpg" alt="">
-                            Lucas
-                        </li>
-                    </ul>
-                </div>
-            </aside>
-
-
-
-
-            <script>
-                
-    // chat
-    function enviarMensagem() {
-        var chatBody = document.getElementById("chat-body");
-        var chatInput = document.getElementById("chat-input").value;
-        var chatImage = document.getElementById("chat-image").files[0];
-        
-        // Adiciona a mensagem de texto ao chat
-        if (chatInput) {
-            var mensagemTexto = document.createElement("p");
-            mensagemTexto.textContent = "Você: " + chatInput;
-            chatBody.appendChild(mensagemTexto);
-        }
-    
-        // Adiciona a imagem ao chat se uma imagem for selecionada
-        if (chatImage) {
-            var mensagemImagem = document.createElement("img");
-            mensagemImagem.src = URL.createObjectURL(chatImage);
-            mensagemImagem.style.maxWidth = "200px"; // Define um tamanho máximo para a imagem
-            mensagemImagem.style.display = "block"; // Garante que a imagem seja exibida em uma nova linha
-            chatBody.appendChild(mensagemImagem);
-        }
-    
-        // Limpa os campos de entrada após o envio
-        document.getElementById("chat-input").value = "";
-        document.getElementById("chat-image").value = "";
-    }
-    
-    
-    function showContent(sectionId) {
-        const sections = document.querySelectorAll('.content-section');
-        sections.forEach(section => section.style.display = 'none');
-    
-        const sectionToShow = document.getElementById(sectionId);
-        if (sectionToShow) {
-            sectionToShow.style.display = 'block';
-        }
-    }
-    
-    function toggleList(list) {
-        const amigosList = document.getElementById('amigos');
-        const interessadosList = document.getElementById('interessados');
-    
-        if (list === 'amigos') {
-            amigosList.classList.add('active');
-            interessadosList.classList.remove('active');
-        } else {
-            interessadosList.classList.add('active');
-            amigosList.classList.remove('active');
-        }
-    }
-    
-    function abrirChat(nome) {
-        document.getElementById('chat-nome').innerText = nome;
-        document.getElementById('chat-box').style.display = 'block';
-    }
-    
-    function fecharChat() {
-        document.getElementById('chat-box').style.display = 'none';
-    }
-    
-    
-    function adicionarMensagem(mensagem, isImage = false) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message');
-        
-        // Criar parágrafo para o conteúdo da mensagem ou imagem
-        if (isImage) {
-            const img = document.createElement('img');
-            img.src = mensagem;
-            messageDiv.appendChild(img);
-        } else {
-            const messageContent = document.createElement('p');
-            messageContent.textContent = mensagem;
-            messageDiv.appendChild(messageContent);
-        }
-            
-    }
-    
-            </script>
-
-            <!-------------------------------------- Caixa de chat --------------------------------------------->
-
-            <div id="chat-box">
-                <div id="chat-header">Converse com <span id="chat-nome">Fulano</span> <span
-                        style="float:right; cursor:pointer;" onclick="fecharChat()">X</span></div>
-
-                <div id="chat-body">
-                    <!-- As mensagens aparecerão aqui -->
-                </div>
-
-                <div id="chat-footer">
-
-                    <!-- Campo de input para texto -->
-                    <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
-
-                    <!-- Botão de upload de imagem -->
-                    <label for="chat-image"><i class="fa-regular fa-image"></i></label>
-                    <input type="file" id="chat-image" accept="image/*">
-
-                    <!-- Botão de envio -->
-                    <button id="chat-send" onclick="enviarMensagem()">
-                        <i class="fa-regular fa-paper-plane"></i>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-
+        <footer class="footer">
+            <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
+        </footer>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
 
     <!----------------- MESSAGES AREA -------------------->
-
-
-
+    <div class="messages-area">
+        <h3>Mensagens</h3>
+        <div class="message-options">
+            <button onclick="showMessages('friends')">Amigos</button>
+            <button onclick="showMessages('inbox')">Mensagens</button>
+        </div>
+        <div id="messages-content">
+            <p>Selecione uma opção acima para ver as mensagens.</p>
+        </div>
+    </div>
+    
+    
 
     <footer class="footer">
         <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>

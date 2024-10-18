@@ -13,6 +13,7 @@ const notificacaoController = require("../Controllers/NotificacaoController");
 const UsuariosBloqueadosController = require("../Controllers/UsuariosBloqueadosController");
 const { denunciarPostagem } = require("../Controllers/denunciaController");
 const denunciaController = require("../Controllers/denunciaController");
+const postagemController = require("../Controllers/postagemController");
 
 const app = express();
 
@@ -140,5 +141,8 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
   // rota para qualquer usuário denunciar uma postagem
   router.post ("/DenunciarPostagem", verificadorDoToken, denunciaController.denunciarPostagem)
+
+  //Rota para criar um novo post
+  router.post ("/CriarPostagem", verificadorDoToken, postagemController.criaPostagem)
 
 module.exports = router;

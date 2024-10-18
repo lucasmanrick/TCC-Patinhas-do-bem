@@ -1,4 +1,5 @@
 const { connection } = require("../../Config/db");
+// const io = require("../../../App")
 
 class Mensagem {
   constructor (ID,DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) {
@@ -28,6 +29,16 @@ class Mensagem {
             e.quemEnviouAMensagem = "Enviado pelo contato"
           }
         })
+        
+        // io.on ('connection', (socket) => {
+        //   socket.on('msg', (msg) => {
+        //     console.log(msg, "teste msg")
+        //     socket.broadcast.emit('msg',msg)
+        //     socket.join (`${contactID}`)
+        //   })
+
+        // })
+
         return {success:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
         }else {
           return{error:"não possui nenhuma mensagem com o contato especificado"}
