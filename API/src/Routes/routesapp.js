@@ -18,6 +18,7 @@ const app = express();
 
 
 function verificadorDoToken(req, res, next){
+  console.log(req.headers.authorization);
   let token;
   if(req.headers.authorization) {
     token = req.headers['authorization'];

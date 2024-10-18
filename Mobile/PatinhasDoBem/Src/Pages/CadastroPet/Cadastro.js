@@ -36,55 +36,7 @@ const CadastroPet = ({ navigation, route }) => {
   }, [route.params?.imagemSelecionada]);
 
 
-  // const handleCadastroPet = async () => {
-  //   // Validação das entradas
-  //   if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
-  //     Alert.alert("Erro", "Por favor, preencha todos os campos.");
-  //     return;
-  //   }
-
-  //   const petData = {
-  //     TipoAnimal: String(TipoAnimal),
-  //     Linhagem: String(Linhagem),
-  //     Idade: String(Idade),
-  //     Sexo: String(Sexo),
-  //     Cor: String(Cor),
-  //     Descricao: String(Descricao),
-  //   };
-
-  //   console.log("Dados do pet:", petData);
-
-  //   try {
-  //     // Recupera o token armazenado
-  //     const token = await AsyncStorage.getItem('token');
-
-  //     console.log(token);
-      
-  //     // Verifica se o token está disponível
-  //     if (!token) {
-  //       Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
-  //       return;
-  //     }
-       
-
-  //     // Enviando a requisição com o token no cabeçalho
-  //     const response = await api.post("/CadastraPet", petData, {
-  //       headers: {
-  //         authorization: token, // Envia o token no formato adequado
-  //       },
-  //     });
-
-  //     // Caso a requisição tenha sucesso
-  //     Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
-  //     console.log(response.data);
-      
-  //     navigation.goBack();
-  //   } catch (error) {
-  //     console.error("Erro ao cadastrar pet:", error);
-  //     Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
-  //   }
-  // };
-
+ 
   const handleCadastroPet = async () => {
     // Validação das entradas
     if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
