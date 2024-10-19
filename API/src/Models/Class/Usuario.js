@@ -86,7 +86,6 @@ class Usuario {
   async editaDadosCadastraisQuery () {
     const conn = await connection();
     try{                
-                                          console.log(this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,this.Cidade,this.ID)                               
       const sendToDBRefreshUserData = await conn.query("UPDATE usuario SET Nome = ?, CEP=?, Rua=?, Numero=?, Bairro=?, Estado=?, DataNasc=?, Email=?, Senha=?,Cidade=? WHERE ID=?",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,this.Cidade,this.ID])
       console.log(sendToDBRefreshUserData)
       if(sendToDBRefreshUserData[0].affectedRows >=1) {

@@ -146,4 +146,13 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //Rota para criar um novo post
   router.post ("/CriarPostagem", verificadorDoToken, postagemController.criaPostagem)
 
+
+  router.put ("/EditarPostagem", verificadorDoToken, postagemController.editarPostagem)
+
+
+  router.get ("/VerPostagens", verificadorDoToken, postagemController.verPostagens)
+
+
+
+
 module.exports = router;
