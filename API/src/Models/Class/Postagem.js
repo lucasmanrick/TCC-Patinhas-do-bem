@@ -40,6 +40,10 @@ class Postagem {
     const conn = await connection();
     try{
       const getingPosts = await conn.query (`select p.*, u.Nome as NomeUsuario from postagem AS p JOIN contato AS C JOIN Usuario AS U on U.ID = p.IDUsuario WHERE C.IDSolicitante=? AND C.IDDestinatario=p.IDUsuario OR C.IDDestinatario=? AND C.IDSolicitante=p.IDUsuario  ORDER BY dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
+      getingPosts[0].forEach(e => {
+        e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media`
+        e.PostPicture =  e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${e.ID}.jpg?alt=media`
+      })
       return{success:"retornando posts de seus amigos",posts:getingPosts[0]}
     }catch(e) {
       return {error:e.message}
