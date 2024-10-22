@@ -1,0 +1,155 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap");
+
+:root {
+  /* Variáveis globais de cor */
+  --primary-color: #000000;
+  --primary-color-dark: #f49c20df;
+  --text-dark: #ffffff;
+  --text-light: #ffffff;
+  --extra-light: #9BA8AB;
+}
+
+* {
+  /* Reset de margens, padding e box-sizing */
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* Estilos gerais para o corpo da página */
+  height: 100vh;
+  padding-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--extra-light);
+  font-family: "Roboto", sans-serif;
+}
+
+nav {
+  /* Estilo para o elemento de navegação */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+nav .nav__logo a {
+  /* Estilo para o link dentro do logo de navegação */
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  text-decoration: none;
+}
+
+.container {
+  /* Contêiner principal da página */
+  max-width: 400px;
+  padding: 2rem;
+  margin: auto;
+  display: grid;
+  color: var(--text-dark);
+}
+
+.header {
+  /* Cabeçalho da página de erro */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.header h1 {
+  /* Estilo para o título grande do cabeçalho (404) */
+  font-size: 4rem;
+  font-weight: 900;
+}
+
+.container h3 {
+  /* Estilo para o subtítulo (Page Not Found) */
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.container img {
+  /* Estilo para a imagem no corpo da página */
+  width: 100%;
+  max-width: 300px;
+  margin: auto;
+}
+
+.footer {
+  /* Rodapé da página com texto e botão */
+  display: grid;
+  gap: 2rem;
+  place-content: baseline;
+}
+
+.footer p {
+  /* Estilo para o texto no rodapé */
+  font-variation-settings: 1rem;
+}
+
+.footer button {
+  /* Estilo para o botão de voltar à página inicial */
+  padding: 1rem;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  color: var(--extra-light);
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--primary-color);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.footer button:hover {
+  /* Estilo ao passar o mouse sobre o botão */
+  background-color: var(--primary-color-dark);
+}
+
+@media (min-width: 640px) {
+  nav {
+    /* Estilo do menu de navegação em telas maiores */
+    max-width: 1000px;
+  }
+
+  .container {
+    /* Estilo do contêiner em telas maiores */
+    max-width: 1200px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .container img {
+    /* Estilo da imagem em telas maiores */
+    max-width: 550px;
+    grid-area: 1/1/3/2;
+  }
+
+  .footer {
+    /* Estilo do rodapé em telas maiores */
+    max-width: 300px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    /* Estilo do contêiner em telas muito grandes */
+    column-gap: 5rem;
+  }
+
+  .header h1 {
+    /* Estilo do título (404) em telas grandes */
+    font-size: 6rem;
+  }
+
+  .header h3 {
+    /* Estilo do subtítulo em telas grandes */
+    font-size: 2.5rem;
+  }
+}
