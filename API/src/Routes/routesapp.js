@@ -15,11 +15,14 @@ const { denunciarPostagem } = require("../Controllers/denunciaController");
 const denunciaController = require("../Controllers/denunciaController");
 const postagemController = require("../Controllers/postagemController");
 
-const app = express();
+const { join } = require('node:path');
+const path = require('node:path');
+
+
+const newDirName = path.resolve(__dirname, '..','..', '..' ,'WEB', 'View','Pages');
 
 
 function verificadorDoToken(req, res, next){
-  console.log(req.headers.authorization);
   let token;
   if(req.headers.authorization) {
     token = req.headers['authorization'];
@@ -48,6 +51,21 @@ function verificadorDoToken(req, res, next){
 }
 
 
+router.get('/Home', (req, res) => {
+  res.sendFile(path.join(newDirName, 'home.html'));
+});
+
+
+router.get('/Login', (req, res) => {
+  res.sendFile(path.join(newDirName, 'Login.html'));
+});
+
+
+router.get('/FeedDeNoticias', (req, res) => {
+  res.sendFile(path.join(newDirName, 'Feed.html'));
+});
+
+
 // rota para o usuário fazer um cadastro no site.
 router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
@@ -70,7 +88,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
   //puxa todos animais de um usuário especifico.
-  router.get("/PetsUser", verificadorDoToken, petManagement.petsDeUmUsuario)
+  router.get("/PetsUser/:UserID", verificadorDoToken, petManagement.petsDeUmUsuario)
 
 
   //puxa todos animais que estão para adoção no mesmo estado da pessoa.
@@ -82,7 +100,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
   //Rota para ver todos animais que eu demonstrei interesse
-  router.get ("/InteressadosMeuPet", verificadorDoToken, interesseController.interessadosMeuPet)
+  router.get ("/InteressadosMeuPet/:MeuPetID", verificadorDoToken, interesseController.interessadosMeuPet)
 
 
   //Rota para ver os pets no qual eu demonstrei interesse
@@ -91,7 +109,6 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
   //Rota para tirar interesse em algum pet
   router.delete ("/RemoverInteressePet", verificadorDoToken, interesseController.removerInteressePet);
-
 
 
   //Rota para Solicitar amizade de um usuário sem que haja interesse em algum de seus pets.
@@ -112,7 +129,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   router.delete("/RemoveUsuarioDaListaDeContatos",verificadorDoToken,contatoController.removeUsuarioDaListaDeContatos)
 
   //Rota para obter dados de perfil de usuários do site (chamar quando quiser ver o perfil de um usuário, ou ver o seu próprio perfil).
-  router.get("/ProfileUser",verificadorDoToken,userInteractController.profileUser);
+  router.get("/ProfileUser/:userBeReturnedID",verificadorDoToken,userInteractController.profileUser);
 
   //Rota para o ADM Remover um usuário do sistema, ou o próprio usuário se remover do sistema permanentemente
   router.delete("/RemoveDadosUsuario",verificadorDoToken,UsuarioController.removeDadosUsuario);
@@ -125,7 +142,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   router.get("/MeusContatos",verificadorDoToken, contatoController.meusContatos)
 
   //Rota para puxar as mensagens que tiveram entre o contato selecionado.
-  router.get("/MensagensContato",verificadorDoToken,mensagemController.mensagensContato);
+  router.get("/MensagensContato/:IDContato",verificadorDoToken,mensagemController.mensagensContato);
 
 
   //Rota para enviar uma mensagem para o contato selecionado

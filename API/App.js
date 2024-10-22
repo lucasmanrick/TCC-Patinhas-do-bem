@@ -3,6 +3,15 @@ const router = require('./src/Routes/routesapp');
 const cors = require("cors");
 const app = express();
 
+const { createServer } = require('node:http');
+const path = require ('node:path')
+
+
+
+const newDirName = path.resolve(__dirname, '..','WEB');;
+app.use(express.static(newDirName))
+
+const server = createServer(app);
 
 
 
@@ -10,16 +19,9 @@ require("dotenv-safe").config();
 const cookieParser = require('cookie-parser');
 
 
-// const http = require('http').createServer(app)
-// const io = require ('socket.io')(http)
-
-
 const port= 5000;
 
 
-// io.on('connection', (socket) => {
-//   console.log('new connection')
-// })
 
 
 app.use(cookieParser());
@@ -42,7 +44,8 @@ app.use((req,res,next) => {
 
 
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Servidor respondendo na porta ${port}`);
 });
 
+module.exports = server

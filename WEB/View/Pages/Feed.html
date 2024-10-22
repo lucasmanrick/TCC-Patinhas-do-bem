@@ -2,139 +2,195 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mySocial - Responsive Social Media Website</title>
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../Public/CSS/Feed.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mySocial - Responsive Social Media Website</title>
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../Public/CSS/Feed.css">
+
+  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+  <script defer>
+
+    fetch('/Login', {
+      method: 'Post',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "Email": "Manrick72@gmail.com",
+        "Senha": "teste123"
+      })
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myBlob) {
+        console.log(myBlob)
+      });
+  </script>
 </head>
 
 <body>
-    <nav>
-        <div class="container">
-            <h2 class="logo">
-                <img src="../../Public/Image/logo.ofc-removebg-preview (1).png" alt="Logo do Site">
-            </h2>
-            <div class="search-bar">
-                <i class="uil uil-search"></i>
-                <input type="search" placeholder="Procure usuários, inspirações e doações">
-            </div>
-            <div class="create"></div>
-        </div>
-    </nav>
-
-    <!-------------------------------- MAIN ----------------------------------->
-    <main>
-        <div class="container">
-            <!----------------- LEFT -------------------->
-            <div class="left">
-                <div class="sidebar">
-                    <a class="menu-item" id="mural" onclick="showContent('mural')">
-                        <span><i class="uil uil-compass"></i></span>
-                        <h3>Mural</h3>
-                    </a>
-                    <a class="menu-item" id="notifications" onclick="showContent('notifications')">
-                        <span><i class="uil uil-bell"></i></span>
-                        <h3>Notificação</h3>
-                    </a>
-                    <a class="menu-item" id="view-animals" onclick="showContent('view-animals')">
-                        <span><i class="uil uil-envelope-alt"></i></span>
-                        <h3>Ver Animais</h3>
-                    </a>
-                </div>
-            </div>
-
-            <!----------------- CONTENT AREA -------------------->
-            <!----------------- CONTENT AREA -------------------->
-            <div class="content-area" id="content-area">
-                <div id="mural-content" style="display:block;">
-                    <!-- Botão para abrir o modal -->
-                    <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar Publicação</button>
-            
-                    <!-- Modal para criar uma publicação -->
-                    <div id="publish-modal" class="modal" style="display:none;">
-                        <div class="modal-content">
-                            <span class="close" onclick="closePublishModal()">&times;</span>
-                            <h2>Criar Publicação</h2>
-                            <input type="text" id="post-title" placeholder="Título da Postagem" required>
-                            <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
-                            <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-                            <button onclick="publishPost()">Publicar</button>
-                        </div>
-                    </div>
-            
-                    <!-- Seção de publicações -->
-                    <div id="posts-container">
-                        <!-- Modelo de Postagem (oculto) -->
-                        <div id="post-template" class="post" style="display:none;">
-                            <div class="post-header">
-                                <img src="./Captura de tela 2024-09-01 124522.png" alt="User" class="profile-pic"> <!-- Foto do usuário -->
-                                <h3>Nome do Usuário</h3>
-                            </div>
-                            <div class="post-body">
-                                <h4 class="post-title"></h4>
-                                <p class="post-content"></p>
-                                <img src="./Captura de tela 2024-09-01 124522.png" alt="Post Image" class="post-image"> <!-- Imagem da postagem -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            
-
-
-
-
-                <!-- Notifications Content -->
-                <div id="notifications-content" style="display:none;">
-                    <h2>Notificações</h2>
-                    <p>Aqui estão suas notificações.</p>
-                </div>
-
-                
-                <!-- View Animals Content -->
-                <div id="view-animals-content" style="display:none;">
-                    <h2>Ver Animais</h2>
-                    <p>Aqui você pode ver todos os animais disponíveis!</p>
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
-        </footer>
-    </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-
-    <!----------------- MESSAGES AREA -------------------->
-    <div class="messages-area">
-        <h3>Mensagens</h3>
-        <div class="message-options">
-            <button onclick="showMessages('friends')">Amigos</button>
-            <button onclick="showMessages('inbox')">Mensagens</button>
-        </div>
-        <div id="messages-content">
-            <p>Selecione uma opção acima para ver as mensagens.</p>
-        </div>
+  <nav>
+    <div class="container">
+      <h2 class="logo">
+        <img src="../../Public/Image/logo.ofc-removebg-preview (1).png" alt="Logo do Site">
+      </h2>
+      <div class="search-bar">
+        <i class="uil uil-search"></i>
+        <input type="search" placeholder="Procure usuários, inspirações e doações">
+      </div>
+      <div class="create"></div>
     </div>
-    
-    
+  </nav>
+
+  <!-------------------------------- MAIN ----------------------------------->
+  <main>
+    <button id="teste"></button>
+    <div class="container">
+      <!----------------- LEFT -------------------->
+      <div class="left">
+        <div class="sidebar">
+          <a class="menu-item" id="mural" onclick="showContent('mural')">
+            <span><i class="uil uil-compass"></i></span>
+            <h3>Mural</h3>
+          </a>
+          <a class="menu-item" id="notifications" onclick="showContent('notifications')">
+            <span><i class="uil uil-bell"></i></span>
+            <h3>Notificação</h3>
+          </a>
+          <a class="menu-item" id="view-animals" onclick="showContent('view-animals')">
+            <span><i class="uil uil-envelope-alt"></i></span>
+            <h3>Ver Animais</h3>
+          </a>
+        </div>
+      </div>
+
+      <!----------------- CONTENT AREA -------------------->
+      <!----------------- CONTENT AREA -------------------->
+      <div class="content-area" id="content-area">
+        <div id="mural-content" style="display:block;">
+          <!-- Botão para abrir o modal -->
+          <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar Publicação</button>
+
+          <!-- Modal para criar uma publicação -->
+          <div id="publish-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+              <span class="close" onclick="closePublishModal()">&times;</span>
+              <h2>Criar Publicação</h2>
+              <input type="text" id="post-title" placeholder="Título da Postagem" required>
+              <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
+              <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+              <button onclick="publishPost()">Publicar</button>
+            </div>
+          </div>
+
+          <!-- Seção de publicações -->
+          <div id="posts-container">
+            <!-- Modelo de Postagem (oculto) -->
+            <div id="post-template" class="post" style="display:none;">
+              <div class="post-header">
+                <img src="./Captura de tela 2024-09-01 124522.png" alt="User" class="profile-pic">
+                <!-- Foto do usuário -->
+                <h3>Nome do Usuário</h3>
+              </div>
+              <div class="post-body">
+                <h4 class="post-title"></h4>
+                <p class="post-content"></p>
+                <img src="./Captura de tela 2024-09-01 124522.png" alt="Post Image" class="post-image">
+                <!-- Imagem da postagem -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+        <!-- Notifications Content -->
+        <div id="notifications-content" style="display:none;">
+          <h2>Notificações</h2>
+          <p>Aqui estão suas notificações.</p>
+        </div>
+
+
+        <!-- View Animals Content -->
+        <div id="view-animals-content" style="display:none;">
+          <h2>Ver Animais</h2>
+          <p>Aqui você pode ver todos os animais disponíveis!</p>
+        </div>
+      </div>
+    </div>
 
     <footer class="footer">
-        <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
+      <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
     </footer>
-    </main>
+  </main>
 
-    <script src="../../Public/JavaScript/Feed.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
+
+  <!----------------- MESSAGES AREA -------------------->
+  <div class="messages-area">
+    <h3>Mensagens</h3>
+    <div class="message-options">
+      <button onclick="showMessages('friends')">Amigos</button>
+      <button onclick="showMessages('inbox')">Mensagens</button>
+    </div>
+    <div id="messages-content">
+      <p>Selecione uma opção acima para ver as mensagens.</p>
+    </div>
+  </div>
+
+
+
+  <footer class="footer">
+    <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
+  </footer>
+  </main>
+
+  <script src="../../Public/JavaScript/Feed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script>
+    document.getElementById('teste').addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const socket = io();
+
+      socket.on('connect', () => {
+        console.log('connected to server');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('disconnected from server');
+      });
+
+      fetch('/MensagensContato/1', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (myBlob) {
+          console.log(myBlob)
+        });
+
+
+
+    })
+
+  </script>
 </body>
 
 </html>
