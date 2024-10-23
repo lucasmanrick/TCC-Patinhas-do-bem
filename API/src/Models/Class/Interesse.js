@@ -92,12 +92,14 @@ class Interesse {
     }
   }
 
-  static async interessadosMeuPetQuery(MeuPetID) {
+  static async interessadosMeuPetQuery(MeuPetID,MeuID) {
     const conn = await connection();
-    try {
-      const interested = await conn.query("SELECT I.IDInteressado, U.Nome FROM interesse As I INNER JOIN usuario As U on U.ID = I.IDInteressado WHERE IDPet = ?", [MeuPetID]);
-      if (interested[0].length >= 1) {
 
+    try {
+      const myPetChecking = await conn.query("SELECT * FROM Pet WHERE IDDoador=? AND ID=?",[MeuID,MeuPetID]);
+      if(myPetChecking[0].length < 1) return {error:"o pet do qual você quer saber informações não te pertence ou não existe."}
+      const interested = await conn.query("SELECT I.IDInteressado, U.Nome FROM interesse As I INNER JOIN usuario As U on U.ID = I.IDInteressado WHERE IDPet = ? ", [MeuPetID]);
+      if (interested[0].length >= 1) {
         return { success: "retornando o nome de todos usuários que demonstraram interesse em seu pet", returnInteresteds: interested[0] }
       } else {
         return { error: "não foi possui nenhum interesse em seu pet informado" }

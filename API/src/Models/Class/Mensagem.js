@@ -1,5 +1,9 @@
 const { connection } = require("../../Config/db");
-// const io = require("../../../App")
+
+
+
+
+
 
 class Mensagem {
   constructor (ID,DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) {
@@ -14,8 +18,11 @@ class Mensagem {
   static async mensagensContatoQuery (userID, contactID) {
     const conn = await connection();
     try {
+      
       const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
       if(verifyIfUserAreInContact[0].length >=1) {
+          
+        
         const getingMessages = await conn.query("select ID as IDMensagem, DataDeEnvio, IDRemetente as quemEnviouAMensagem , Texto from mensagem WHERE IDContato = ? AND Remocao = ?",[contactID,0])
         if(getingMessages[0].length >= 1) {
           getingMessages[0].sort((a,b) => {
@@ -29,22 +36,13 @@ class Mensagem {
             e.quemEnviouAMensagem = "Enviado pelo contato"
           }
         })
-        
-        // io.on ('connection', (socket) => {
-        //   socket.on('msg', (msg) => {
-        //     console.log(msg, "teste msg")
-        //     socket.broadcast.emit('msg',msg)
-        //     socket.join (`${contactID}`)
-        //   })
 
-        // })
-
-        return {success:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0]}
+        return {success:"retornando todas mensagens com o contato solicitado", messages: getingMessages[0], contactID:contactID}
         }else {
           return{error:"não possui nenhuma mensagem com o contato especificado"}
         }
       }else {
-        return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
+        return {error:"o usuário não faz parte do contato do qual está tentando puxar mensagens"}
       }
     }catch(e) {
       return{error:e.message}

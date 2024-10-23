@@ -21,11 +21,13 @@ const interesseController = {
   },
 
   interessadosMeuPet: async (req,res) => {
+    const {ID} = req.dataUser;
+    const {MeuPetID} = req.params;
     try{
-     const {MeuPetID} = req.body;
+
 
      if(MeuPetID) {
-      const analyzeIntrest = await Interesse.interessadosMeuPetQuery(MeuPetID);
+      const analyzeIntrest = await Interesse.interessadosMeuPetQuery(MeuPetID,ID);
       return res.json(analyzeIntrest)
      }else {
       return res.json({error:"não foi informado o id do pet para identificar os interessados no mesmo."})

@@ -59,12 +59,14 @@ const petManagement = {
   },
 
   petsDeUmUsuario: async (req,res) => {
+    const {UserID} = req.params //ATENTE-SE O USERID ESTÁ SENDO PASSADO NO PARAMS NESSA REQUISIÇÃO
     try {
-      const {UserID} = req.body  //ATENTE-SE O USERID ESTÁ SENDO PASSADO NO BODY NESSA REQUISIÇÃO
-      if(UserID && typeof(UserID) !== 'string') {
+       
+      if(UserID) {
         const callBackRequisition = await Pet.petsDeUmUsuarioQuery(UserID)
-        res.json(callBackRequisition)
+        return res.json(callBackRequisition)
       }
+      return res.json({error:"você não passou os dados necessários para ver o pet de um usuário"})
     }
     catch (e) {
       res.json({error:e.message})
@@ -74,9 +76,10 @@ const petManagement = {
   petsParaAdocao: async (req,res) => {
     try {
       const {ID,Estado} = req.dataUser;
+      const {gapQuantity} = req.body;
 
       if(Estado,ID) {
-        const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID);
+        const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID,gapQuantity);
         return res.json(receivePets)
       }
       else {

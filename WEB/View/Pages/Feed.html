@@ -2,139 +2,554 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mySocial - Responsive Social Media Website</title>
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="../../Public/CSS/Feed.css">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patinhas do Bem</title>
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.6/css/unicons.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="../../Public/CSS/Feed.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.0/socket.io.js"></script>
 </head>
 
 <body>
-    <nav>
-        <div class="container">
-            <h2 class="logo">
-                <img src="../../Public/Image/logo.ofc-removebg-preview (1).png" alt="Logo do Site">
-            </h2>
-            <div class="search-bar">
-                <i class="uil uil-search"></i>
-                <input type="search" placeholder="Procure usuários, inspirações e doações">
-            </div>
-            <div class="create"></div>
-        </div>
-    </nav>
+  <nav>
+    <!------------------------- Container na parte de cima da pagina ---------------------->
+    <div class="container">
+      <h2 class="logo">
+        <img src="../../Public/Image/logo animada.gif" alt="Logo do Site">
+      </h2>
+      <div class="search-bar">
+        <i class="uil uil-search"></i>
+        <input type="search" id="search-input" placeholder="Procure usuários, inspirações e doações"
+          oninput="searchContent()">
+      </div>
+      <div class="dropdown">
+        <img src="../../Public/Image/user (1).png" alt="Perfil" class="profile-dropdown-pic" data-bs-toggle="dropdown">
+        <!-- Imagem do perfil -->
 
-    <!-------------------------------- MAIN ----------------------------------->
-    <main>
-        <div class="container">
-            <!----------------- LEFT -------------------->
-            <div class="left">
-                <div class="sidebar">
-                    <a class="menu-item" id="mural" onclick="showContent('mural')">
-                        <span><i class="uil uil-compass"></i></span>
-                        <h3>Mural</h3>
-                    </a>
-                    <a class="menu-item" id="notifications" onclick="showContent('notifications')">
-                        <span><i class="uil uil-bell"></i></span>
-                        <h3>Notificação</h3>
-                    </a>
-                    <a class="menu-item" id="view-animals" onclick="showContent('view-animals')">
-                        <span><i class="uil uil-envelope-alt"></i></span>
-                        <h3>Ver Animais</h3>
-                    </a>
-                </div>
-            </div>
-
-            <!----------------- CONTENT AREA -------------------->
-            <!----------------- CONTENT AREA -------------------->
-            <div class="content-area" id="content-area">
-                <div id="mural-content" style="display:block;">
-                    <!-- Botão para abrir o modal -->
-                    <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar Publicação</button>
-            
-                    <!-- Modal para criar uma publicação -->
-                    <div id="publish-modal" class="modal" style="display:none;">
-                        <div class="modal-content">
-                            <span class="close" onclick="closePublishModal()">&times;</span>
-                            <h2>Criar Publicação</h2>
-                            <input type="text" id="post-title" placeholder="Título da Postagem" required>
-                            <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
-                            <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-                            <button onclick="publishPost()">Publicar</button>
-                        </div>
-                    </div>
-            
-                    <!-- Seção de publicações -->
-                    <div id="posts-container">
-                        <!-- Modelo de Postagem (oculto) -->
-                        <div id="post-template" class="post" style="display:none;">
-                            <div class="post-header">
-                                <img src="./Captura de tela 2024-09-01 124522.png" alt="User" class="profile-pic"> <!-- Foto do usuário -->
-                                <h3>Nome do Usuário</h3>
-                            </div>
-                            <div class="post-body">
-                                <h4 class="post-title"></h4>
-                                <p class="post-content"></p>
-                                <img src="./Captura de tela 2024-09-01 124522.png" alt="Post Image" class="post-image"> <!-- Imagem da postagem -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="./Login.html" onclick="viewProfile()">Ver Perfil</a></li>
+          <li><a class="dropdown-item" href="#" onclick="logOff()">Sair</a></li>
 
 
-
-
-                <!-- Notifications Content -->
-                <div id="notifications-content" style="display:none;">
-                    <h2>Notificações</h2>
-                    <p>Aqui estão suas notificações.</p>
-                </div>
-
-                
-                <!-- View Animals Content -->
-                <div id="view-animals-content" style="display:none;">
-                    <h2>Ver Animais</h2>
-                    <p>Aqui você pode ver todos os animais disponíveis!</p>
-                </div>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
-        </footer>
-    </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
-
-
-    <!----------------- MESSAGES AREA -------------------->
-    <div class="messages-area">
-        <h3>Mensagens</h3>
-        <div class="message-options">
-            <button onclick="showMessages('friends')">Amigos</button>
-            <button onclick="showMessages('inbox')">Mensagens</button>
-        </div>
-        <div id="messages-content">
-            <p>Selecione uma opção acima para ver as mensagens.</p>
-        </div>
+        </ul>
+      </div>
     </div>
-    
-    
+    <!---------------------------- Fim do Container na parte de cima da pagina ---------------------->
+  </nav>
 
-    <footer class="footer">
-        <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
-    </footer>
-    </main>
 
-    <script src="../../Public/JavaScript/Feed.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+
+
+  <!-------------------------------- MAIN ----------------------------------->
+  <main>
+    <div class="container">
+      <!----------------- LEFT -------------------->
+      <div class="left">
+        <div class="sidebar">
+          <a class="menu-item" id="mural" onclick="showContent('mural')">
+            <span><i class="uil uil-compass"></i></span>
+            <h3>Feed Animals</h3>
+          </a>
+          <a class="menu-item" id="notifications" onclick="showContent('notifications')">
+            <span><i class="uil uil-bell"></i></span>
+            <h3>Notificação</h3>
+          </a>
+
+          <a class="menu-item" id="view-animals" onclick="showContent('view-animals')">
+            <span><i class="uil uil-envelope-alt"></i></span>
+            <h3>Ver Animais</h3>
+          </a>
+        </div>
+      </div>
+
+      <!----------------- CONTENT AREA -------------------->
+      <div class="content-area" id="content-area">
+        <div id="mural-content" style="display:block;">
+          <!-- Botão para abrir o modal -->
+          <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar
+            Publicação</button>
+
+          <!-- Modal para criar uma publicação -->
+          <div id="publish-modal" class="modal" style="display:none;">
+            <div class="modal-content">
+              <span class="close" onclick="closePublishModal()">&times;</span>
+              <h2>Criar Publicação</h2>
+              <input type="text" id="post-title" placeholder="Título da Postagem" required>
+              <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
+              <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+              <button onclick="publishPost()">Publicar</button>
+            </div>
+          </div>
+
+          <!-- Seção de publicações -->
+          <div id="posts-container">
+            <!-- Modelo de Postagem (oculto) -->
+            <div id="post-template" class="post" style="display:none;">
+              <div class="post-header">
+                <img src="../../Public/Image/image.png" alt="User" class="profile-pic">
+                <!-- Foto do usuário -->
+                <h3>Nome do Usuário</h3>
+              </div>
+              <div class="post-body">
+                <h4 class="post-title"></h4>
+                <p class="post-content"></p>
+                <img src="./Captura de tela 2024-09-01 124522.png" alt="Post Image" class="post-image">
+                <!-- Imagem da postagem -->
+              </div>
+            </div>
+          </div>
+
+
+          <div class="feed-post">
+            <div class="post-header">
+              <div class="user-avatar">
+                <a href="./Login.html">
+                  <img class="user-photo" src="../../Public/Image/image.png" alt="Foto do Usuário">
+                </a>
+              </div>
+
+              <div class="user-info">
+                <a href="./Login.html" class="user-name">Thiago Antonio</a>
+                <p class="post-date">Publicado em 17 de outubro de 2024</p>
+              </div>
+
+              <div class="post-options">
+                <div class="three-dots">
+                  <button class="dots-button" onclick="toggleMenu(event)">&#8230;</button>
+                  <div class="menu" style="display: none;">
+                    <button class="report-button" onclick="reportPost()">Denunciar Postagem</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="post-content">
+              <p class="post-text">Doa-se esses vira-latas</p>
+              <img class="post-image" src="../../Public/Image/telaCadastro.png" alt="Imagem da Postagem">
+            </div>
+
+            <div class="post-actions">
+              <div class="reaction-section">
+                <button class="reaction-button like-button"><i class="fas fa-thumbs-up"></i> Curtir</button>
+                <button class="reaction-button comment-button"><i class="fas fa-comment"></i> Comentar</button>
+              </div>
+
+              <div class="comment-section" style="display: none;">
+                <textarea class="comment-input" placeholder="Escreva um comentário..."></textarea>
+                <button class="submit-comment">Publicar</button>
+              </div>
+
+
+            </div>
+          </div>
+
+
+
+        </div>
+
+
+
+
+
+
+
+        <!------------------------- Campo de Notificações ---------------------->
+
+        <div class="notifications-container" id="notifications-content" style="display: none;">
+          <h2>Notificações - Patinhas do Bem</h2>
+          <div class="notification">
+            <p><strong>Data:</strong> 12 de Outubro de 2024</p>
+            <p><strong>Notificação:</strong> O Programa de adoção será realizado no próximo sábado! Venha
+              conhecer nossos pets!</p>
+          </div>
+          <div class="notification">
+            <p><strong>Data:</strong> 10 de Outubro de 2024</p>
+            <p><strong>Notificação:</strong> Novos voluntários foram adicionados à nossa equipe. Seja
+              bem-vindo!</p>
+          </div>
+          <div class="notification">
+            <p><strong>Data:</strong> 05 de Outubro de 2024</p>
+            <p><strong>Notificação:</strong> Campanha de arrecadação de ração em andamento. Contribua!</p>
+          </div>
+        </div>
+        <!------------------------- Fim do Campo de Notificações ---------------------->
+
+
+
+
+        <!----------------------- Campo do Cadastro do animal ------------------------------>
+        <div id="Cadastrar-Pets" style="display:none;">
+          <h2>Cadastre seu pet</h2>
+
+          <div id="view-animals" onclick="showContent('view-animals')">
+            <button type="button" class="btn-close" disabled aria-label="Close"></button>
+            </a>
+          </div>
+
+
+
+          </button>
+
+          <div class="Cadastro-pets">
+            <div>
+              <h6>Data de nascimento</h6>
+              <input type="date" class="animal" required>
+            </div><br>
+
+            <div>
+              <label for="tipo-animal" class="label-animal">Tipo de Animal</label>
+              <select id="tipo-animal" class="animal" name="tipo" required>
+                <option value="" disabled selected>Selecione o tipo</option>
+                <option value="Cachorro">Cachorro</option>
+                <option value="Gato">Gato</option>
+                <option value="Coelho">Coelho</option>
+                <option value="Hamster">Hamster</option>
+                <option value="Porquinho-da-índia">Porquinho-da-índia</option>
+                <option value="Papagaio">Papagaio</option>
+                <option value="Calopsita">Calopsita</option>
+              </select>
+            </div><br>
+
+            <div>
+              <label for="raca" class="label-animal">Raça</label>
+              <input type="text" id="raca" class="animal" required>
+            </div><br>
+
+            <div>
+              <label for="idade" class="label-animal">Idade</label>
+              <input type="number" id="idade" class="animal" required>
+            </div><br>
+
+
+            <div>
+              <label for="sexo" class="label-animal">Sexo</label>
+              <select id="sexo" class="animal" name="sexo" required>
+                <option value="" disabled selected>Selecione o sexo</option>
+                <option value="Feminino">Fêmea</option>
+                <option value="Masculino">Macho</option>
+              </select>
+            </div><br>
+
+            <div>
+              <label for="cor" class="label-animal">Cor</label>
+              <input type="text" id="cor" class="animal" required>
+            </div><br>
+
+            <div>
+              <label for="descricao" class="label-animal">Descrição</label>
+              <textarea id="descricao" class="animal" rows="4" cols="30" placeholder="Descreva o pet aqui..."
+                required></textarea>
+            </div><br>
+
+            <div class="adc-image">
+              <h3>Adicione a imagem do animal</h3>
+              <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+            </div>
+            <div class="botao-salvar">
+              <button type="button" class="btn-salvar" disabled>Salvar</button>
+            </div>
+          </div>
+        </div>
+        <!--------------------- fim do campo de cadastro do pet --------------------->
+
+
+
+        <!---------------------- Area para ver os animais --------------------------->
+
+        <div id="view-animals-content" style="display:none;">
+          <h2>Ver Animais</h2>
+
+          <a id="Cadastro" onclick="showContent('Cadastro')">
+            <button class="btn-cadastrar">Cadastrar Animais</button>
+          </a>
+
+          <div class="post">
+            <div class="user-info">
+              <div class="titulo-pet">
+                <p>Informações do pet</p>
+              </div>
+
+              <div class="formulario-do-pet">
+                <p class="descrição"><strong>Tipo de Animal:</strong> Cachorro</p>
+                <p class="descrição"><strong>Linhagem:</strong> Labrador</p>
+                <p class="descrição"><strong>Idade:</strong> 3 anos</p>
+                <p class="descrição"><strong>Sexo:</strong> Macho</p>
+                <p class="descrição"><strong>Cor:</strong> Branco</p>
+                <p class="descrição"><strong>Descrição:</strong> Amigável e brincalhão.</p>
+
+              </div>
+
+              <button class="btn-interesse">Tenho Interesse</button>
+            </div>
+            <div class="animal-post">
+              <img src="../../Public/Image/image.png" alt="Imagem do animal" class="animal-photo">
+            </div>
+          </div>
+
+          <div class="post">
+            <div class="user-info">
+              <div class="titulo-pet">
+                <p>Informações do pet</p>
+              </div>
+
+              <div class="formulario-do-pet">
+                <p class="descrição"><strong>Tipo de Animal:</strong> Cachorro</p>
+                <p class="descrição"><strong>Linhagem:</strong> Vira Lata</p>
+                <p class="descrição"><strong>Idade:</strong> 2 anos</p>
+                <p class="descrição"><strong>Sexo:</strong> Femêa</p>
+                <p class="descrição"><strong>Cor:</strong> preto</p>
+                <p class="descrição"><strong>Descrição:</strong> Quieto e carinhoso.</p>
+              </div>
+
+              <button class="btn-interesse">Tenho Interesse</button>
+            </div>
+
+          </div>
+        </div>
+        <!---------------------- fim da Area para ver os animais --------------------------->
+      </div>
+    </div>
+
+
+
+
+
+
+    <!--------------------------------Campo de mensagens e amigos ---------------------------->
+    <div class="mensagens">
+
+      <aside class="sidebar1-left">
+        <div class="button-container">
+          <button class="btn btn-toggle" id="btn-amigos" onclick="toggleList('amigos')">Amigos</button>
+          <button class="btn btn-toggle" id="btn-interessados"
+            onclick="toggleList('interessados')">Interessados</button>
+        </div>
+        <div id="amigos" class="content-list active">
+          <ul>
+            <li id="1" class="thiago" onclick="abrirChat(this)">
+              <img class="img1" src="ftTeste.jpg" alt="">
+              Thiago Antonio
+            </li>
+            <li id="2" class="lucas" onclick="abrirChat(this)">
+              <img class="img1" src="ftTeste.jpg" alt="">
+              Lucas
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+
+
+      <!------------------------------ Script da caixa de chat ------------------------------->
+      <script>
+        const socket = io();
+
+        socket.on ('sendMessage', (msg) => {
+          receberMensagem (msg)
+        })
+
+
+        function receberMensagem(mensagem) {
+          var chatBody = document.getElementById("chat-body");
+          var chatImage = document.getElementById("chat-image").files[0];
+
+          // Adiciona a mensagem de texto ao chat
+
+            var mensagemTexto = document.createElement("p");
+            mensagemTexto.textContent = mensagem.messageSender + ": " + mensagem.message;
+            chatBody.appendChild(mensagemTexto);
+
+          // Adiciona a imagem ao chat se uma imagem for selecionada
+          if (chatImage) {
+            var mensagemImagem = document.createElement("img");
+            mensagemImagem.src = URL.createObjectURL(chatImage);
+            mensagemImagem.style.maxWidth = "200px"; // Define um tamanho máximo para a imagem
+            mensagemImagem.style.display = "block"; // Garante que a imagem seja exibida em uma nova linha
+            chatBody.appendChild(mensagemImagem);
+          }
+
+          // Limpa os campos de entrada após o envio
+          document.getElementById("chat-input").value = "";
+          document.getElementById("chat-image").value = "";
+        }
+
+
+        // chat
+        function enviarMensagem() {
+          var chatBody = document.getElementById("chat-body");
+          var chatInput = document.getElementById("chat-input").value;
+          var chatImage = document.getElementById("chat-image").files[0];
+
+          // Adiciona a mensagem de texto ao chat
+          if (chatInput) {
+            const storageContact =  JSON.parse(localStorage.getItem('talkingNow'))
+            const dataMessage = {contatoID:storageContact.contactID,messageText:chatInput, myName:'Lucas'}
+            socket.emit(`sendMessage`, dataMessage)
+            var mensagemTexto = document.createElement("p");
+            chatBody.appendChild(mensagemTexto);
+          }
+
+          // Adiciona a imagem ao chat se uma imagem for selecionada
+          if (chatImage) {
+            var mensagemImagem = document.createElement("img");
+            mensagemImagem.src = URL.createObjectURL(chatImage);
+            mensagemImagem.style.maxWidth = "200px"; // Define um tamanho máximo para a imagem
+            mensagemImagem.style.display = "block"; // Garante que a imagem seja exibida em uma nova linha
+            chatBody.appendChild(mensagemImagem);
+          }
+
+          // Limpa os campos de entrada após o envio
+          document.getElementById("chat-input").value = "";
+          document.getElementById("chat-image").value = "";
+        }
+
+
+        function showContent(sectionId) {
+          const sections = document.querySelectorAll('.content-section');
+          sections.forEach(section => section.style.display = 'none');
+
+          const sectionToShow = document.getElementById(sectionId);
+          if (sectionToShow) {
+            sectionToShow.style.display = 'block';
+          }
+        }
+
+        function toggleList(list) {
+          const amigosList = document.getElementById('amigos');
+          const interessadosList = document.getElementById('interessados');
+
+          if (list === 'amigos') {
+            amigosList.classList.add('active');
+            interessadosList.classList.remove('active');
+          } else {
+            interessadosList.classList.add('active');
+            amigosList.classList.remove('active');
+          }
+        }
+
+        function abrirChat(dataUsers) {
+          localStorage.setItem('talkingNow', JSON.stringify({contactID:dataUsers.id,nameUser:dataUsers.className}))
+          fetch(`/MensagensContato/${dataUsers.id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (myBlob) {
+              if (myBlob.success) {
+                document.getElementById('chat-nome').innerText = dataUsers.className;
+                document.getElementById('chat-box').style.display = 'block';
+                const contactID = myBlob.contactID
+                socket.emit('chatInject', contactID)
+              }
+            });
+
+
+
+        }
+
+        function fecharChat() {
+          localStorage.clear('talkingNow')
+          document.getElementById('chat-box').style.display = 'none';
+        }
+
+
+        function adicionarMensagem(mensagem, isImage = false) {
+          const messageDiv = document.createElement('div');
+          messageDiv.classList.add('message');
+
+          // Criar parágrafo para o conteúdo da mensagem ou imagem
+          if (isImage) {
+            const img = document.createElement('img');
+            img.src = mensagem;
+            messageDiv.appendChild(img);
+          } else {
+
+            const messageContent = document.createElement('p');
+            messageContent.textContent = mensagem;
+            messageDiv.appendChild(messageContent);
+          }
+
+        }
+
+
+
+        fetch(`/Login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            "Email": "Manrick72@gmail.com",
+            "Senha": "teste123"
+          })
+        })
+          .then(function (response) {
+            return response.json();
+          })
+          .then(function (myBlob) {
+            console.log(myBlob)
+          })
+
+      </script>
+      <!-----------------------------------Fim do Script ------------------------------------>
+
+
+
+
+
+      <!-------------------------------------- Caixa de chat --------------------------------------------->
+      <div id="chat-box">
+        <div id="chat-header">Converse com <span id="chat-nome">Fulano</span> <span style="float:right; cursor:pointer;"
+            onclick="fecharChat()">X</span></div>
+
+        <div id="chat-body">
+          <!-- As mensagens aparecerão aqui -->
+        </div>
+
+        <div id="chat-footer">
+
+          <!-- Campo de input para texto -->
+          <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
+
+          <!-- Botão de upload de imagem -->
+          <label for="chat-image"><i class="fa-regular fa-image"></i></label>
+          <input type="file" id="chat-image" accept="image/*">
+
+          <!-- Botão de envio -->
+          <button id="chat-send" onclick="enviarMensagem()">
+            <i class="fa-regular fa-paper-plane"></i>
+          </button>
+
+        </div>
+      </div>
+      <!-------------------------------------- Caixa de chat --------------------------------------------->
+
+
+
+
+    </div>
+  </main>
+
+
+  <!--------------------------------- Rodapé no fim da pagina ----------------------------------->
+  <footer class="footer">
+    <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p>
+  </footer>
+  <!-------------------------------------- Fim do Rodapé ----------------------------------->
+
+
+  <script src="../../Public/JavaScript/Feed.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+
 </body>
 
 </html>

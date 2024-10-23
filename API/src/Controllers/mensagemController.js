@@ -5,7 +5,7 @@ const mensagemController  = {
 
   mensagensContato: async(req,res) => {
     const {ID} = req.dataUser;
-    const {IDContato} = req.body;
+    const {IDContato} = req.params;
     try {
       if(ID && IDContato) {
         const getMessagesWithMyContact = await Mensagem.mensagensContatoQuery(ID,IDContato)

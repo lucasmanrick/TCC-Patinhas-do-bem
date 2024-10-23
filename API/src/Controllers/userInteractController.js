@@ -9,7 +9,7 @@ const userInteractController = {
   profileUser: async(req,res) => {
     const {ID} = req.dataUser;
     try {
-      const {userBeReturnedID} = req.body;
+      const {userBeReturnedID} = req.params;
 
       if(userBeReturnedID) {
         const dataReturnUserEspecified = await userInteractQueries.profileUserQuery(userBeReturnedID,ID)
