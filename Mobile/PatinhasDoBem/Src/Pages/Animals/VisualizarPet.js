@@ -9,7 +9,7 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 const { width } = Dimensions.get("window");
 
 const TelaDePets = ({ navigation }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [Petts, setPetts] = useState([]);
 
   const fetchPets = async () => {
@@ -20,12 +20,13 @@ const TelaDePets = ({ navigation }) => {
         Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
         return;
       }
-
+      setIsLoading(true);
       const response = await api.get("/PetsAdocao", {}, {
         headers: { authorization: token },
       }).then((e) => {
         const petsData = e.data.dataResponse;
         setPetts(petsData);
+        setIsLoading(false);
         if (!Petts) {
           throw new Error("Erro ao obter ID do pet.");
         }
@@ -44,12 +45,12 @@ const TelaDePets = ({ navigation }) => {
   }, []);
 
   return (
-    // <View style={styles.container}>
-    //   {isLoading ? (
-    //     <View style={styles.loadingContainer}>
-    //       <ActivityIndicator size="large" color="#3DAAD9" />
-    //     </View>
-    //   ) : (
+    <View style={styles.container}>
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#3DAAD9" />
+        </View>
+      ) : (
         Petts.length > 0 ? (
           <Swiper
             cards={Petts}
@@ -121,9 +122,9 @@ const TelaDePets = ({ navigation }) => {
           <Text style={styles.noPetsText}>Nenhum pet disponível no momento.</Text>
         )
       )}
-    // </View>
-  // );
-// };
+      </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: 450,
     borderRadius: 15,
+    marginTop: 50,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
   },
   petImage: {
     width: "100%",
-    height: "70%",
+    height: "100%",
     resizeMode: "cover",
   },
   noImageText: {
