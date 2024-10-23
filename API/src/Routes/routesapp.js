@@ -11,7 +11,6 @@ const contatoController = require("../Controllers/contatoController");
 const mensagemController = require("../Controllers/mensagemController");
 const notificacaoController = require("../Controllers/NotificacaoController");
 const UsuariosBloqueadosController = require("../Controllers/UsuariosBloqueadosController");
-const { denunciarPostagem } = require("../Controllers/denunciaController");
 const denunciaController = require("../Controllers/denunciaController");
 const postagemController = require("../Controllers/postagemController");
 
@@ -92,7 +91,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
   //puxa todos animais que estão para adoção no mesmo estado da pessoa.
-  router.get("/PetsAdocao", verificadorDoToken, petManagement.petsParaAdocao)
+  router.post("/PetsAdocao", verificadorDoToken, petManagement.petsParaAdocao)
 
 
   //Rota que pode-se demonstrar interesse em um pet
@@ -131,6 +130,9 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //Rota para obter dados de perfil de usuários do site (chamar quando quiser ver o perfil de um usuário, ou ver o seu próprio perfil).
   router.get("/ProfileUser/:userBeReturnedID",verificadorDoToken,userInteractController.profileUser);
 
+  //Rota para trazer meus proprios dados de perfil
+  router.get("/MyProfile",verificadorDoToken,userInteractController.profileUser);
+
   //Rota para o ADM Remover um usuário do sistema, ou o próprio usuário se remover do sistema permanentemente
   router.delete("/RemoveDadosUsuario",verificadorDoToken,UsuarioController.removeDadosUsuario);
 
@@ -167,7 +169,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   router.put ("/EditarPostagem", verificadorDoToken, postagemController.editarPostagem)
 
 
-  router.get ("/VerPostagens", verificadorDoToken, postagemController.verPostagens)
+  router.post ("/VerPostagens", verificadorDoToken, postagemController.verPostagens)
 
 
 

@@ -1,28 +1,54 @@
 const express = require("express");
 const router = require('./src/Routes/routesapp');
 const cors = require("cors");
-const app = express();
-
 const { createServer } = require('node:http');
 const path = require ('node:path')
+const { Server } = require("socket.io");
 
 
+const app = express();
 
 const newDirName = path.resolve(__dirname, '..','WEB');;
 app.use(express.static(newDirName))
 
 const server = createServer(app);
-
-
+const io = new Server(server);
 
 require("dotenv-safe").config();
 const cookieParser = require('cookie-parser');
 
 
+
 const port= 5000;
 
 
+io.on('connection', (socket) => {
+  // Verifique o token aqui, se necessário
+  console.log('nova conexão')
+  socket.on('chatInject', (contatoID) => {
+    console.log('entrou em uma sala', contatoID)
+    if (contatoID) {
+      socket.join(`${contatoID}Message`); 
+    }
+  })
 
+  socket.on('sendMessage', (dataMessage) => {
+    if (dataMessage.contatoID) {
+        
+      io.to(`${dataMessage.contatoID}Message`).emit('sendMessage', {messageSender: dataMessage.myName, message: dataMessage.messageText} ); 
+    }
+  })
+})
+
+
+// io.on('connection', (socket) => {
+//   console.log('usuário está vendo mensagens com outro usuário')
+//   socket.broadcast.emit('msg', msg)
+//   socket.join (`${contactID}Message`)
+// })
+
+
+// io.to (`${IDContato}Message`).emit('msg', Texto);
 
 app.use(cookieParser());
 app.use(express.json());

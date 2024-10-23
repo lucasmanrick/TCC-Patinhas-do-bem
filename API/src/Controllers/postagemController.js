@@ -33,12 +33,12 @@ const postagemController = {
 
   verPostagens: async (req,res) => {
     const {ID} = req.dataUser;
-    const {gapQuantity} = req.body
+    const {gapQuantity} = req.body;
+
+    console.log(ID,gapQuantity)
     try{
      return res.json(await Postagem.verPostagensQuery(gapQuantity,ID))
-      // if(quantityGet) {
-       
-      // }
+ 
     }catch(e){
       res.json({error:e.message})
     }

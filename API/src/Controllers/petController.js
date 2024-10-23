@@ -76,9 +76,10 @@ const petManagement = {
   petsParaAdocao: async (req,res) => {
     try {
       const {ID,Estado} = req.dataUser;
+      const {gapQuantity} = req.body;
 
       if(Estado,ID) {
-        const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID);
+        const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID,gapQuantity);
         return res.json(receivePets)
       }
       else {
