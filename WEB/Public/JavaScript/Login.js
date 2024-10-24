@@ -171,4 +171,28 @@ document.getElementById('cep')
         return true;
     }
 
+
+
+// Seleciona o input e a imagem
+const imageInput = document.getElementById('image-input');
+const profileImage = document.getElementById('profile-image');
+
+// Função para alterar a imagem quando o usuário seleciona um novo arquivo
+imageInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    
+    if (file) {
+        // Cria uma URL temporária para a imagem e a atribui ao src da imagem
+        const imageUrl = URL.createObjectURL(file);
+        profileImage.src = imageUrl;
+    }
+});
+
+
+
+
+
+
+
+    
      //-------------------------------------------- FIM  ------------------------------------------- //

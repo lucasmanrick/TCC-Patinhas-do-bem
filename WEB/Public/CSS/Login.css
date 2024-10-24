@@ -67,6 +67,7 @@ margin-left: 10px;
 }
 
 
+
 /* ---------------------------PARTE ESQUERDA DA TELA -------------------------- */
 
 .title-second-1 {
@@ -82,6 +83,7 @@ margin-left: 10px;
 }
 .description-primary {
     color: #fff;
+    margin-left: 20px;
 }
 .description-second {
     color: #7f8c8d;
@@ -98,11 +100,15 @@ margin-left: 10px;
     align-self: center;
     border: none;
     margin-top: 1rem;
+   
 }
 .btn-primary {
     background-color: transparent;
     border: 1px solid #fff;
     transition: background-color .5s;
+    margin-left: 60px;
+    margin-top: 80px;
+    
 }
 .btn-primary:hover {
     background-color: #fff;
@@ -177,6 +183,11 @@ margin-left: 10px;
     line-height: 35px;
     text-align: center;
     color: #95a5a6;
+}
+
+
+.title-primary{
+    margin-left: 40px;
 }
 
 /* --------------- formulario da esquerda ------------------*/
@@ -480,4 +491,53 @@ position: fixed;
 
 .fa-regular{
     color: #858484;
+}
+
+
+
+
+
+/* Estilo da imagem de perfil para ficar circular */
+.profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    margin-left: 80px;
+}
+
+/* Container que envolve a imagem e o ícone */
+.profile-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin-left: 15%; /* Ajuste conforme necessário */
+    margin-top: 10%;
+}
+
+/* Input do tipo file invisível */
+#image-input {
+    display: none; /* Oculta o input padrão */
+}
+
+/* Estilo do ícone de upload */
+.upload-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40px; /* Tamanho do ícone */
+    height: 40px;
+    cursor: pointer; /* Mostra que é clicável */
+}
+
+/* Estilo da imagem do ícone */
+.icon {
+    width: 50%;
+    height: 100%;
+    object-fit: contain;
+    margin-left: 110px;
 }
