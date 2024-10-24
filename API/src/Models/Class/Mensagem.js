@@ -56,7 +56,7 @@ class Mensagem {
       if(verifyIfUserAreInContact[0].length >=1) {
         const sendingMessage = await conn.query("INSERT INTO mensagem (DataDeEnvio,IDRemetente,IDContato,Remocao,Texto) VALUES (?,?,?,?,?)", [DataDeEnvio,IDRemetente,IDContato,0,Texto])
         if(sendingMessage[0].affectedRows >=1) {
-          return {success:"mensagem enviada com sucesso"}
+          return {success:"mensagem enviada com sucesso", idMensagem:sendingMessage[0].insertId}
         }
       }  return {error:"o usuário não faz parte do contato do qual está tentando enviar mensagem"}
   } catch(e) {
