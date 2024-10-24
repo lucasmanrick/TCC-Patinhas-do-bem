@@ -67,7 +67,7 @@ class Usuario {
             expiresIn: 10000 // tempo em que o token irá expirar em segundos
           });
 
-          return{success: "Usuário logado com sucesso",auth:true,token:token}
+          return{success: "Usuário logado com sucesso",auth:true,token:token, Administrador:authResponse[0][0].Administrador}
           
         } else {
           return {error:"Email ou senha incorreta.",auth:false}

@@ -85,13 +85,15 @@ const UsuarioController = {
             if(verifyExistence.auth === true) {
               if(verifyMobileOrWeb === "mobile") {
                 return res.json({sucess:verifyExistence.success,auth:verifyExistence.auth, token:verifyExistence.token})
+              }else {
+                res.cookie('token', verifyExistence.token, {
+                  secure: true, // O cookie só será enviado em conexões HTTP
+                  httpOnly: true, // O cookie não será acessível via JavaScript no navegador
+                  maxAge: 3600000 // Tempo de vida do cookie em milissegundos (1 hora)
+                })
+               return res.json({sucess:verifyExistence.success,auth:verifyExistence.auth, Administrador:verifyExistence.Administrador})
               }
-              res.cookie('token', verifyExistence.token, {
-                secure: true, // O cookie só será enviado em conexões HTTP
-                httpOnly: true, // O cookie não será acessível via JavaScript no navegador
-                maxAge: 3600000 // Tempo de vida do cookie em milissegundos (1 hora)
-              })
-             return res.json({sucess:verifyExistence.success,auth:verifyExistence.auth})
+              
             }
 
             return res.json(verifyExistence)
