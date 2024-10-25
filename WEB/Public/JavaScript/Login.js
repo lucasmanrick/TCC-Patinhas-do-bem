@@ -227,6 +227,31 @@ async function validateForm(event) {
     ) {
       const IDUsuario = resultado.IDUsuario; // Ajustando a referência para IDUsuario
       console.log(IDUsuario);
+      
+      document.getElementById("image-input").addEventListener("change", async (event) => {
+        const file = event.target.files[0]; // Captura o arquivo de imagem
+      
+        if (file) {
+          try {
+            // Define o caminho de upload no Firebase Storage
+            const storageRef = storage.ref().child(`perfil/${IDUsuario}`);
+      
+            // Faz o upload da imagem
+            const snapshot = await storageRef.put(file);
+            console.log("Upload concluído com sucesso!", snapshot);
+      
+            // Obtém a URL de download da imagem após o upload
+            const downloadURL = await storageRef.getDownloadURL();
+            console.log("URL da imagem:", downloadURL);
+      
+            // Atualiza a imagem no HTML com a nova imagem do Firebase
+            document.getElementById("profile-image").src = downloadURL;
+          } catch (error) {
+            console.error("Erro ao fazer upload da imagem:", error);
+            alert("Falha no upload da imagem. Por favor, tente novamente.");
+          }
+        }
+      });
       alert("Cadastro realizado com sucesso!");
       // Limpar os campos do formulário
       document.getElementById("name").value = "";
