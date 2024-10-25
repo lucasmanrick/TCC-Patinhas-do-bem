@@ -49,6 +49,32 @@ class Postagem {
       return {error:e.message}
     }
   }
+
+
+  static async deletarPostagemQuery (UserID,PostID,Administrator) {
+    const conn = await connection();
+    try {
+    const receivePostToDelete = await  conn.query('SELECT * from postagem where id=?',[PostID])
+
+    if(receivePostToDelete[0].length >= 1) {
+      if(receivePostToDelete[0][0].IDUsuario === UserID) {
+        const deletingPost = await conn.query('delete from postagem where id=?',[PostID])
+        if(deletingPost[0].length>=1) return {success:"você deletou sua postagem com sucesso"}
+        return {error:"não foi possivel deletar a postagem, houve um erro durante o processo (404)"}
+      }else {
+        if(Administrator === 1) {
+          const deletingPost = await conn.query('delete from postagem where id=?',[PostID])
+          if(deletingPost[0].affectedRows >=1) return {success:"você deletou a postagem do usuário solicitado, com sucesso"} 
+          return {error:"não foi possivel deletar a postagem, houve um erro no processo (404)"}
+        }else {
+          return {error:"você não pode deletar a postagem de outra pessoa sem ter permissão."}
+        }
+      }
+    }
+    }catch(e) {
+      return {error:e.message}
+    } 
+  }
 }
 
 

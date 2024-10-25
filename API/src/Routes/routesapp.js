@@ -16,6 +16,7 @@ const postagemController = require("../Controllers/postagemController");
 
 const { join } = require('node:path');
 const path = require('node:path');
+const avaliacaoController = require("../Controllers/avaliacaoController");
 
 
 const newDirName = path.resolve(__dirname, '..','..', '..' ,'WEB', 'View','Pages');
@@ -165,13 +166,17 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //Rota para criar um novo post
   router.post ("/CriarPostagem", verificadorDoToken, postagemController.criaPostagem)
 
-
+  //Rota para editar os dados da postagem que o usuário fez.
   router.put ("/EditarPostagem", verificadorDoToken, postagemController.editarPostagem)
 
-
+  //Rota para puxar as ultimas 50 postagens feitas por usuarios, (solicita de 50 em 50)
   router.post ("/VerPostagens", verificadorDoToken, postagemController.verPostagens)
 
+  //Rota para reagir/avaliar uma postagem com "like", "uau" ou "amei"
+  router.post ("/ReagirPostagem", verificadorDoToken, avaliacaoController.reagirPostagem)
 
+  //rota para retirar uma reação de uma postagem
+  router.post ("/RemoverReacao", verificadorDoToken, avaliacaoController.removerReacao)
 
 
 module.exports = router;
