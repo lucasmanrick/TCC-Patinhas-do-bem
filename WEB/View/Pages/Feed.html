@@ -360,21 +360,20 @@
 
           var mensagemTexto = document.createElement("p");
           mensagemTexto.idMensagem = mensagem.idMensagem
-          mensagemTexto.textContent = mensagem.messageSender + ": " + mensagem.message;
-          chatBody.appendChild(mensagemTexto);
 
-          // Adiciona a imagem ao chat se uma imagem for selecionada
-          if (chatImage) {
-            var mensagemImagem = document.createElement("img");
-            mensagemImagem.src = URL.createObjectURL(chatImage);
-            mensagemImagem.style.maxWidth = "200px"; // Define um tamanho máximo para a imagem
-            mensagemImagem.style.display = "block"; // Garante que a imagem seja exibida em uma nova linha
-            chatBody.appendChild(mensagemImagem);
+          if(mensagem.messageSender !== 'Lucas') {
+            mensagemTexto.textContent = mensagem.messageSender + ": " + mensagem.message;
+            chatBody.appendChild(mensagemTexto);
+          }else {
+            mensagemTexto.textContent = "Você: " + mensagem.message;
+            chatBody.appendChild(mensagemTexto);
           }
+          
 
+      
           // Limpa os campos de entrada após o envio
           document.getElementById("chat-input").value = "";
-          document.getElementById("chat-image").value = "";
+
         }
 
 
@@ -475,7 +474,7 @@
                     mensagem.message = e.Texto
                     mensagem.idMensagem = e.IDMensagem
                   }else {
-                    mensagem.messageSender = 'Lucas'
+                    mensagem.messageSender = 'Você'
                     mensagem.message = e.Texto
                     mensagem.idMensagem = e.IDMensagem
                   }
