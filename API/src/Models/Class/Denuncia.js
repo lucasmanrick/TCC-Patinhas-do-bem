@@ -16,7 +16,7 @@ class Denuncia {
       if(denunciatePost[0].length >=1){
         const verifyComplaintQuantity = await conn.query("SELECT * FROM denuncia WHERE IDPostagem = ?",[this.IDPostagem])
         if(verifyComplaintQuantity[0].length >=5) {
-          const newNotify = new Notificacao (null,"um usuário denunciou a postagem de ID " + this.IDPostagem,6,null,this.IDPostagem,0)
+          const newNotify = new Notificacao (null,"um usuário denunciou a postagem de ID " + this.IDPostagem,6,null,this.IDPostagem,0)  // no lugar do 6 inserir o ID DO ADMINISTRADOR DO SITE
           await newNotify.criarNotificação();
         }
         return {success:"postagem denunciada com sucesso"}
