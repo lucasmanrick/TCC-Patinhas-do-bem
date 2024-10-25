@@ -10,11 +10,10 @@
 
     <link rel="stylesheet" href="../../Public/CSS/Login.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
-
-
-
-
-
+     <!-- Adicione o Firebase SDK -->
+     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-storage-compat.js"></script>
 
 </head>
 
@@ -23,6 +22,7 @@
     <div class="container-1">
         <div class="content first-content">
 
+           
             <div class="first-column">
                 <h2 class="title title-primary">Foto de Perfil</h2>
                 <p class="description description-primary">Escolha uma nova foto para seu perfil:</p>
@@ -44,14 +44,13 @@
                 <button id="signin" class="btn btn-primary">Voltar</button>
             </div>
             
-            
 
             <div class="second-column">
 
                 <h2 class="title title-second">criar uma conta</h2>
 
                 <p class="description description-second">ou use seu e-mail para inscrição:</p>
-                <form class="form" onsubmit="return validateForm(event)">
+                <form class="form" onsubmit="validateForm(event)">
                     <label class="label-input" for="">
                         <i class="fa-regular fa-user"></i>
                         <input type="text" id="name" placeholder=" Nome" required>
@@ -82,7 +81,7 @@
                    
                 </form>
                 
-                <form class="form-1" onsubmit="return validateForm(event)">
+                <form class="form-1" onsubmit="validateForm(event)">
                     <label class="label-input inputbox" for="">
                         <i class="fa-solid fa-location-dot"></i>
                         <input type="text" placeholder=" CEP" id="cep" required>
@@ -115,7 +114,7 @@
                 
                     <label class="label-input" for="">
                         <i class="fa-solid fa-house"></i>
-                        <input type="number" placeholder=" Numero" id="numero" required>
+                        <input type="texte" placeholder=" Numero" id="numero" required>
                     </label>
                 </form>
                          
@@ -141,15 +140,15 @@
                 <h2 class="title title-second-1">faça login</h2>
 
 
-                <form class="form-2" onsubmit="return validateLogin(event)">
+                <form class="form-2" onsubmit="enviarDadosLogin(event)">
                     <label class="label-input" for="">
                         <i class="far fa-envelope icon-modify"></i>
-                        <input type="email" id="email" placeholder="e-mail" required>
+                        <input type="email" id="email1" placeholder="e-mail" required>
                     </label>
                 
                     <label class="label-input" for="">
                         <i class="fas fa-lock icon-modify"></i>
-                        <input type="password" id="password" placeholder="Password" required>
+                        <input type="password" id="password1" placeholder="Password" required>
                     </label>
                 
                     <a class="password" href="#">esqueceu sua senha?</a>
@@ -180,6 +179,10 @@
     <!------------------------------------------- FINAL DO FOOTER --------------------------------------------------------->
 
     <script src="../../Public/JavaScript/Login.js"></script>
+    <script  src="../../Public/JavaScript/FirebaseConfig.js"></script>
+
+
+   
 
 </body>
 
