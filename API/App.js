@@ -24,9 +24,7 @@ const port= 5000;
 
 io.on('connection', (socket) => {
   // Verifique o token aqui, se necessário
-  console.log('nova conexão')
   socket.on('chatInject', (contatoID) => {
-    console.log('entrou em uma sala', contatoID)
     if (contatoID) {
       socket.join(`${contatoID}Message`); 
     }
