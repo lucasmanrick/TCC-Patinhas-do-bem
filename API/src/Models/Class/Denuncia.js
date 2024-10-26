@@ -12,8 +12,10 @@ class Denuncia {
    async denunciarPostagemQuery () {
     const conn = await connection();
     try {
+      const verifyDenunciate = await conn.query ("select * from denuncia where idUsuario = ? AND IDPostagem = ?", [this.IDUsuario,this.IDPostagem])
+      if(verifyDenunciate[0].length >=1) return {error:"você já denunciou está postagem"}
       const denunciatePost = await conn.query("INSERT INTO denuncia (Causa,IDUsuario,IDPostagem) VALUES (?,?,?)", [this.Causa,this.IDUsuario,this.IDPostagem])
-      if(denunciatePost[0].length >=1){
+      if(denunciatePost[0].affectedRows >=1){
         const verifyComplaintQuantity = await conn.query("SELECT * FROM denuncia WHERE IDPostagem = ?",[this.IDPostagem])
         if(verifyComplaintQuantity[0].length >=5) {
           const newNotify = new Notificacao (null,"um usuário denunciou a postagem de ID " + this.IDPostagem,6,null,this.IDPostagem,0)  // no lugar do 6 inserir o ID DO ADMINISTRADOR DO SITE

@@ -11,7 +11,7 @@ const avaliacaoController = {
           const receiveReturnAction = await newReaction.reagirPostagemQuery()
           return res.json (receiveReturnAction)
         }
-        return
+        return res.json({error:"está faltando informações para que seja completado a requisição"})
       }
       return res.json({error:"o campo tipo não está com um valor valido, tente novamente"})
       
