@@ -7,7 +7,7 @@ const postagemController = {
     const { Descricao } = req.body;
     try {
       const dataPublicacao = new Date();
-
+      
       if (ID && Descricao && dataPublicacao) {
         const newPost = new Postagem(null, Descricao, dataPublicacao, ID);
         return res.json(await newPost.criarPostagemQuery());
@@ -41,6 +41,23 @@ const postagemController = {
  
     }catch(e){
       res.json({error:e.message})
+    }
+  },
+
+
+  removerPostagem: async (req,res) => {
+    const {ID,Administrador} = req.dataUser;
+    const {PostID} = req.params;
+    try {
+      if(ID && Administrador === 1 && PostID) {
+       const requestPostDelete = await Postagem.deletarPostagemQuery(ID,PostID,Administrador)
+        return res.json(requestPostDelete)
+      }else {
+        return res.json({error:"não foi possivel dar prosseguimento a exclusão de postagem, pois não foi informado os dados necessários para a continuidade"})
+      }
+    }
+    catch (e) {
+      res.send(500).json({error:e.message})
     }
   }
 }

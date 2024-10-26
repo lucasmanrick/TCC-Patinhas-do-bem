@@ -16,6 +16,8 @@ const postagemController = require("../Controllers/postagemController");
 
 const { join } = require('node:path');
 const path = require('node:path');
+const avaliacaoController = require("../Controllers/avaliacaoController");
+const comentarioController = require("../Controllers/comentarioController");
 
 
 const newDirName = path.resolve(__dirname, '..','..', '..' ,'WEB', 'View','Pages');
@@ -50,12 +52,16 @@ function verificadorDoToken(req, res, next){
 }
 
 
+router.get('/', (req, res) => {
+  res.sendFile(path.join(newDirName, 'home.html'));
+});
+
 router.get('/Home', (req, res) => {
   res.sendFile(path.join(newDirName, 'home.html'));
 });
 
 
-router.get('/Login', (req, res) => {
+router.get('/LoginPage', (req, res) => {
   res.sendFile(path.join(newDirName, 'Login.html'));
 });
 
@@ -165,13 +171,19 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //Rota para criar um novo post
   router.post ("/CriarPostagem", verificadorDoToken, postagemController.criaPostagem)
 
-
+  //Rota para editar os dados da postagem que o usuário fez.
   router.put ("/EditarPostagem", verificadorDoToken, postagemController.editarPostagem)
 
-
+  //Rota para puxar as ultimas 50 postagens feitas por usuarios, (solicita de 50 em 50)
   router.post ("/VerPostagens", verificadorDoToken, postagemController.verPostagens)
 
+  //Rota para reagir/avaliar uma postagem com "like", "uau" ou "amei"
+  router.post ("/ReagirPostagem", verificadorDoToken, avaliacaoController.reagirPostagem)
 
+  //rota para retirar uma reação de uma postagem
+  router.post ("/RemoverReacao", verificadorDoToken, avaliacaoController.removerReacao)
 
+  //rota para efetuar um comentário em algum post
+  router.post ("/comentarPost", verificadorDoToken, comentarioController.comentarEmUmPost)
 
 module.exports = router;
