@@ -136,19 +136,15 @@ async function enviarDadosLogin(event) {
 
 //-------------------------------------------- VALIDAÇÃO DE CADASTRO ---------------------------------- //
 
-async function validateForm(event) {
-  event.preventDefault(); // Evita o envio automático do formulário
+function validateForm(event) {
+  event.preventDefault();
 
-  // Campos de informações pessoais
+  // Campos de informações pessoais e endereço
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
-  const confirmPassword = document
-    .getElementById("confirm-password")
-    .value.trim();
+  const confirmPassword = document.getElementById("confirm-password").value.trim();
   const birthdate = document.getElementById("birthdate").value.trim();
-
-  // Campos de endereço
   const cep = document.getElementById("cep").value.trim();
   const cidade = document.getElementById("cidade").value.trim();
   const estado = document.getElementById("estado").value.trim();
@@ -156,45 +152,28 @@ async function validateForm(event) {
   const endereco = document.getElementById("endereco").value.trim();
   const numero = parseInt(document.getElementById("numero").value.trim(), 10);
 
-  // Verifica se todos os campos de informações pessoais estão preenchidos
-  if (!name || !email || !password || !confirmPassword || !birthdate) {
-    alert("Por favor, preencha todos os campos de informações pessoais!");
+  // Verificações dos campos e senhas
+  if (!name || !email || !password || !confirmPassword || !birthdate || !cep || !cidade || !estado || !bairro || !endereco || isNaN(numero) || numero <= 0) {
+    alert("Por favor, preencha todos os campos corretamente!");
     return false;
   }
 
-  // Verifica se todos os campos de endereço estão preenchidos
-  if (
-    !cep ||
-    !cidade ||
-    !estado ||
-    !bairro ||
-    !endereco ||
-    isNaN(numero) ||
-    numero <= 0
-  ) {
-    alert("Por favor, preencha todos os campos de endereço corretamente!");
-    return false;
-  }
-
-  // Verifica se as senhas coincidem
   if (password !== confirmPassword) {
     alert("As senhas não coincidem!");
     return false;
   }
 
-  // Validação de email simples
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) {
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     alert("Por favor, insira um endereço de email válido!");
     return false;
   }
 
-  // Validação de senha (mínimo de 6 caracteres)
   if (password.length < 6) {
     alert("A senha deve ter pelo menos 6 caracteres!");
     return false;
   }
 
+  // Dados do formulário
   const dados = {
     NomeUsuario: name,
     DataNasc: birthdate,
@@ -202,84 +181,72 @@ async function validateForm(event) {
     Senha: password,
     Cep: cep,
     Rua: endereco,
-    Numero: numero, // Agora aqui está como um inteiro
+    Numero: numero,
     Bairro: bairro,
     Estado: estado,
     Cidade: cidade,
   };
 
-  try {
-    const resposta = await fetch("/Cadastro", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(dados),
-    });
-    const resultado = await resposta.json();
-    console.log(resultado); // Verifique a estrutura da resposta
+  // Envia os dados do formulário ao backend
+  fetch("/Cadastro", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(dados),
+  })
+    .then((resposta) => resposta.json())
+    .then((resultado) => {
+      if (resultado && resultado.success && resultado.success.includes("sucesso")) {
+        const IDUsuario = resultado.IDUsuario;
+        console.log("ID do usuário cadastrado:", IDUsuario);
 
-    // Verifique a resposta para a string de sucesso
-    if (
-      resultado &&
-      resultado.success &&
-      resultado.success.includes("sucesso")
-    ) {
-      const IDUsuario = resultado.IDUsuario; // Ajustando a referência para IDUsuario
-      console.log(IDUsuario);
-      
-      document.getElementById("image-input").addEventListener("change", async (event) => {
-        const file = event.target.files[0]; // Captura o arquivo de imagem
-      
+        // Fazer upload da imagem para o Firebase usando o ID do usuário
+        const file = document.getElementById("image-input").files[0];
         if (file) {
-          try {
-            // Define o caminho de upload no Firebase Storage
-            const storageRef = storage.ref().child(`perfil/${IDUsuario}`);
-      
-            // Faz o upload da imagem
-            const snapshot = await storageRef.put(file);
-            console.log("Upload concluído com sucesso!", snapshot);
-      
-            // Obtém a URL de download da imagem após o upload
-            const downloadURL = await storageRef.getDownloadURL();
-            console.log("URL da imagem:", downloadURL);
-      
-            // Atualiza a imagem no HTML com a nova imagem do Firebase
-            document.getElementById("profile-image").src = downloadURL;
-          } catch (error) {
-            console.error("Erro ao fazer upload da imagem:", error);
-            alert("Falha no upload da imagem. Por favor, tente novamente.");
-          }
-        }
-      });
-      alert("Cadastro realizado com sucesso!");
-      // Limpar os campos do formulário
-      document.getElementById("name").value = "";
-      document.getElementById("email").value = "";
-      document.getElementById("password").value = "";
-      document.getElementById("confirm-password").value = "";
-      document.getElementById("birthdate").value = "";
-      document.getElementById("cep").value = "";
-      document.getElementById("cidade").value = "";
-      document.getElementById("estado").value = "";
-      document.getElementById("bairro").value = "";
-      document.getElementById("endereco").value = "";
-      document.getElementById("numero").value = "";
+          const storageRef = storage.ref().child(`perfil/${IDUsuario}`);
+          return storageRef.put(file)
+            .then((snapshot) => {
+              console.log("Upload concluído com sucesso!", snapshot);
+              alert("Cadastro realizado com sucesso e imagem enviada!");
 
-      body.className = "sign-in-js";
-    } else {
-      alert(
-        "Erro no cadastro: " +
-          (resultado.success || "Mensagem não especificada.")
-      );
-    }
-  } catch (erro) {
-    console.error("Erro ao enviar dados:", erro);
-    alert(
-      "Ocorreu um erro ao tentar enviar os dados. Por favor, tente novamente mais tarde."
-    );
-  }
+              // Limpar campos do formulário
+              clearForm();
+            })
+            .catch((error) => {
+              console.error("Erro ao fazer upload da imagem:", error);
+              alert("Erro ao enviar a imagem. Por favor, tente novamente.");
+            });
+        } else {
+          alert("Nenhuma imagem selecionada para upload.");
+        }
+      } else {
+        alert("Erro no cadastro: " + (resultado.success || "Mensagem não especificada."));
+      }
+    })
+    .catch((erro) => {
+      console.error("Erro ao enviar dados:", erro);
+      alert("Ocorreu um erro ao tentar enviar os dados. Por favor, tente novamente mais tarde.");
+    });
 }
+
+// Função para limpar os campos do formulário
+function clearForm() {
+  document.getElementById("name").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("confirm-password").value = "";
+  document.getElementById("birthdate").value = "";
+  document.getElementById("cep").value = "";
+  document.getElementById("cidade").value = "";
+  document.getElementById("estado").value = "";
+  document.getElementById("bairro").value = "";
+  document.getElementById("endereco").value = "";
+  document.getElementById("numero").value = "";
+  document.getElementById("image-input").value = ""; // Limpa o campo da imagem
+  document.body.className = "sign-in-js";
+}
+
 
 //--------------------------------------------------- FIM----------------------------------------------------//
 

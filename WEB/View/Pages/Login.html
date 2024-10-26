@@ -10,40 +10,42 @@
 
     <link rel="stylesheet" href="../../Public/CSS/Login.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.6.0/css/all.css">
-     <!-- Adicione o Firebase SDK -->
-     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
-     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
-     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-storage-compat.js"></script>
+    <!-- Adicione o Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-storage-compat.js"></script>
 
 </head>
 
 <body>
- <!---------------- FORMULARIO ----------------------------->
+    <!---------------- FORMULARIO ----------------------------->
     <div class="container-1">
         <div class="content first-content">
 
-           
+
             <div class="first-column">
                 <h2 class="title title-primary">Foto de Perfil</h2>
                 <p class="description description-primary">Escolha uma nova foto para seu perfil:</p>
-            
+
                 <!-- Imagem do perfil (vai receber a imagem redonda) -->
-                <div class="profile-container">
-                    <img id="profile-image" src="../../Public/Image/user (1).png" class="profile-img">
-                    
-                    <!-- Input de upload invisível -->
-                    <input type="file" id="image-input" accept="image/*">
-                    
-                    <!-- Ícone no canto direito -->
-                    <label for="image-input" class="upload-icon">
-                        <img src="../../Public/Image/simbolo-de-interface-de-camera-fotografica-para-botao.png" alt="Upload" class="icon">
-                    </label>
-                </div>
-            
+                <form onsubmit="validateForm(event)">
+                    <div class="profile-container">
+                        <img id="profile-image" src="../../Public/Image/user (1).png" class="profile-img">
+
+                        <!-- Input de upload invisível -->
+                        <input type="file" id="image-input" accept="image/*">
+
+                        <!-- Ícone no canto direito -->
+                        <label for="image-input" class="upload-icon">
+                            <img src="../../Public/Image/simbolo-de-interface-de-camera-fotografica-para-botao.png"
+                                alt="Upload" class="icon">
+                        </label>
+                    </div>
+                </form>
                 <!-- Botão para voltar -->
                 <button id="signin" class="btn btn-primary">Voltar</button>
             </div>
-            
+
 
             <div class="second-column">
 
@@ -55,85 +57,86 @@
                         <i class="fa-regular fa-user"></i>
                         <input type="text" id="name" placeholder=" Nome" required>
                     </label>
-                
+
                     <label class="label-input" for="">
                         <i class="fa-regular fa-envelope"></i>
                         <input type="email" id="email" placeholder="e-mail" required>
                     </label>
-                
+
                     <label class="label-input" for="">
                         <i class="fa-solid fa-lock"></i>
                         <input type="password" id="password" placeholder=" Senha" required>
                     </label>
-                
+
                     <label class="label-input" for="">
-                        <i class="fa-solid fa-lock"></i> 
+                        <i class="fa-solid fa-lock"></i>
                         <input type="password" id="confirm-password" placeholder=" Confirmar Senha" required>
                     </label>
-                
+
                     <label class="label-input" for="">
                         <i class="fa-solid fa-calendar-days"></i>
                         <input type="date" id="birthdate" placeholder=" Data Nascimento" required>
                     </label>
-                <div>
-                    <button class="btn btn-second" type="submit">Criar Conta</button>
-                </div>
-                   
+                    <div>
+                        <button class="btn btn-second" type="submit">Criar Conta</button>
+                    </div>
+
                 </form>
-                
+
                 <form class="form-1" onsubmit="validateForm(event)">
                     <label class="label-input inputbox" for="">
                         <i class="fa-solid fa-location-dot"></i>
                         <input type="text" placeholder=" CEP" id="cep" required>
                         <label for="cep"></label>
                     </label>
-                
+
                     <label class="label-input inputbox" for="">
                         <i class="fa-regular fa-flag"></i>
                         <input type="text" placeholder=" Cidade" id="cidade" required>
                         <label for="cidade"></label>
                     </label>
-                
+
                     <label class="label-input inputbox" for="">
                         <i class="fa-solid fa-location-dot"></i>
                         <input type="text" placeholder=" Estado" id="estado" required>
                         <label for="estado"></label>
                     </label>
-                
+
                     <label class="label-input inputbox" for="">
                         <i class="fa-regular fa-flag"></i>
                         <input type="text" placeholder=" Bairro" id="bairro" required>
                         <label for="bairro"></label>
                     </label>
-                
+
                     <label class="label-input inputbox" for="">
                         <i class="fa-solid fa-road"></i>
                         <input type="text" placeholder=" Endereço" id="endereco" required>
                         <label for="endereco"></label>
                     </label>
-                
+
                     <label class="label-input" for="">
                         <i class="fa-solid fa-house"></i>
                         <input type="texte" placeholder=" Numero" id="numero" required>
                     </label>
                 </form>
-                         
-            
+
+
                 <div class="inputValido">
                     <p class="valido" id="valido"></p>
                 </div>
-                    <!------------------------------  FINAL DO CADASTRAMENTO DE Endereço ---------------------------------------->
+                <!------------------------------  FINAL DO CADASTRAMENTO DE Endereço ---------------------------------------->
 
-                
-                 <!------------------------------  FINAL DO BOTÃO DE SE INSCREVER-SE  ---------------------------------------->
+
+                <!------------------------------  FINAL DO BOTÃO DE SE INSCREVER-SE  ---------------------------------------->
             </div><!-- second column -->
         </div><!-- first content -->
 
 
         <div class="content second-content">
             <div class="first-column">
-        
-                <img src="../../Public/Image/logo.ofc-removebg-preview (1).png" class="img" width="60%" style=" display:flexbox; margin-left: 15%; margin-top: 30%;">
+
+                <img src="../../Public/Image/logo.ofc-removebg-preview (1).png" class="img" width="60%"
+                    style=" display:flexbox; margin-left: 15%; margin-top: 30%;">
                 <button id="signup" class="btn btn-primary" style="margin-top: 1%;">Cadastrar</button>
             </div>
             <div class="second-column-1">
@@ -145,12 +148,12 @@
                         <i class="far fa-envelope icon-modify"></i>
                         <input type="email" id="email1" placeholder="e-mail" required>
                     </label>
-                
+
                     <label class="label-input" for="">
                         <i class="fas fa-lock icon-modify"></i>
                         <input type="password" id="password1" placeholder="Password" required>
                     </label>
-                
+
                     <a class="password" href="#">esqueceu sua senha?</a>
                     <button class="btn btn-second1" type="submit">Entrar</button>
                 </form>
@@ -163,12 +166,12 @@
 
     <!----------------------------------- IMAGEM DE FUNDO DA TELA ------------------------------------------------>
     <div>
-        <img src="../../Public/Image/Design sem nome (5).png" class="img" width="100%" style="margin-left: -0%; margin-top: -400%; display:flexbox;"
-            srcset="">
+        <img src="../../Public/Image/Design sem nome (5).png" class="img" width="100%"
+            style="margin-left: -0%; margin-top: -400%; display:flexbox;" srcset="">
     </div>
     <!----------------------------------- FINAL DA IMAGEM DE FUNDO DA TELA ------------------------------------------------>
 
-    
+
 
     <!------------------------------------------- FOOTER --------------------------------------------------------->
     <footer class="footer">
@@ -179,10 +182,10 @@
     <!------------------------------------------- FINAL DO FOOTER --------------------------------------------------------->
 
     <script src="../../Public/JavaScript/Login.js"></script>
-    <script  src="../../Public/JavaScript/FirebaseConfig.js"></script>
+    <script src="../../Public/JavaScript/FirebaseConfig.js"></script>
 
 
-   
+
 
 </body>
 
