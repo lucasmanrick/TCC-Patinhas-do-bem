@@ -70,6 +70,10 @@ router.get('/FeedDeNoticias',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Feed.html'));
 });
 
+router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
+  res.sendFile(path.join(newDirName, 'Perfil.html'));
+});
+
 
 router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Perfil.html'));

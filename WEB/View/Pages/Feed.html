@@ -180,8 +180,9 @@
             <span><i class="uil uil-envelope-alt"></i></span>
             <h3>Ver Animais</h3>
           </a>
-
+          
           <a class="menu-item" id="Sair" href="/Home" onclick="logOff()">
+
             <i class="fa-solid fa-right-from-bracket"></i>
             <h3 class="sair"> Sair</h3>
             
@@ -524,7 +525,7 @@
               .then(function (myBlob) {
                 if (myBlob.success) {
                   const dataMessage = { contatoID: storageContact.contactID, messageText: chatInput, myName: 'Lucas', idMensagem:myBlob.idMensagem }
-                  socket.emit(`sendMessage`, dataMessage)
+                  socket.emit(sendMessage, dataMessage)
                   let mensagemTexto = document.createElement("p");
                   mensagemTexto.id = myBlob.idMensagem
                   chatBody.appendChild(mensagemTexto);
@@ -581,7 +582,7 @@
           localStorage.clear('talkingNow')
 
           localStorage.setItem('talkingNow', JSON.stringify({ contactID: dataUsers.id, nameUser: dataUsers.className }))
-          fetch(`/MensagensContato/${dataUsers.id}`, {
+          fetch(/MensagensContato/${dataUsers.id}, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json'

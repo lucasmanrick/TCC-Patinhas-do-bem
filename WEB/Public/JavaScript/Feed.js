@@ -18,7 +18,7 @@ function searchContent() {
 
 
 function viewProfile() {
-  window.location.href = '/path/to/profile'; // Altere o caminho conforme necessário
+  window.location.href = '/MeuPerfil'; // Altere o caminho conforme necessário
 }
 
 function logOff() {
