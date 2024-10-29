@@ -80,7 +80,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
 //Rota para o usuário logar no site (será retornado um token ao mesmo)
- router.post('/Login' ,UsuarioController.autenticaUsuario) 
+ router.post('/LoginP' ,UsuarioController.autenticaUsuario) 
 
 
 //Rota para cadastrar os dados de um novo pet 
