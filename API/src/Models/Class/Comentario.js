@@ -1,4 +1,5 @@
 const { connection } = require("../../Config/db");
+const { profileUserQuery } = require("../Query/userInteractQueries");
 
 
 class Comentario {
@@ -23,8 +24,7 @@ class Comentario {
   static async verComentariosDeUmPostQuery (IDPost) { // função de uso interno (é utilizada na hora de retornar as postagens, ou seja não é acessada pelo cliente/usuario)
     const conn = await connection();
     try{ 
-      const getComments = await conn.query("select c.* from comentario as c join usuario as u where IDPostagem = ?",[IDPost])
-      //puxar o nome do usuário que fez o comentario
+      const getComments = await conn.query("select u.Nome , c.ID as IDComentario, c.Texto, c.Data, c.IDUsuario  from comentario as c join usuario as u on u.ID = c.IDUsuario where IDPostagem = ?",[IDPost])
       return getComments
     }catch(e) {
       return {error:e.message}

@@ -49,18 +49,17 @@ class Postagem {
 
         const verifyLikeQuantity = await Avaliacao.verReacoesPostagemQuery(e.ID) //função para ver a quantidade de likes que tem na postagem sendo analisada
         verifyMyPostsDenunces[0].forEach((i) => { //verifica se os posts retornado não foi denunciado pelo usuário que o solicitou
-          if(i.IDPostagem === e.ID) {
-            checkPostDenuncies = true
-          }
+          if(i.IDPostagem === e.ID) {checkPostDenuncies = true}
         })
 
         const verifyComments = await Comentario.verComentariosDeUmPostQuery(e.ID)
-  
+        
 
         //inserir aki a consulta dos comentarios dessa postagem (puxar os comentarios)
 
         if(checkPostDenuncies === true) {return delete getingPosts[index]} // se o usuário que está solicitando já denunciou esta postagem, não retornamos ela ao usuário que está solicitando
-        e.likeQuantity = verifyLikeQuantity[0].length //define a quantidade de like
+        e.comentariosDoPost = verifyComments[0]
+        e.quantidadeDeLike = verifyLikeQuantity[0].length //define a quantidade de like
         e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media`  //url da qual hipoteticamente deveria estar a foto de perfil do usuário
         e.PostPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${e.ID}.jpg?alt=media`  //url de onde deveria estar a foto que o usuário utilizou no post/postagem.
         return e
@@ -96,6 +95,18 @@ class Postagem {
     }catch(e) {
       return {error:e.message}
     } 
+  }
+
+
+  static async postagensDeUmUsuarioQuery (UserID) {  // função de uso interno, ou seja o usuário não terá acesso direto a essa funcionalidade
+    const conn = await connection();
+    try {
+      const getingPosts = await conn.query("select * from Postagem WHERE IDUsuario =?", [UserID])
+      if(getingPosts[0].length >=1) return {success:"retornando postagens do usuário", postagens:getingPosts[0]}
+      return {error:"não foi identificado nenhuma postagem do usuário em questão"}
+    }catch(e) {
+      return{error:e.message}
+    }
   }
 }
 

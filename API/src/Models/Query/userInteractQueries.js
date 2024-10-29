@@ -1,5 +1,8 @@
 const {connection} = require('../../Config/db');
-const Pet = require("../Class/Pet")
+const Avaliacao = require('../Class/Avalicacao');
+const Comentario = require('../Class/Comentario');
+const Pet = require("../Class/Pet");
+const Postagem = require('../Class/Postagem');
 
 const userInteractQueries = {
  
@@ -9,14 +12,19 @@ const userInteractQueries = {
 
     if (userID && !usuarioASerRetornado) { // se o usuário solicitou analise de algum perfil e não passou id será retornado as informações dele mesmo, caso ele passe id sera pego os dados do usuário solicitado.
       //returnDataCleaned pega os dados (que podem ser vistos) do usuário que será visto o perfil.
-      const returnDataCleaned = await conn.query("select u.Nome, u.CEP, u.Rua, u.Numero, u.Bairro, u.Estado, u.DataNasc,u.Cidade, u.Email  from usuario As u WHERE id=? ",[userID]);   
+      const returnDataCleaned = await conn.query("select u.ID,u.Nome, u.CEP, u.Rua, u.Numero, u.Bairro, u.Estado, u.DataNasc,u.Cidade, u.Email  from usuario As u WHERE id=? ",[userID]);   
       const returnPetsUser = await Pet.petsDeUmUsuarioQuery(userID);
-
+      const myPosts = await Postagem.postagensDeUmUsuarioQuery(userID)//
 
       if(returnDataCleaned[0].length >=1) {
-        
-
-       return {success:"retornando dados do seu perfil para uso"  ,dadosUsuario: returnDataCleaned[0][0],dadosPetsUsuario:returnPetsUser.dataResponse}
+       const getingAnotherInfosAboutPost = await myPosts.postagens.map(async(el,index) => {
+          const verifyComments = await Comentario.verComentariosDeUmPostQuery(el.ID);
+          const likesQuantity = await Avaliacao.verReacoesPostagemQuery(el.ID)
+          el.quantidadeDeLike = likesQuantity[0].length
+          el.comentariosDoPost = verifyComments[0]
+          return el
+        })
+       return {success:"retornando dados do seu perfil para uso"  ,meusDados: returnDataCleaned[0][0],dadosMeusPets:returnPetsUser.dataResponse,minhasPostagens:await Promise.all(getingAnotherInfosAboutPost)}
       }else {
         return{error:"não foi possivel retornar dados do seu perfil, tente novamente por favor"}
       }
@@ -26,6 +34,8 @@ const userInteractQueries = {
       const returnPetsOfThisUser = await Pet.petsDeUmUsuarioQuery(usuarioASerRetornado);
       const verifyContactVinculate = await conn.query("select * from contato WHERE IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=?",[userID,usuarioASerRetornado,usuarioASerRetornado,userID])
       const verifyInviteExistence = await conn.query("select * from solicitacaocontato where IDSolicitante =? AND IDDestinatario = ? OR IDDestinatario=? AND IDSolicitante = ?",[userID,usuarioASerRetornado,usuarioASerRetornado,userID])
+      const userPosts = await Postagem.postagensDeUmUsuarioQuery(usuarioASerRetornado)
+
 
       let saoAmigos;
       let envioAmizadePendente;
@@ -34,7 +44,15 @@ const userInteractQueries = {
   
 
       if(returnAnotherUserProfile[0].length >=1) {
-        return {success: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente}
+        const getingPostsUser = await userPosts.postagens.map(async(el,index) => {
+          const verifyComments = await Comentario.verComentariosDeUmPostQuery(el.ID);
+          const likesQuantity = await Avaliacao.verReacoesPostagemQuery(el.ID)
+          el.quantidadeDeLike = likesQuantity[0].length
+          el.comentariosDoPost = verifyComments[0]
+          return el
+        })
+        
+        return {success: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente, postagensDoUsuario:await Promise.all(getingPostsUser)}
       } else {
         return {error:"não foi possivel retornar dados do perfil do usuário especificado"}
       }
