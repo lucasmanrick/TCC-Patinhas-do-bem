@@ -190,4 +190,6 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //rota para efetuar um comentário em algum post
   router.post ("/comentarPost", verificadorDoToken, comentarioController.comentarEmUmPost)
 
+  //
+
 module.exports = router;
