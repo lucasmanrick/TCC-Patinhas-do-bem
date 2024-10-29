@@ -17,9 +17,9 @@
 // }
 
 
-// function viewProfile() {
-//   window.location.href = '/path/to/profile'; // Altere o caminho conforme necessário
-// }
+function viewProfile() {
+  window.location.href = 'Perfil.html'; // Altere o caminho conforme necessário
+}
 
 // function logOff() {
 //   window.location.href = '/logout'; // Altere o caminho conforme necessário

@@ -17,6 +17,7 @@ const postagemController = require("../Controllers/postagemController");
 const { join } = require('node:path');
 const path = require('node:path');
 const avaliacaoController = require("../Controllers/avaliacaoController");
+const comentarioController = require("../Controllers/comentarioController");
 
 
 const newDirName = path.resolve(__dirname, '..','..', '..' ,'WEB', 'View','Pages');
@@ -60,13 +61,17 @@ router.get('/Home', (req, res) => {
 });
 
 
-router.get('/Login', (req, res) => {
+router.get('/LoginPage', (req, res) => {
   res.sendFile(path.join(newDirName, 'Login.html'));
 });
 
 
-router.get('/FeedDeNoticias', (req, res) => {
+router.get('/FeedDeNoticias',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Feed.html'));
+});
+
+router.get('/MyProfile',verificadorDoToken, (req, res) => {
+  res.sendFile(path.join(newDirName, 'Perfil.html'));
 });
 
 
@@ -182,5 +187,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   //rota para retirar uma reação de uma postagem
   router.post ("/RemoverReacao", verificadorDoToken, avaliacaoController.removerReacao)
 
+  //rota para efetuar um comentário em algum post
+  router.post ("/comentarPost", verificadorDoToken, comentarioController.comentarEmUmPost)
 
 module.exports = router;

@@ -1,4 +1,6 @@
 const { connection } = require("../../Config/db");
+const Avaliacao = require("./Avalicacao");
+const Comentario = require("./Comentario");
 
 
 class Postagem {
@@ -39,12 +41,31 @@ class Postagem {
   static async verPostagensQuery (gapQuantity,UserID) {
     const conn = await connection();
     try{
-      const getingPosts = await conn.query (`select p.*, u.Nome as NomeUsuario from postagem AS p JOIN contato AS C JOIN Usuario AS U on U.ID = p.IDUsuario WHERE C.IDSolicitante=? AND C.IDDestinatario=p.IDUsuario OR C.IDDestinatario=? AND C.IDSolicitante=p.IDUsuario  ORDER BY dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
-      getingPosts[0].forEach(e => {
-        e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media`
-        e.PostPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${e.ID}.jpg?alt=media`
+      const verifyMyPostsDenunces = await conn.query("select * from denuncia where IDUsuario = ?",[UserID]);
+      const getingPosts = await conn.query (`select p.*, u.Nome as NomeUsuario from postagem AS p JOIN Usuario AS U on U.ID = p.IDUsuario ORDER BY p.dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
+
+      const getReturnPosts = await getingPosts[0].map(async(e,index) => {
+        let checkPostDenuncies = false; //variavel para verificar se o post sendo analisado já foi denunciado por mim
+
+        const verifyLikeQuantity = await Avaliacao.verReacoesPostagemQuery(e.ID) //função para ver a quantidade de likes que tem na postagem sendo analisada
+        verifyMyPostsDenunces[0].forEach((i) => { //verifica se os posts retornado não foi denunciado pelo usuário que o solicitou
+          if(i.IDPostagem === e.ID) {checkPostDenuncies = true}
+        })
+
+        const verifyComments = await Comentario.verComentariosDeUmPostQuery(e.ID)
+        
+
+        //inserir aki a consulta dos comentarios dessa postagem (puxar os comentarios)
+
+        if(checkPostDenuncies === true) {return delete getingPosts[index]} // se o usuário que está solicitando já denunciou esta postagem, não retornamos ela ao usuário que está solicitando
+        e.comentariosDoPost = verifyComments[0]
+        e.quantidadeDeLike = verifyLikeQuantity[0].length //define a quantidade de like
+        e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media`  //url da qual hipoteticamente deveria estar a foto de perfil do usuário
+        e.PostPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${e.ID}.jpg?alt=media`  //url de onde deveria estar a foto que o usuário utilizou no post/postagem.
+        return e
       })
-      return{success:"retornando posts de seus amigos",posts:getingPosts[0]}
+       getingPosts[0] = await Promise.all(getReturnPosts) // faz com que a função aguarde terminar todo o preenchimento/ tratamento de dados do getingPosts sendo feito dentro do for each
+      return{success:"retornando os posts conforme o feed",posts:getingPosts[0]}
     }catch(e) {
       return {error:e.message}
     }
@@ -74,6 +95,18 @@ class Postagem {
     }catch(e) {
       return {error:e.message}
     } 
+  }
+
+
+  static async postagensDeUmUsuarioQuery (UserID) {  // função de uso interno, ou seja o usuário não terá acesso direto a essa funcionalidade
+    const conn = await connection();
+    try {
+      const getingPosts = await conn.query("select * from Postagem WHERE IDUsuario =?", [UserID])
+      if(getingPosts[0].length >=1) return {success:"retornando postagens do usuário", postagens:getingPosts[0]}
+      return {error:"não foi identificado nenhuma postagem do usuário em questão"}
+    }catch(e) {
+      return{error:e.message}
+    }
   }
 }
 

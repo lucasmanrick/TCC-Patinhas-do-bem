@@ -1,77 +1,177 @@
 <!DOCTYPE html>
-<html lang="pt-br"> 
-  <head>
-    <meta charset="UTF-8" /> 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> 
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patinhas do Bem</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="../../Public/CSS/Perfil.css" />
-  </head>
-  <body>
-    <div class="cabecalho__container">
-      <header></header> <!-- Um cabeçalho vazio, onde normalmente se colocariam logo, navegação, etc. -->
+  <!-- Favicon -->
+  <link rel="icon" href="../../Public/Image/logo-1.png" type="image/png" />
 
-      <div class="colunas__container">
-        <!-- Seção da coluna da esquerda -->
-        <div class="coluna__esquerda">
-          <div class="img__container">
-            <!-- Contém a imagem de perfil -->
-            <img src="img/perfil.png" alt="Anna Smith" /> <!-- Mostra a imagem de perfil do usuário -->
-            <span></span> <!-- Um elemento visual vazio que pode ser estilizado pelo CSS -->
-          </div>
-          
-          <!-- Nome do usuário -->
-          <h2>Anna Smith</h2>
-          
-          <!-- Descrição curta do usuário -->
-          <p>Adotar</p> 
-          <p>@anna_st</p> <!-- Handle ou nome de usuário para redes sociais -->
+  <!-- CSS -->
+  <link rel="stylesheet" href="../../Public/CSS/Perfil.css" />
 
-          <!-- Seção "sobre" com seguidores, seguidos e conexões -->
-          <ul class="sobre">
-            <li><span>150</span> Seguidores</li>
-            <li><span>99</span> Seguindo</li>
-            <li><span>25</span> Conexões</li>
+  <style>
+    
+  </style>
+</head>
+
+<body>
+  <div class="cabecalho__container">
+    <header></header>
+
+    <div class="colunas__container">
+      <!-- Coluna da esquerda -->
+      <div class="coluna__esquerda">
+        <div class="img__container">
+          <img src="../../Public/Image/user (1).png" alt="Thiago" />
+          <span></span>
+        </div>
+        <h2>Thiago Antonio</h2>
+      </div>
+
+      <!-- Coluna da direita -->
+      <div class="coluna__direita">
+        <nav>
+          <ul>
+            <li><a href="#" id="meus-pets-link" class="nav-link" onclick="showSection('meus-pets')">Meus pets</a></li>
+            <li><a href="#" id="postagens-link" class="nav-link" onclick="showSection('postagens')">Postagens</a></li>
           </ul>
+          <div id="indicator"></div>
+        </nav>
 
-          <!-- Texto de biografia ou descrição pessoal -->
-          <div class="conteudo">
-            <p>
-              Apaixonada por animais, explorando o mundo um passo de cada vez. <br>
-              📚🎨 Amante de bons livros, café e conversas que fazem o coração aquecer. <br>
-              Sempre em busca de novas aventuras e de fazer a diferença, uma adoção de cada vez. 🐾✨
-            </p>
+        <!-- Seção "Meus pets" -->
+        <div class="conteudo" id="meus-pets" style="display: none;">
+          <h3>Meus pets</h3>
+          <button class="btn-cadastrar" onclick="toggleModal()">Cadastrar Animais</button>
+          <div class="fotos1">
+            <div class="publicacao">
+             
+              <img src="../../Public/Image/cachorro.png" alt="Foto Pet 1" class="imagem-pet" />
+
+
+
+              <div class="botoes">
+                <button class="btn-editar">Editar</button>
+                <button class="btn-excluir">Excluir</button>
+              </div>
+            </div>
+         
+            
+            
+            
+           
+            
           </div>
         </div>
 
-        <!-- Seção da coluna da direita -->
-        <div class="coluna__direita">
-          <nav>
-            <!-- Navegação com links para diferentes seções do perfil -->
-            <ul>
-              <li><a href="">Postagens</a></li>
-              <li><a href="">Meus pets</a></li>
-            </ul>
-            <button>Início</button> <!-- Botão para navegar de volta à página inicial -->
-          </nav>
-
-          <!-- Seção de fotos dos pets -->
+        <!-- Seção "Postagens" -->
+        <div class="conteudo" id="postagens" style="display: none;">
+          <h3>Suas postagens</h3>
           <div class="fotos">
-            <img src="img/animal-1.jpeg" alt="Foto" /> <!-- Imagem de pet 1 -->
-            <img src="img/animal-2.jpeg" alt="Foto" /> <!-- Imagem de pet 2 -->
-            <img src="img/animal-3.jpeg" alt="Foto" /> <!-- Imagem de pet 3 -->
-            <img src="img/animal-4.jpeg" alt="Foto" /> <!-- Imagem de pet 4 -->
-            <img src="img/animal-5.jpeg" alt="Foto" /> <!-- Imagem de pet 5 -->
-            <img src="img/animal-6.jpeg" alt="Foto" /> <!-- Imagem de pet 6 -->
+            <img src="../../Public/Image/animal-1.jpeg" alt="Foto Pet 1" />
+            <img src="../../Public/Image/animal-2.jpeg" alt="Foto Pet 2" />
+            <img src="../../Public/Image/animal-3.jpeg" alt="Foto Pet 3" />
+            <img src="../../Public/Image/animal-4.jpeg" alt="Foto Pet 4" />
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Rodapé da página -->
+    <!-- Modal para Cadastro de Animais -->
+    <div id="modalCadastro" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="toggleModal()">&times;</span>
+        <h2>Cadastre seu pet</h2>
+
+        <div class="Cadastro-pets">
+          <div>
+            <h6>Data de nascimento</h6>
+            <input type="date" class="animal" required>
+          </div>
+
+          <div>
+            <label for="tipo-animal" class="label-animal">Tipo de Animal</label>
+            <select id="tipo-animal" class="animal" name="tipo" required>
+              <option value="" disabled selected>Selecione o tipo</option>
+              <option value="Cachorro">Cachorro</option>
+              <option value="Gato">Gato</option>
+              <option value="Coelho">Coelho</option>
+              <option value="Hamster">Hamster</option>
+              <option value="Porquinho-da-índia">Porquinho-da-índia</option>
+              <option value="Papagaio">Papagaio</option>
+              <option value="Calopsita">Calopsita</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="raca" class="label-animal">Raça</label>
+            <input type="text" id="raca" class="animal" required>
+          </div>
+
+          <div>
+            <label for="idade" class="label-animal">Idade</label>
+            <input type="number" id="idade" class="animal" required>
+          </div>
+
+          <div>
+            <label for="sexo" class="label-animal">Sexo</label>
+            <select id="sexo" class="animal" name="sexo" required>
+              <option value="" disabled selected>Selecione o sexo</option>
+              <option value="Feminino">Fêmea</option>
+              <option value="Masculino">Macho</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="cor" class="label-animal">Cor</label>
+            <input type="text" id="cor" class="animal" required>
+          </div>
+
+          <div>
+            <label for="descricao" class="label-animal">Descrição</label>
+            <textarea id="descricao" class="animal" rows="4" cols="30" placeholder="Descreva o pet aqui..." required></textarea>
+          </div>
+
+          <div class="adc-image">
+            <h3>Adicione a imagem do animal</h3>
+            <input type="file" id="post-image" accept="image/*">
+          </div>
+
+          <div class="botao-salvar">
+            <button type="button" class="btn-salvar">Salvar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rodapé -->
     <footer class="rodape">
-      <p>&copy; Patinhas Do Bem © 2024 | Todos os Direitos Reservados</p> <!-- Informações de direitos autorais -->
+      <p>&copy; Patinhas Do Bem 2024 | Todos os Direitos Reservados</p>
     </footer>
-  </body>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function toggleModal() {
+      const modal = document.getElementById("modalCadastro");
+      modal.style.display = modal.style.display === "none" || modal.style.display === "" ? "flex" : "none";
+    }
+
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.conteudo');
+      sections.forEach(section => section.style.display = 'none');
+      document.getElementById(sectionId).style.display = 'block';
+    }
+
+    // Fecha o modal ao clicar fora dele
+    window.onclick = function(event) {
+      const modal = document.getElementById("modalCadastro");
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    }
+  </script>
+</body>
 </html>

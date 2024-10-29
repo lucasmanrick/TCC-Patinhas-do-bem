@@ -30,7 +30,7 @@
         <!-- Imagem do perfil -->
 
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="./Login.html" onclick="viewProfile()">Ver Perfil</a></li>
+          <li><a class="dropdown-item" href="/MyProfile" onclick="viewProfile()">Ver Perfil</a></li>
           <li><a class="dropdown-item" href="#" onclick="logOff()">Sair</a></li>
 
 
@@ -517,32 +517,10 @@
 
         }
 
-
-
-        fetch(`/Login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            "Email": "Manrick72@gmail.com",
-            "Senha": "teste123"
-          })
-        })
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (myBlob) {
-            console.log(myBlob)
-          })
-
       </script>
       <!-----------------------------------Fim do Script ------------------------------------>
 
-
-
-
-
+      
       <!-------------------------------------- Caixa de chat --------------------------------------------->
       <div id="chat-box">
         <div id="chat-header">Converse com <span id="chat-nome">Fulano</span> <span style="float:right; cursor:pointer;"
