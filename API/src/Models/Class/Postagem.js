@@ -96,6 +96,17 @@ class Postagem {
       return {error:e.message}
     } 
   }
+
+
+  static async postagensDeUmUsuarioQuery (UserID) {  // função de uso interno, ou seja o usuário não terá acesso direto a essa funcionalidade
+    const conn = await connection();
+    try {
+      const getingPosts = await conn.query("select * from Postagem WHERE IDUsuario =?", [UserID])
+      return getingPosts
+    }catch(e) {
+      return{error:e.message}
+    }
+  }
 }
 
 

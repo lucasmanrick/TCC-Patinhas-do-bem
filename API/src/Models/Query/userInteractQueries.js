@@ -1,5 +1,6 @@
 const {connection} = require('../../Config/db');
-const Pet = require("../Class/Pet")
+const Pet = require("../Class/Pet");
+const Postagem = require('../Class/Postagem');
 
 const userInteractQueries = {
  
@@ -11,7 +12,7 @@ const userInteractQueries = {
       //returnDataCleaned pega os dados (que podem ser vistos) do usuário que será visto o perfil.
       const returnDataCleaned = await conn.query("select u.Nome, u.CEP, u.Rua, u.Numero, u.Bairro, u.Estado, u.DataNasc,u.Cidade, u.Email  from usuario As u WHERE id=? ",[userID]);   
       const returnPetsUser = await Pet.petsDeUmUsuarioQuery(userID);
-
+      // const minhasPostagens = await Postagem.
 
       if(returnDataCleaned[0].length >=1) {
         

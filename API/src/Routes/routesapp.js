@@ -66,7 +66,7 @@ router.get('/LoginPage', (req, res) => {
 });
 
 
-router.get('/FeedDeNoticias', (req, res) => {
+router.get('/FeedDeNoticias',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Feed.html'));
 });
 
