@@ -70,6 +70,10 @@ router.get('/FeedDeNoticias',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Feed.html'));
 });
 
+router.get('/MyProfile',verificadorDoToken, (req, res) => {
+  res.sendFile(path.join(newDirName, 'Perfil.html'));
+});
+
 
 // rota para o usuário fazer um cadastro no site.
 router.post("/Cadastro",UsuarioController.cadastraUsuario)
