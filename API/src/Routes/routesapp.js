@@ -70,7 +70,7 @@ router.get('/FeedDeNoticias',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Feed.html'));
 });
 
-router.get('/MyProfile',verificadorDoToken, (req, res) => {
+router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Perfil.html'));
 });
 
@@ -80,7 +80,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
 
 
 //Rota para o usuário logar no site (será retornado um token ao mesmo)
- router.post('/LoginP' ,UsuarioController.autenticaUsuario) 
+ router.post('/Login' ,UsuarioController.autenticaUsuario) 
 
 
 //Rota para cadastrar os dados de um novo pet 
