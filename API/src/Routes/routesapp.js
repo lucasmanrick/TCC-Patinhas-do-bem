@@ -75,6 +75,11 @@ router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
 });
 
 
+router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
+  res.sendFile(path.join(newDirName, 'Perfil.html'));
+});
+
+
 // rota para o usuário fazer um cadastro no site.
 router.post("/Cadastro",UsuarioController.cadastraUsuario)
 

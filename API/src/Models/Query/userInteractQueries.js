@@ -24,7 +24,7 @@ const userInteractQueries = {
           el.comentariosDoPost = verifyComments[0]
           return el
         })
-       return {success:"retornando dados do seu perfil para uso"  ,meusDados: returnDataCleaned[0][0],dadosMeusPets:returnPetsUser.dataResponse,minhasPostagens:await Promise.all(getingAnotherInfosAboutPost)}
+       return {success:"retornando dados do seu perfil para uso" ,meusDados: returnDataCleaned[0][0],dadosMeusPets:returnPetsUser.dataResponse,minhasPostagens:await Promise.all(getingAnotherInfosAboutPost)}
       }else {
         return{error:"não foi possivel retornar dados do seu perfil, tente novamente por favor"}
       }
