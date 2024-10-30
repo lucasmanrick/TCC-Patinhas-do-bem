@@ -21,13 +21,16 @@ const TelaDePets = ({ navigation }) => {
         return;
       }
       setIsLoading(true);
-      const response = await api.get("/PetsAdocao", {}, {
+      const response = await api.post('/PetsAdocao', {gapQuantity:0} ,{
         headers: { authorization: token },
       }).then((e) => {
+        console.log(e);
+        
         const petsData = e.data.dataResponse;
+        
         setPetts(petsData);
         setIsLoading(false);
-        if (!Petts) {
+        if (!petsData) {
           throw new Error("Erro ao obter ID do pet.");
         }
       }).catch(error => {
@@ -79,7 +82,7 @@ const TelaDePets = ({ navigation }) => {
             onSwipedAll={() => Alert.alert("Fim da lista!")}
             overlayLabels={{
               left: {
-                title: "Não",
+                title: "Não tenho interesse",
                 style: {
                   label: {
                     backgroundColor: "red",
@@ -98,7 +101,7 @@ const TelaDePets = ({ navigation }) => {
                 },
               },
               right: {
-                title: "Sim",
+                title: "Tenho interesse",
                 style: {
                   label: {
                     backgroundColor: "green",
