@@ -25,6 +25,7 @@ const newDirName = path.resolve(__dirname, '..','..', '..' ,'WEB', 'View','Pages
 
 function verificadorDoToken(req, res, next){
   let token;
+  
   if(req.headers.authorization) {
     token = req.headers['authorization'];
   }else if (req.cookies.token) {
@@ -75,7 +76,7 @@ router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
 });
 
 
-router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
+router.get('/PerfilUser',verificadorDoToken, (req, res) => {
   res.sendFile(path.join(newDirName, 'Perfil.html'));
 });
 
