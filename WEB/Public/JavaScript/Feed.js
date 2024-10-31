@@ -1,3 +1,5 @@
+
+
 function searchContent() {
   const query = document.getElementById('search-input').value.toLowerCase();
   const posts = document.querySelectorAll('.post'); // Selecione todos os posts
@@ -15,16 +17,6 @@ function searchContent() {
       }
   });
 }
-
-
-function viewProfile() {
-  window.location.href = '/MeuPerfil'; // Altere o caminho conforme necessário
-}
-
-function logOff() {
-  window.location.href = '/logout'; // Altere o caminho conforme necessário
-}
-
 
 
 function showContent(menuId) {
@@ -49,54 +41,6 @@ function showContent(menuId) {
   }
   
 }
-
-
-
-function publishPost() {
-  const title = document.getElementById('post-title').value;
-  const content = document.getElementById('post-content').value;
-  const postsContainer = document.getElementById('posts-container');
-
-  // Verifica se os campos não estão vazios
-  if (title.trim() === '' || content.trim() === '') {
-      alert('Por favor, preencha todos os campos.');
-      return;
-  }
-
-  // Cria um novo elemento de postagem
-  const post = document.createElement('div');
-  post.classList.add('post');
-
-  // Adiciona o conteúdo da postagem
-  post.innerHTML = `
-      <h4>${title}</h4>
-      <p>${content}</p>
-  `;
-
-  // Adiciona a postagem ao container
-  postsContainer.prepend(post); // Insere no início para mostrar as mais recentes primeiro
-
-  // Limpa os campos de entrada
-  document.getElementById('post-title').value = '';
-  document.getElementById('post-content').value = '';
-}
-
-function openPublishModal() {
-  document.getElementById('publish-modal').style.display = 'block';
-}
-
-function closePublishModal() {
-  document.getElementById('publish-modal').style.display = 'none';
-}
-
-window.onclick = function(event) {
-  const modal = document.getElementById('publish-modal');
-  if (event.target === modal) {
-      closePublishModal();
-  }
-}
-
-
 
 function publishPost() {
   const title = document.getElementById('post-title').value;
@@ -172,27 +116,6 @@ document.querySelector('.submit-comment').addEventListener('click', function() {
   }
 });
 
-// Evento para o botão Tenho Interesse
-document.querySelector('.interest-button').addEventListener('click', function() {
-  alert('Você demonstrou interesse!');
-});
-
-
-// Evento para o botão Curtir
-document.querySelector('.like-button').addEventListener('click', function() {
-  alert('Você curtiu a postagem!');
-});
-
-// Evento para o botão Comentar
-document.querySelector('.comment-button').addEventListener('click', function() {
-  const commentSection = document.querySelector('.comment-section');
-  // Verifica se a seção de comentário está visível ou não
-  if (commentSection.style.display === 'none' || commentSection.style.display === '') {
-      commentSection.style.display = 'flex'; // Exibe a seção de comentário
-  } else {
-      commentSection.style.display = 'none'; // Oculta a seção de comentário
-  }
-});
 
 // Evento para o botão Publicar comentário
 document.querySelector('.submit-comment').addEventListener('click', function() {
@@ -205,98 +128,188 @@ document.querySelector('.submit-comment').addEventListener('click', function() {
   }
 });
 
-// Evento para o botão Tenho Interesse
+//CÓDIGO PARA PUXAR MEUS DADOS 
 
+function getMyData () {
+  fetch("/MyProfile", {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      console.log(myBlob)
+      if (myBlob.success) {
+          Cookies.remove('meusDados')
+          Cookies.remove('dadosMeusPets')
+          Cookies.remove('minhasPostagens')
+          Cookies.set("meusDados", myBlob.meusDados)
+          Cookies.set("dadosMeusPets", myBlob.dadosMeusPets)
+          Cookies.set("minhasPostagens", myBlob.minhasPostagens)
 
-
-
-
-
-
-
-
-// Função para abrir o modal
-function openPublishModal() {
-  document.getElementById('publish-modal').style.display = 'block';
-}
-
-// Função para fechar o modal
-function closePublishModal() {
-  document.getElementById('publish-modal').style.display = 'none';
-}
-
-// Função para criar a publicação
-function publishPost() {
-  // Captura os valores dos campos
-  const postTitle = document.getElementById('post-title').value;
-  const postContent = document.getElementById('post-content').value;
-  const postImageInput = document.getElementById('post-image');
-  const postImage = postImageInput.files[0] ? URL.createObjectURL(postImageInput.files[0]) : '';
-
-  // Verifica se os campos estão preenchidos
-  if (postTitle === '' || postContent === '') {
-      alert('Preencha todos os campos.');
-      return;
-  }
-
-  // Cria o container da nova publicação
-  const postContainer = document.createElement('div');
-  postContainer.classList.add('feed-post');
-
-
-
-  // Adiciona a nova publicação ao container de posts
-  document.getElementById('posts-container').appendChild(postContainer);
-
-  // Fecha o modal após a publicação
-  closePublishModal();
-
-  // Limpa os campos do modal
-  document.getElementById('post-title').value = '';
-  document.getElementById('post-content').value = '';
-  document.getElementById('post-image').value = '';
-}
-
-// Evento para o botão Comentar
-document.addEventListener('click', function(event) {
-  if (event.target && event.target.classList.contains('comment-button')) {
-      const commentSection = event.target.closest('.feed-post').querySelector('.comment-section');
-      if (commentSection.style.display === 'none' || commentSection.style.display === '') {
-          commentSection.style.display = 'flex';
-      } else {
-          commentSection.style.display = 'none';
+          document.getElementById("userImage").src = `${myBlob.meusDados.userPicture}`
+      }else {
+       
       }
-  }
-});
-
-// Evento para o botão Curtir
-document.addEventListener('click', function(event) {
-  if (event.target && event.target.classList.contains('like-button')) {
-      alert('Você curtiu a postagem!');
-  }
-});
-
-
-function toggleMenu(event) {
-  const menu = event.target.nextElementSibling;
-  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    })
 }
 
-function reportPost() {
-  alert('Postagem denunciada!');
-  // Aqui você pode adicionar a lógica para denunciar a postagem
-}
 
-// Fecha o menu se clicar fora dele
-window.onclick = function(event) {
-  if (!event.target.matches('.dots-button')) {
-      const menus = document.querySelectorAll('.menu');
-      menus.forEach(menu => menu.style.display = 'none');
+
+getMyData();
+
+
+
+
+
+//CODIGO DO CHAT EM TEMPO REAL, MANUNTENÇÕES FALAR COM LUCAS.
+
+
+const socket = io();
+
+socket.on('sendMessage', (msg) => {
+  receberMensagem(msg)
+})
+
+
+function receberMensagem(mensagem) {
+  var chatBody = document.getElementById("chat-body");
+  var chatImage = document.getElementById("chat-image").files[0];
+
+  // Adiciona a mensagem de texto ao chat
+
+  var mensagemTexto = document.createElement("p");
+  mensagemTexto.setAttribute("idmensagem",mensagem.idMensagem)
+
+  if(mensagem.messageSender !== 'Lucas') {
+    mensagemTexto.textContent = mensagem.messageSender + ": " + mensagem.message;
+    chatBody.appendChild(mensagemTexto);
+  }else {
+    mensagemTexto.textContent = "Você: " + mensagem.message;
+    chatBody.appendChild(mensagemTexto);
   }
-};
+  
 
 
+  // Limpa os campos de entrada após o envio
+  document.getElementById("chat-input").value = "";
 
-function abrirChat(contatoID) {
-  console.log(contatoID)
 }
+
+
+// chat
+function enviarMensagem() {
+  var chatBody = document.getElementById("chat-body");
+  var chatInput = document.getElementById("chat-input").value;
+  var chatImage = document.getElementById("chat-image").files[0];
+
+  // Adiciona a mensagem de texto ao chat
+  if (chatInput) {
+    const storageContact = JSON.parse(localStorage.getItem('talkingNow'))
+
+    fetch("/EnviaMensagem", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        "IDContato": storageContact.contactID,
+        "Texto": chatInput
+      })
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (myBlob) {
+        if (myBlob.success) {
+          const dataMessage = { contatoID: storageContact.contactID, messageText: chatInput, myName: 'Lucas', idMensagem:myBlob.idMensagem }
+          socket.emit('sendMessage', dataMessage)
+          let mensagemTexto = document.createElement("p");
+          mensagemTexto.id = myBlob.idMensagem
+          chatBody.appendChild(mensagemTexto);
+        }else {
+          let Mensagem = {messageSender:"SERVIDOR", message:"não foi possivel enviar a mensagem solicitada"}
+          receberMensagem(Mensagem)
+        }
+
+      })
+
+  }
+  // Limpa os campos de entrada após o envio
+  document.getElementById("chat-input").value = "";
+  // document.getElementById("chat-image").value = "";
+}
+
+
+function toggleList(list) {
+  const amigosList = document.getElementById('amigos');
+  const interessadosList = document.getElementById('interessados');
+
+  if (list === 'amigos') {
+    amigosList.classList.add('active');
+    interessadosList.classList.remove('active');
+  } else {
+    interessadosList.classList.add('active');
+    amigosList.classList.remove('active');
+  }
+}
+
+function abrirChat(dataUsers) {
+
+  document.getElementById('chat-body').innerHTML = ''
+  localStorage.clear('talkingNow')
+
+  localStorage.setItem('talkingNow', JSON.stringify({ contactID: dataUsers.id, nameUser: dataUsers.className }))
+  fetch(`/MensagensContato/${dataUsers.id}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      console.log(myBlob)
+      let mensagem = {}
+      if (myBlob.success) {
+        myBlob.messages.forEach(e => {
+          if(e.quemEnviouAMensagem === 'Enviado pelo contato') {
+            mensagem.messageSender = dataUsers.className
+            mensagem.message = e.Texto
+            mensagem.idMensagem = e.IDMensagem
+          }else {
+            mensagem.messageSender = 'Você'
+            mensagem.message = e.Texto
+            mensagem.idMensagem = e.IDMensagem
+          }
+          receberMensagem(mensagem)
+        })
+        document.getElementById('chat-nome').innerText = dataUsers.className;
+        document.getElementById('chat-box').style.display = 'block';
+        const contactID = myBlob.contactID
+        socket.emit('chatInject', contactID)
+      }else if (myBlob.error === "não possui nenhuma mensagem com o contato especificado") {
+        document.getElementById('chat-nome').innerText = dataUsers.className;
+        document.getElementById('chat-box').style.display = 'block';
+        const contactID = myBlob.contactID
+        socket.emit('chatInject', contactID)
+      }else {
+        mensagem.message = "Você não pode ver mensagens deste contato, tente novamente"
+        mensagem.messageSender = "Servidor"
+        receberMensagem(mensagem)
+      }
+    });
+
+}
+
+function fecharChat() {
+  localStorage.clear('talkingNow')
+  document.getElementById('chat-box').style.display = 'none';
+}
+
+
+

@@ -16,6 +16,10 @@ const userInteractQueries = {
       const returnPetsUser = await Pet.petsDeUmUsuarioQuery(userID);
       const myPosts = await Postagem.postagensDeUmUsuarioQuery(userID)//
 
+      returnDataCleaned[0].forEach (e => {
+         e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media`
+      })
+
       if(returnDataCleaned[0].length >=1) {
        const getingAnotherInfosAboutPost = await myPosts.postagens.map(async(el,index) => {
           const verifyComments = await Comentario.verComentariosDeUmPostQuery(el.ID);

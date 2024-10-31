@@ -13,18 +13,21 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="../../Public/CSS/Feed.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.0/socket.io.js"></script>
+  <script src="
+https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
+"></script>
 </head>
 
 
 
 <body>
   <nav>
-    
+
     <!------------------------- Container na parte de cima da pagina ---------------------->
     <div class="container">
       <h2 class="logo">
         <img src="../../Public/Image/logo animada.gif" alt="Logo do Site">
-        
+
       </h2>
       <div class="search-bar">
         <i class="uil uil-search"></i>
@@ -36,132 +39,134 @@
 
 
 
-<!------------------ NOTIFICAÇÕES E SOLICITAÇÕES DE AMIZADE ------------------>
+      <!------------------ NOTIFICAÇÕES E SOLICITAÇÕES DE AMIZADE ------------------>
 
       <!-- Botão de Notificação -->
       <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="notificationButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="notificationButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
           <i class="fa-solid fa-bell"></i>
         </button>
         <ul class="dropdown-menu" aria-labelledby="notificationButton">
-            <li><a class="dropdown-item" href="#" onclick="openModal('notificacoesModal')">Notificações</a></li>
-            <li><a class="dropdown-item" href="#" onclick="openModal('amizadeModal')">Solicitação de amizade</a></li>
+          <li><a class="dropdown-item" href="#" onclick="openModal('notificacoesModal')">Notificações</a></li>
+          <li><a class="dropdown-item" href="#" onclick="openModal('amizadeModal')">Solicitação de amizade</a></li>
         </ul>
       </div>
-      
+
       <!-- Modal de Notificações -->
-      <div class="modal fade" id="notificacoesModal" tabindex="-1" aria-labelledby="notificacoesModalLabel" aria-hidden="true">
+      <div class="modal fade" id="notificacoesModal" tabindex="-1" aria-labelledby="notificacoesModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <!-- Cabeçalho do Modal -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="notificacoesModalLabel">Notificações</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-                </div>
-                
-                <!-- Corpo do Modal -->
-                <div class="modal-body">
-                   
-    
-                    <!-- Notificação adicional -->
-                    <div class="notification">
-                        <div class="notification-icon">
-                            <i class="fas fa-comment"></i>
-                        </div>
-                        <div class="notification-content">
-                            <p><strong>Comentário em sua postagem</strong></p>
-                            <p>Ana comentou: "Que fofura!" em sua foto. <a href="#">Ver comentário</a></p>
-                            
-                        </div>
-                    </div>
-                </div>
-    
+          <div class="modal-content">
+            <!-- Cabeçalho do Modal -->
+            <div class="modal-header">
+              <h5 class="modal-title" id="notificacoesModalLabel">Notificações</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
+
+            <!-- Corpo do Modal -->
+            <div class="modal-body">
+
+
+              <!-- Notificação adicional -->
+              <div class="notification">
+                <div class="notification-icon">
+                  <i class="fas fa-comment"></i>
+                </div>
+                <div class="notification-content">
+                  <p><strong>Comentário em sua postagem</strong></p>
+                  <p>Ana comentou: "Que fofura!" em sua foto. <a href="#">Ver comentário</a></p>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
-    </div>
-    
+      </div>
+
       <!-- Modal de Solicitação de Amizade -->
-<div class="modal fade" id="amizadeModal" tabindex="-1" aria-labelledby="amizadeModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
+      <div class="modal fade" id="amizadeModal" tabindex="-1" aria-labelledby="amizadeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
               <h5 class="modal-title" id="amizadeModalLabel">Solicitação de Amizade</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-          </div>
-          <div class="modal-body">
+            </div>
+            <div class="modal-body">
               <!-- Exemplo de Solicitação de Amizade -->
               <div class="solicitacao-amizade">
-                  <div class="d-flex align-items-center">
-                      <!-- Foto de Perfil -->
-                      <img src="../../Public/Image/renato.png" alt="Foto de Perfil" class="rounded-circle me-3">
-                      <!-- Nome do Usuário -->
-                      <div>
-                          <p class="mb-0"><strong>João Pé de feijão</strong></p>
-                          <small>Enviou uma Solicitação</small>
-                      </div>
+                <div class="d-flex align-items-center">
+                  <!-- Foto de Perfil -->
+                  <img src="../../Public/Image/renato.png" alt="Foto de Perfil" class="rounded-circle me-3">
+                  <!-- Nome do Usuário -->
+                  <div>
+                    <p class="mb-0"><strong>João Pé de feijão</strong></p>
+                    <small>Enviou uma Solicitação</small>
                   </div>
-                  <!-- Botões de Ação -->
-                  <div class="mt-3 d-flex justify-content-around">
-                      <button class="btn btn-primary btn-sm">Aceitar</button>
-                      <button class="btn btn-secondary btn-sm">Recusar</button>
-                  </div>
+                </div>
+                <!-- Botões de Ação -->
+                <div class="mt-3 d-flex justify-content-around">
+                  <button class="btn btn-primary btn-sm">Aceitar</button>
+                  <button class="btn btn-secondary btn-sm">Recusar</button>
+                </div>
               </div>
               <hr>
               <!-- Adicione mais solicitações como desejar -->
               <div class="solicitacao-amizade">
-                  <div class="d-flex align-items-center">
-                      <img src="../../Public/Image/Ana.png" alt="Foto de Perfil" class="rounded-circle me-3">
-                      <div>
-                          <p class="mb-0"><strong>Ana Catarina</strong></p>
-                          <small>Enviou uma Solicitação</small>
-                      </div>
+                <div class="d-flex align-items-center">
+                  <img src="../../Public/Image/Ana.png" alt="Foto de Perfil" class="rounded-circle me-3">
+                  <div>
+                    <p class="mb-0"><strong>Ana Catarina</strong></p>
+                    <small>Enviou uma Solicitação</small>
                   </div>
-                  <div class="mt-3 d-flex justify-content-around">
-                      <button class="btn btn-primary btn-sm">Aceitar</button>
-                      <button class="btn btn-secondary btn-sm">Recusar</button>
-                  </div>
+                </div>
+                <div class="mt-3 d-flex justify-content-around">
+                  <button class="btn btn-primary btn-sm">Aceitar</button>
+                  <button class="btn btn-secondary btn-sm">Recusar</button>
+                </div>
               </div>
+            </div>
+
           </div>
-        
+        </div>
       </div>
-  </div>
-</div>
-      
+
       <!-- JavaScript para abrir o modal -->
-   <!-- JavaScript para forçar o fechamento -->
-<script>
-  // Função para abrir o modal
-  function openModal(modalId) {
-      var modal = new bootstrap.Modal(document.getElementById(modalId));
-      modal.show();
+      <!-- JavaScript para forçar o fechamento -->
+      <script>
+        // Função para abrir o modal
+        function openModal(modalId) {
+          var modal = new bootstrap.Modal(document.getElementById(modalId));
+          modal.show();
 
-      // Fechar o modal quando clicar no fundo cinza
-      document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
-          backdrop.addEventListener('click', () => {
+          // Fechar o modal quando clicar no fundo cinza
+          document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
+            backdrop.addEventListener('click', () => {
               modal.hide();
+            });
           });
-      });
-  }
-</script>
+        }
+      </script>
 
-      
+
       <!-------------------------------------------- FIM  ------------------------------------------>
-      
-      
+
+
       <div class="dropdown">
-        <img src="../../Public/Image/user (1).png" alt="Perfil" class="profile-dropdown-pic" data-bs-toggle="dropdown">
+        <img id="userImage" src="../../Public/Image/user (1).png" alt="Perfil" class="profile-dropdown-pic" data-bs-toggle="dropdown">
         <!-- Imagem do perfil -->
 
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="/MeuPerfil" onclick="viewProfile()">Ver Perfil</a></li>
-          
+          <li><a class="dropdown-item" href="/MeuPerfil">Ver Perfil</a></li>
+
         </ul>
       </div>
     </div>
   </nav>
   <!---------------------------- Fim do Container na parte de cima da pagina ---------------------->
 
-  
+
 
 
   <!-------------------------------- MAIN ----------------------------------->
@@ -174,18 +179,18 @@
             <span><i class="uil uil-compass"></i></span>
             <h3>Feed Animals</h3>
           </a>
-        
+
 
           <a class="menu-item" id="view-animals" onclick="showContent('view-animals')">
             <span><i class="uil uil-envelope-alt"></i></span>
             <h3>Ver Animais</h3>
           </a>
-          
-          <a class="menu-item" id="Sair" href="/Home" onclick="logOff()">
+
+          <a class="menu-item" id="Sair" href="/Home">
 
             <i class="fa-solid fa-right-from-bracket"></i>
             <h3 class="sair"> Sair</h3>
-            
+
           </a>
 
         </div>
@@ -215,14 +220,14 @@
             <!-- Modelo de Postagem (oculto) -->
             <div id="post-template" class="post" style="display:none;">
               <div class="post-header">
-                <img src="../../Public/Image/image.png" alt="User" class="profile-pic">
+                <img src="" alt="User" class="profile-pic">
                 <!-- Foto do usuário -->
                 <h3>Nome do Usuário</h3>
               </div>
               <div class="post-body">
                 <h4 class="post-title"></h4>
                 <p class="post-content"></p>
-                <img src="./Captura de tela 2024-09-01 124522.png" alt="Post Image" class="post-image">
+                <img src="" alt="Post Image" class="post-image">
                 <!-- Imagem da postagem -->
               </div>
             </div>
@@ -233,7 +238,7 @@
             <div class="post-header">
               <div class="user-avatar">
                 <a href="./Login.html">
-                  <img class="user-photo" src="../../Public/Image/image.png" alt="Foto do Usuário">
+                  <img class="user-photo" src="" alt="Foto do Usuário">
                 </a>
               </div>
 
@@ -407,7 +412,7 @@
               <button class="btn-interesse">Tenho Interesse</button>
             </div>
             <div class="animal-post">
-              <img src="../../Public/Image/image.png" alt="Imagem do animal" class="animal-photo">
+              <img src="" alt="Imagem do animal" class="animal-photo">
             </div>
           </div>
 
@@ -452,11 +457,11 @@
         <div id="amigos" class="content-list active">
           <ul>
             <li id="1" class="thiago" onclick="abrirChat(this)">
-              <img class="img1" src="ftTeste.jpg" alt="">
+              <img class="img1" src="" alt="">
               Thiago Antonio
             </li>
             <li id="2" class="lucas" onclick="abrirChat(this)">
-              <img class="img1" src="ftTeste.jpg" alt="">
+              <img class="img1" src="" alt="">
               Lucas
             </li>
           </ul>
@@ -464,189 +469,9 @@
       </aside>
 
 
-
-      <!------------------------------ Script da caixa de chat ------------------------------->
-      <script>
-        const socket = io();
-
-        socket.on('sendMessage', (msg) => {
-          receberMensagem(msg)
-        })
-
-
-        function receberMensagem(mensagem) {
-          var chatBody = document.getElementById("chat-body");
-          var chatImage = document.getElementById("chat-image").files[0];
-
-          // Adiciona a mensagem de texto ao chat
-
-          var mensagemTexto = document.createElement("p");
-          mensagemTexto.setAttribute("idmensagem",mensagem.idMensagem)
-
-          if(mensagem.messageSender !== 'Lucas') {
-            mensagemTexto.textContent = mensagem.messageSender + ": " + mensagem.message;
-            chatBody.appendChild(mensagemTexto);
-          }else {
-            mensagemTexto.textContent = "Você: " + mensagem.message;
-            chatBody.appendChild(mensagemTexto);
-          }
-          
-
-      
-          // Limpa os campos de entrada após o envio
-          document.getElementById("chat-input").value = "";
-
-        }
-
-
-        // chat
-        function enviarMensagem() {
-          var chatBody = document.getElementById("chat-body");
-          var chatInput = document.getElementById("chat-input").value;
-          var chatImage = document.getElementById("chat-image").files[0];
-
-          // Adiciona a mensagem de texto ao chat
-          if (chatInput) {
-            const storageContact = JSON.parse(localStorage.getItem('talkingNow'))
-
-            fetch("/EnviaMensagem", {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                "IDContato": storageContact.contactID,
-                "Texto": chatInput
-              })
-            })
-              .then(function (response) {
-                return response.json();
-              })
-              .then(function (myBlob) {
-                if (myBlob.success) {
-                  const dataMessage = { contatoID: storageContact.contactID, messageText: chatInput, myName: 'Lucas', idMensagem:myBlob.idMensagem }
-                  socket.emit(sendMessage, dataMessage)
-                  let mensagemTexto = document.createElement("p");
-                  mensagemTexto.id = myBlob.idMensagem
-                  chatBody.appendChild(mensagemTexto);
-                }else {
-                  let Mensagem = {messageSender:"SERVIDOR", message:"não foi possivel enviar a mensagem solicitada"}
-                  receberMensagem()
-                }
-
-              })
-
-          }
-
-          // // Adiciona a imagem ao chat se uma imagem for selecionada
-          // if (chatImage) {
-          //   var mensagemImagem = document.createElement("img");
-          //   mensagemImagem.src = URL.createObjectURL(chatImage);
-          //   mensagemImagem.style.maxWidth = "200px"; // Define um tamanho máximo para a imagem
-          //   mensagemImagem.style.display = "block"; // Garante que a imagem seja exibida em uma nova linha
-          //   chatBody.appendChild(mensagemImagem);
-          // }
-
-          // Limpa os campos de entrada após o envio
-          document.getElementById("chat-input").value = "";
-          // document.getElementById("chat-image").value = "";
-        }
-
-
-        function showContent(sectionId) {
-          const sections = document.querySelectorAll('.content-section');
-          sections.forEach(section => section.style.display = 'none');
-
-          const sectionToShow = document.getElementById(sectionId);
-          if (sectionToShow) {
-            sectionToShow.style.display = 'block';
-          }
-        }
-
-        function toggleList(list) {
-          const amigosList = document.getElementById('amigos');
-          const interessadosList = document.getElementById('interessados');
-
-          if (list === 'amigos') {
-            amigosList.classList.add('active');
-            interessadosList.classList.remove('active');
-          } else {
-            interessadosList.classList.add('active');
-            amigosList.classList.remove('active');
-          }
-        }
-
-        function abrirChat(dataUsers) {
-
-          document.getElementById('chat-body').innerHTML = ''
-          localStorage.clear('talkingNow')
-
-          localStorage.setItem('talkingNow', JSON.stringify({ contactID: dataUsers.id, nameUser: dataUsers.className }))
-          fetch(/MensagensContato/${dataUsers.id}, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (myBlob) {
-              let mensagem = {}
-              if (myBlob.success) {
-                myBlob.messages.forEach(e => {
-                  if(e.quemEnviouAMensagem === 'Enviado pelo contato') {
-                    mensagem.messageSender = dataUsers.className
-                    mensagem.message = e.Texto
-                    mensagem.idMensagem = e.IDMensagem
-                  }else {
-                    mensagem.messageSender = 'Você'
-                    mensagem.message = e.Texto
-                    mensagem.idMensagem = e.IDMensagem
-                  }
-                  receberMensagem(mensagem)
-                })
-
-
-                document.getElementById('chat-nome').innerText = dataUsers.className;
-                document.getElementById('chat-box').style.display = 'block';
-                const contactID = myBlob.contactID
-                socket.emit('chatInject', contactID)
-              }
-            });
-
-
-
-        }
-
-        function fecharChat() {
-          localStorage.clear('talkingNow')
-          document.getElementById('chat-box').style.display = 'none';
-        }
-
-
-        function adicionarMensagem(mensagem, isImage = false) {
-          const messageDiv = document.createElement('div');
-          messageDiv.classList.add('message');
-
-          // Criar parágrafo para o conteúdo da mensagem ou imagem
-          if (isImage) {
-            const img = document.createElement('img');
-            img.src = mensagem;
-            messageDiv.appendChild(img);
-          } else {
-
-            const messageContent = document.createElement('p');
-            messageContent.textContent = mensagem;
-            messageDiv.appendChild(messageContent);
-          }
-
-        }
-
-      </script>
       <!-----------------------------------Fim do Script ------------------------------------>
 
-      
+
       <!-------------------------------------- Caixa de chat --------------------------------------------->
       <div id="chat-box">
         <div id="chat-header">Converse com <span id="chat-nome">Fulano</span> <span style="float:right; cursor:pointer;"
@@ -690,7 +515,7 @@
   <!-------------------------------------- Fim do Rodapé ----------------------------------->
 
 
-  <script src="../../Public/JavaScript/Feed.js"></script>
+  <script src="../../Public/JavaScript/Feed.js" type="module"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
