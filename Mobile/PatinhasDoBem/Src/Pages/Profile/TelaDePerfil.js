@@ -1,20 +1,40 @@
 import React from "react";
-import { View,Text,StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-export default class TelaDePerfil extends React.Component{
-    render(){
-        return(
-            <View style={styles.container}>
-                <Text>Tela de Perfil</Text>
-            </View>
-        )
-    }
+export default class TelaDePerfil extends React.Component {
+  render() {
+    const { navigation } = this.props;
+
+    return (
+      <View style={styles.container}>
+        <Text>Tela de Perfil</Text>
+        
+        {/* Botão usando TouchableOpacity */}
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => navigation.navigate('Pet')}
+        >
+          <Text style={styles.buttonText}>Ir para Tela de Pets</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center',
-    }
-})
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#3DAAD9',
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  }
+});
