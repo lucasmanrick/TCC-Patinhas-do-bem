@@ -2,33 +2,30 @@
 
 /* Estilos básicos para a página */
 body {
-  width: 100%; 
-  margin: 0; 
-  padding: 0; 
-  box-sizing: border-box; 
-  min-height: 100vh; /* Garante que a altura mínima da página seja a altura da janela */
-  font-family: "Poppins", sans-serif; 
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: 100vh;
+  /* Garante que a altura mínima da página seja a altura da janela */
+  font-family: "Poppins", sans-serif;
 }
 
-/* Remove os estilos padrão das listas não ordenadas  */
-ul {
-  list-style-type: none;
-  margin: 0; 
-  padding: 0; 
-  display: flex; 
-  align-items: center;
+
+
+.btn-voltar{
+  margin-left: 100%;
+  margin-top: 20px;
+  
 }
 
-/* Remove sublinhado dos links */
-a {
-  text-decoration: none; /* Remove a decoração de sublinhado */
-}
 
 /* Estilos para o cabeçalho da página */
 .cabecalho__container header {
-  width: 100%; 
-  background: url("../../Public/Image/cute-dog-portrait-studio.jpg") no-repeat 50% 20% / cover; /* Aplica uma imagem de fundo */
-  min-height: calc(100px + 15vw); 
+  width: 100%;
+  background: url("../../Public/Image/pote2.jpg") no-repeat 50% 20% / cover;
+  /* Aplica uma imagem de fundo */
+  min-height: calc(100px + 15vw);
 }
 
 /* Estilos para o rodapé */
@@ -46,7 +43,7 @@ footer {
   font-weight: 400; /* Define a espessura da fonte */
   font-style: normal; /* Define o estilo da fonte */
   z-index: 1000; /* Garante que o rodapé fique acima de outros elementos */
-  position:relative;
+  position: relative;
   margin-top: 12%;
 }
 
@@ -54,163 +51,158 @@ footer {
 .cabecalho__container .colunas__container .coluna__esquerda {
   padding: 25px 20px;
   text-align: center;
-  max-width: 350px; 
-  position: relative; 
-  margin: 0 auto; 
+  max-width: 350px;
+  position: relative;
+  margin: 0 auto;
 
 }
 
 /* Estilos para o container da imagem de perfil */
 .cabecalho__container .colunas__container .coluna__esquerda .img__container {
   position: absolute;
-  top: -60px; 
+  top: -60px;
   left: 50%;
-  transform: translatex(-50%); 
+  transform: translatex(-50%);
 }
 
 /* Estilos para a imagem de perfil */
 .cabecalho__container .colunas__container .coluna__esquerda .img__container img {
-  width: 120px; 
-  height: 120px; 
-  object-fit: cover; 
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
   border-radius: 50%;
   display: block;
-  box-shadow: 1px 3px 12px rgba(0, 0, 0, 0.18); 
+  box-shadow: 1px 3px 12px rgba(0, 0, 0, 0.18);
 }
-
-
 
 /* Estilos para o nome do usuário */
 .cabecalho__container .colunas__container .coluna__esquerda h2 {
-  margin-top: 60px; 
-  font-weight: 600; 
-  font-size: 22px; 
-  margin-bottom: 5px; 
+  margin-top: 60px;
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 5px;
 }
 
 /* Estilos para a biografia do usuário */
 .cabecalho__container .colunas__container .coluna__esquerda p {
   font-size: 0.9rem;
-  color: #818181; 
-  margin: 0; 
+  color: #818181;
+  margin: 0;
 }
 
 /* Estilos para a seção "sobre" */
 .cabecalho__container .colunas__container .coluna__esquerda .sobre {
-  justify-content: space-between; 
-  position: relative; 
+  justify-content: space-between;
+  position: relative;
   margin: 35px 0;
 }
 
 /* Estilos para os itens da lista de "sobre" */
 .cabecalho__container .colunas__container .coluna__esquerda .sobre li {
   display: flex;
-  flex-direction: column; 
-  color: #818181; 
-  font-size: 0.9rem; 
+  flex-direction: column;
+  color: #818181;
+  font-size: 0.9rem;
 }
 
 /* Estilos para o número de seguidores, seguindo, etc. */
 .cabecalho__container .colunas__container .coluna__esquerda .sobre li span {
-  color: #1d1d1d; 
-  font-weight: 600; 
+  color: #1d1d1d;
+  font-weight: 600;
 }
 
 /* Linha divisória abaixo da seção "sobre" */
 .cabecalho__container .colunas__container .coluna__esquerda .sobre:after {
-  position: absolute; 
-  content: ""; 
-  bottom: -16px; 
-  display: block; 
-  background: #cccccc; 
-  height: 1px; 
-  width: 100%; 
+  position: absolute;
+  content: "";
+  bottom: -16px;
+  display: block;
+  background: #cccccc;
+  height: 1px;
+  width: 100%;
 }
 
 /* Estilos para o texto de biografia do usuário */
 .cabecalho__container .colunas__container .conteudo p {
-  font-size: 1rem; 
-  color: #1d1d1d; 
-  line-height: 1.8em; 
+  font-size: 1rem;
+  color: #1d1d1d;
+  line-height: 1.8em;
 }
 
 /* Estilos para a lista de ícones de contato/links */
 .cabecalho__container .colunas__container .conteudo ul {
-  gap: 30px; 
-  justify-content: center; 
-  align-items: center; 
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
   margin-top: 25px;
 }
 
 /* Estilos para os itens da lista de ícones */
 .cabecalho__container .colunas__container .conteudo ul li {
-  display: flex; 
+  display: flex;
 }
 
 /* Estilos para os ícones de contato/links */
 .cabecalho__container .colunas__container .conteudo ul i {
-  font-size: 1.3rem; 
+  font-size: 1.3rem;
 }
 
 /* Estilos para a navegação no perfil */
 .cabecalho__container .colunas__container .coluna__direita nav {
-  display: flex; 
-  align-items: center; 
-  padding: 30px 0; 
-  justify-content: space-between; 
-  flex-direction: column; 
+  display: flex;
+  align-items: center;
+  padding: 30px 0;
+  justify-content: space-between;
+  flex-direction: column;
 }
 
 /* Estilos para a lista de navegação no perfil */
 .cabecalho__container .colunas__container .coluna__direita nav ul {
-  display: flex; 
-  gap: 20px; 
-  flex-direction: column; 
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
 }
 
 /* Estilos para os links de navegação no perfil */
 .cabecalho__container .colunas__container .coluna__direita nav ul li a {
-  text-transform: uppercase; 
-  color: #818181; 
+  text-transform: uppercase;
+  color: #818181;
 }
-
-/* Estilos para o link ativo na navegação */
-
 
 /* Estilos para o botão de navegação */
 .cabecalho__container .colunas__container .coluna__direita nav button {
-  background: #0091ff; 
-  color: #fff; 
-  border: none; 
-  padding: 10px 25px; 
-  border-radius: 4px; 
-  cursor: pointer; 
-  margin-top: 20px; 
+  background: #0091ff;
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
 }
 
 /* Efeito de hover para o botão */
 .cabecalho__container .colunas__container .coluna__direita nav button:hover {
-  opacity: 0.8; 
+  opacity: 0.8;
 }
 
 /* Estilos para a galeria de fotos dos pets */
 .cabecalho__container .colunas__container .coluna__direita .fotos {
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); 
-  gap: 20px; 
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 20px;
 }
 
 /* Estilos para as imagens dos pets */
 .cabecalho__container .colunas__container .coluna__direita .fotos img {
-  max-width: 100%; 
-  display: block; 
-  height: 100%; 
-  object-fit: cover; 
+  max-width: 130%;
+  display: block;
+  height: 70%;
+  object-fit: cover;
 }
 
 
 
-.fotos1{
+.fotos1 {
   border-radius: 20px;
 }
 
@@ -221,23 +213,26 @@ footer {
 /* Estilos aplicados em telas maiores que 868px */
 @media (min-width: 868px) {
   .cabecalho__container .colunas__container {
-    max-width: 1200px; 
-    margin: 0 auto; 
-    width: 90%; 
-    justify-content: space-between; 
-    display: grid; 
-    grid-template-columns: 1fr 2fr; 
-    gap: 50px; 
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 90%;
+    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 50px;
   }
+
   .cabecalho__container .colunas__container .coluna__esquerda {
-    padding: 25px 0px; 
+    padding: 25px 0px;
   }
+
   .cabecalho__container .colunas__container .coluna__direita nav ul {
-    flex-direction: row; 
-    gap: 30px; 
+    flex-direction: row;
+    gap: 30px;
   }
+
   .cabecalho__container .colunas__container .coluna__direita .fotos {
-    height: 365px; 
+    height: 365px;
     overflow: auto;
     padding: 0 0 30px;
   }
@@ -246,30 +241,26 @@ footer {
 /* Estilos aplicados em telas maiores que 1017px */
 @media (min-width: 1017px) {
   .cabecalho__container .colunas__container .coluna__esquerda {
-    margin: 0; 
-    margin-right: auto; 
+    margin: 0;
+    margin-right: auto;
   }
+
   .cabecalho__container .colunas__container .coluna__direita nav {
-    flex-direction: row; 
+    flex-direction: row;
   }
+
   .cabecalho__container .colunas__container .coluna__direita nav button {
-    margin-top: 0; 
+    margin-top: 0;
   }
 }
-
-
-
-
-
-
-
 
 
 
 /* Estilo básico das seções */
 .conteudo {
   opacity: 1;
-  transition: opacity 0.5s ease; /* Transição suave de 0.5 segundos */
+  transition: opacity 0.5s ease;
+  /* Transição suave de 0.5 segundos */
 }
 
 /* Quando a seção está escondida */
@@ -278,7 +269,7 @@ footer {
   display: none;
 }
 
-/* Estilo das fotos de pets */
+/* ---------------------- Estilo das fotos de pets na parte de "POSTAGENS" ------------------*/
 .fotos {
   display: flex;
   flex-wrap: wrap;
@@ -296,82 +287,35 @@ footer {
 }
 
 .fotos img:hover {
-  transform: scale(1.1); /* Efeito de zoom ao passar o mouse */
+  transform: scale(1.1);
+  /* Efeito de zoom ao passar o mouse */
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+/* ---------------------- FIM Estilo das fotos de pets na parte de "POSTAGENS" ------------------*/
 
 
 
 
 
-.button {
-  display: inline-block; /* Para tratar o link como um botão */
-  padding: 10px 20px; /* Espaçamento interno */
-  background-color: #4CAF50; /* Cor de fundo */
-  color: white; /* Cor do texto */
-  text-align: center; /* Alinhamento do texto */
-  text-decoration: none; /* Remove o sublinhado */
-  border-radius: 5px; /* Bordas arredondadas */
-  transition: background-color 0.3s; /* Transição suave */
-}
-
-.button:hover {
-  background-color: #45a049; /* Cor de fundo ao passar o mouse */
-}
 
 
 
 ul {
-  list-style-type: none; /* Remove marcadores */
-  padding: 0; /* Remove o padding padrão */
+  list-style-type: none;
+  /* Remove marcadores */
+  padding: 0;
+  /* Remove o padding padrão */
 }
 
 .nav-link {
-  padding: 10px 20px; /* Espaçamento interno */
-  text-decoration: none; /* Remove o sublinhado */
-  color: #333; /* Cor do texto */
-  transition: color 0.3s; /* Transição suave para a cor */
-}
-
-.nav-link:hover {
-  color: #4CAF50; /* Cor do texto ao passar o mouse */
-}
-
-/* Estilos do modal */
-.modal {
-  display: none; /* Oculto por padrão */
-  position: fixed; /* Fixo na tela */
-  z-index: 1; /* Fica acima de outros conteúdos */
-  left: 0;
-  top: 0;
-  width: 100%; /* Largura total */
-  height: 100%; /* Altura total */
-  overflow: auto; /* Permite rolagem se necessário */
-  background-color: rgb(0,0,0); /* Cor de fundo */
-  background-color: rgba(0,0,0,0.4); /* Cor de fundo com transparência */
-}
-
-.modal-content {
-  background-color: #fefefe; /* Fundo do modal */
-  margin: 15% auto; /* Centraliza o modal */
-  padding: 20px; /* Espaçamento interno */
-  border: 1px solid #888; /* Borda do modal */
-  width: 80%; /* Largura do modal */
-  max-width: 500px; /* Largura máxima */
-}
-
-.close {
-  color: #aaa; /* Cor do botão de fechar */
-  float: right; /* Posiciona o botão à direita */
-  font-size: 28px; /* Tamanho da fonte */
-  font-weight: bold; /* Negrito */
-}
-
-.close:hover,
-.close:focus {
-  color: black; /* Cor ao passar o mouse */
-  text-decoration: none; /* Remove sublinhado */
-  cursor: pointer; /* Cursor de mão */
+  padding: 10px 20px;
+  /* Espaçamento interno */
+  text-decoration: none;
+  /* Remove o sublinhado */
+  color: #333;
+  /* Cor do texto */
+  transition: color 0.3s;
+  /* Transição suave para a cor */
 }
 
 
@@ -381,11 +325,7 @@ ul {
 
 
 
-
-
-
-
-
+/* ------------------ ESTILIZAÇÃO DO MODAL DO CADASTRO DOS PETS ----------------*/
 
 #Cadastrar-Pets {
   display: none;
@@ -426,61 +366,10 @@ ul {
   background-color: #fff;
 }
 
-.animal:focus {
-  border-color: #5cb85c;
-  box-shadow: 0 0 8px rgba(92, 184, 92, 0.3);
-  outline: none;
-}
-
-.btn-salvar {
-  background-color: #5cb85c;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  align-self: flex-end;
-  margin-top: -30px;
-}
-
-.btn-salvar:hover {
-  background-color: #4cae4c;
-}
-
-textarea.animal {
-  resize: none;
-  font-family: 'Arial', sans-serif;
-}
-
-select.animal {
-  cursor: pointer;
-}
-
-@media (max-width: 600px) {
-  #Cadastrar-Pets {
-      padding: 15px;
-  }
-
-  .animal {
-      font-size: 14px;
-  }
-
-  .btn-salvar {
-      font-size: 14px;
-  }
-}
 
 
-
-
-
-
-
-
-
-.Cadastro-pets, .Cadastro-pets-2 {
+.Cadastro-pets,
+.Cadastro-pets-2 {
   margin: 20px;
   padding: 20px;
   border: 1px solid #ccc;
@@ -491,78 +380,14 @@ select.animal {
 .label-animal {
   font-weight: bold;
 }
-
-.animal {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.btn-salvar {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-salvar:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-
-
-.post {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;
-  background-color: #f9f9f9;
-}
-
-.user-info {
-  flex: 1;
-  margin-right: 20px;
-}
-
-.animal-post {
-  flex-shrink: 0;
-  width: 150px; /* Tamanho padrão da imagem */
-  height: 200px; /* Tamanho padrão da imagem */
-  
-}
-
-.animal-photo {
-  width: 300px; /* Aumenta ainda mais a largura */
-  height: 200px; /* Aumenta a altura */
-  border-radius: 8px;
-  margin-left: -100px; /* Desloca mais para a direita */
-}
+/* ------------------ FIM DO ESTILIZAÇÃO DO MODAL DO CADASTRO DOS PETS ----------------*/
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-/* Estilos para o modal */
+/* ------------------------ MODAL PARA CADASTRO DE ANIMAIS -------------------------*/
 .modal {
   display: none;
   position: fixed;
@@ -601,16 +426,7 @@ select.animal {
   flex-direction: column;
   gap: 15px;
 }
-
-.Cadastro-pets input, 
-.Cadastro-pets select, 
-.Cadastro-pets textarea {
-  width: 100%;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
+  
 
 .botao-salvar {
   display: flex;
@@ -632,23 +448,6 @@ select.animal {
   background-color: #45a049;
 }
 
-
-.btn-cadastrar{
-  color:#fff;
-  background-color: #0d8007;
-  border-radius: 15px;
-}
-
-
-
-
-
-
-
-
-
-
-
 /* Estilos para o botão */
 .btn-cadastrar {
   background-color: #4CAF50;
@@ -659,52 +458,19 @@ select.animal {
   cursor: pointer;
   margin-top: 15px;
 }
-
-/* Estilos dos cards de pets */
-#lista-pets {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.pet-card {
-  background-color: #f2f2f2;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 150px;
-  text-align: center;
-}
-
-.pet-card h4 {
-  margin: 10px 0 5px;
-  color: #333;
-}
-
-.pet-card p {
-  margin: 5px 0;
-  font-size: 14px;
-}
-
-.imagem-pet {
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
-  margin-bottom: 10px;
-}
+/* --------------------------------- FIM DO MODAL PARA CADASTRO DE ANIMAIS --------------------------*/
 
 
 
 
 
-/* ------------------------- ESTILIZAÇÃO PARA POSTAGENS ----------------------- */
 
-
+/* ------------------------- ESTILIZAÇÃO PARA MEUS-PETS ----------------------- */
 
 .publicacao {
-  text-align: center; /* Centraliza o texto e a imagem */
-border: #fff;
+  text-align: center;
+  /* Centraliza o texto e a imagem */
+  border: #fff;
   margin-right: 80px;
   padding: 20px;
   margin: 20px 0;
@@ -715,28 +481,39 @@ border: #fff;
 .imagem-pet {
   padding: 20px;
   width: 150px;
-  height: 150px; /* Define uma altura para a imagem */
-  border-radius: 50%; /* Faz a imagem ficar redonda */
-  object-fit: cover; /* Ajusta a imagem para cobrir o espaço sem distorcer */
-  border: 2px solid #4CAF50; /* Adiciona uma borda verde ao redor da imagem */
+  height: 150px;
+  /* Define uma altura para a imagem */
+  border-radius: 50%;
+  /* Faz a imagem ficar redonda */
+  object-fit: cover;
+  /* Ajusta a imagem para cobrir o espaço sem distorcer */
+  border: 2px solid #4CAF50;
+  /* Adiciona uma borda verde ao redor da imagem */
+  margin-left: 60PX;
 }
 
 
 
 
+/* ---------------------- BOTÕES PARA EDITAR OU EXCLUIR ANIMAL ----------------------------*/
 .botoes {
- 
-  bottom: 10px; /* Distância do fundo */
-  right: 20px; /* Distância da direita */
-  display: flex; /* Usado para alinhar os botões em linha */
-  gap: 10px; /* Espaço entre os botões */
+  bottom: 10px;
+  /* Distância do fundo */
+  right: 20px;
+  /* Distância da direita */
+  display: flex;
+  /* Usado para alinhar os botões em linha */
+  gap: 10px;
+  /* Espaço entre os botões */
   margin-left: 45%;
   margin-top: -1%;
-  
+
 }
 
-.btn-editar, .btn-excluir {
-  background-color: #4CAF50; /* Cor de fundo verde */
+.btn-editar,
+.btn-excluir {
+  background-color: #4CAF50;
+  /* Cor de fundo verde */
   color: white;
   border: none;
   border-radius: 5px;
@@ -744,7 +521,231 @@ border: #fff;
   cursor: pointer;
 }
 
-.btn-editar:hover, .btn-excluir:hover {
-  background-color: #45a049; /* Tom mais escuro ao passar o mouse */
+.btn-editar:hover,
+.btn-excluir:hover {
+  background-color: #45a049;
+  /* Tom mais escuro ao passar o mouse */
 }
+
+/* ------------------------- FIM ----------------------- */
+
 /* ------------------------- FIM DA ESTILIZAÇÃO PARA POSTAGENS ----------------------- */
+
+
+
+
+
+
+
+
+/* =============== Navbar ============== */
+/* Estilo do Navbar */
+.nav1 {
+  background-color: #4A5C6A; /* Cor de fundo */
+  padding: 15px 20px; /* Espaçamento interno */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px; /* Largura máxima */
+  margin: auto; /* Centraliza */
+}
+
+/* Estilo do Logo */
+.logo img {
+  width: 45px; /* Largura do logo */
+  height: auto; /* Altura automática */
+  margin-left: 20px;
+}
+
+/* Estilo da Barra de Pesquisa */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0; /* Cor de fundo */
+  border-radius: 30px; /* Bordas arredondadas */
+  padding: 5px 15px; /* Espaçamento interno */
+  transition: background-color 0.3s ease; /* Transição suave */
+  flex-grow: 1; /* Para expandir */
+  margin: 0 150px; /* Margem lateral */
+  margin-left: 300px;
+}
+
+.search-bar i {
+  color: #888; /* Cor do ícone */
+  font-size: 20px; /* Tamanho do ícone */
+  margin-right: 10px; /* Espaçamento à direita */
+}
+
+.search-bar input {
+  border: none; /* Sem borda */
+  background: none; /* Sem fundo */
+  outline: none; /* Sem contorno */
+  font-size: 16px; /* Tamanho da fonte */
+  color: #333; /* Cor do texto */
+  width: 100%; /* Largura total */
+}
+
+.search-bar:hover {
+  background-color: #e0e0e0; /* Cor ao passar o mouse */
+}
+
+/* Estilo do Dropdown */
+.dropdown {
+  position: relative; /* Para posicionamento correto do dropdown */
+  margin-left: 50px;
+}
+
+.profile-dropdown-pic {
+  width: 40px; /* Tamanho da imagem do perfil */
+  height: 40px; /* Tamanho da imagem do perfil */
+  border-radius: 50%; /* Tornar imagem redonda */
+  cursor: pointer; /* Muda o cursor ao passar por cima */
+  margin-left: 0px;
+}
+
+
+/* Aumentar o tamanho do ícone e o botão */
+.sino {
+  font-size: 22px; /* Aumenta o tamanho geral do botão */
+  margin-left: 10px;
+}
+
+.sino i {
+  font-size: 2em; /* Aumenta o tamanho do ícone */
+  color: #000000; /* Ajuste de cor opcional */
+}
+
+/* Ajuste o espaçamento e o tamanho da área de clique */
+#notifications {
+  padding: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Estilo do botão */
+#notificationButton {
+  background-color: #4A5C6A; /* Verde suave */
+ border-color:#4A5C6A ;
+ color: #000000;
+}
+
+/* Hover no botão */
+#notificationButton:hover {
+  
+  
+  transform: scale(1.1);
+}
+
+/* Aumenta o tamanho do ícone */
+#notificationButton i {
+  font-size: 30px; /* Ajuste o tamanho conforme necessário */
+  margin-top: 10px;
+}
+
+
+/* Estilo dos itens do menu */
+
+/* Remove a seta do botão dropdown */
+#notificationButton::after {
+  display: none;
+  content: none;
+}
+
+
+
+#notificationButton::after {
+  display: none;
+}
+
+
+.sair{
+  margin-left: 15px;
+}
+
+
+
+
+
+
+
+
+
+
+
+/* Estilo básico para o botão de editar */
+.btn-editar {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-editar:hover {
+  background-color: #45a049;
+}
+
+/* Estilos do modal */
+.modal {
+  display: none; /* Oculto por padrão */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo escuro transparente */
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px;
+}
+
+/* Conteúdo do modal */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  max-width: 80%;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+/* Botão de fechar o modal */
+.close {
+  color: #aaa;
+  font-size: 24px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #000;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

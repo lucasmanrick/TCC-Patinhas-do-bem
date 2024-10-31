@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
 *{
     margin: 0;
@@ -91,10 +90,10 @@ header ul li a{
 
 .rodape { /* rodapé */
 position: absolute;
-color: white; /*cor do conteúdo interno, como o texto*/
+color: white;
 background-color: #124872; /* cor de fundo do rodapé*/
-width: 100%; /*largura de 100%*/
-text-align: center; /*alinhamento de texto*/
+width: 100%; 
+text-align: center; 
 }
 .imgBox img{
     max-width: 950px;

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+                                                                                                                                                                                                                                                                                                @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 :root {
     --light-color-lightness: 95%;
@@ -172,7 +172,7 @@ nav {
     height: 40px; /* Tamanho da imagem do perfil */
     border-radius: 50%; /* Tornar imagem redonda */
     cursor: pointer; /* Muda o cursor ao passar por cima */
-    margin-left: 50px;
+    margin-left: 0px;
 }
 
 /* Estilo do Menu Dropdown */
@@ -567,6 +567,26 @@ select.animal {
     }
 }
 
+
+
+/* Aumentar o tamanho do ícone e o botão */
+.sino {
+    font-size: 22px; /* Aumenta o tamanho geral do botão */
+    margin-left: 10px;
+}
+
+.sino i {
+    font-size: 2em; /* Aumenta o tamanho do ícone */
+    color: #000000; /* Ajuste de cor opcional */
+}
+
+/* Ajuste o espaçamento e o tamanho da área de clique */
+#notifications {
+    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
 
 
 
@@ -1047,4 +1067,74 @@ img {
     display: none;
     margin-top: 10px;
     transition: all 0.3s ease;
+}
+
+.modal-backdrop {
+    z-index: 0 !important; /* Mantenha o fundo abaixo de tudo */
+}
+
+
+.rounded-circle{
+    width: 30%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Estilo do botão */
+#notificationButton {
+    background-color: #4A5C6A; /* Verde suave */
+   border-color:#4A5C6A ;
+   color: #000000;
+}
+
+/* Hover no botão */
+#notificationButton:hover {
+    
+    
+    transform: scale(1.1);
+}
+
+/* Aumenta o tamanho do ícone */
+#notificationButton i {
+    font-size: 30px; /* Ajuste o tamanho conforme necessário */
+    margin-top: 10px;
+}
+
+
+/* Estilo dos itens do menu */
+
+/* Remove a seta do botão dropdown */
+#notificationButton::after {
+    display: none;
+    content: none;
+}
+
+
+
+#notificationButton::after {
+    display: none;
+}
+
+
+.sair{
+    margin-left: 15px;
 }

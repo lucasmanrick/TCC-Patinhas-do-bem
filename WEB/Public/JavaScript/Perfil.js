@@ -37,9 +37,9 @@ document.getElementById("postagens-link").addEventListener("click", function (ev
 
 
 // Botão "Início" redireciona para a página inicial
-document.getElementById('inicio-button').addEventListener('click', function () {
-    window.location.href = 'index.html'; // Altere para a URL desejada
-});
+// document.getElementById('inicio-button').addEventListener('click', function () {
+//     window.location.href = 'index.html'; // Altere para a URL desejada
+// });
 
 
 
@@ -101,7 +101,7 @@ function showContent(menuId) {
   // Função para exibir a lista de pets do usuário
   function exibirPets() {
     const petsDiv = document.getElementById("lista-pets");
-    petsDiv.innerHTML = ""; // Limpa o conteúdo atual
+    
   
     petsUsuario.forEach(pet => {
       const petElemento = document.createElement("div");
@@ -114,7 +114,6 @@ function showContent(menuId) {
         <p><strong>Raça:</strong> ${pet.raca}</p>
       `;
       
-      petsDiv.appendChild(petElemento);
     });
   
     document.getElementById("meus-pets").style.display = "block"; // Exibe a div dos pets
@@ -122,3 +121,63 @@ function showContent(menuId) {
   
   // Exibe a lista de pets ao carregar a página
   exibirPets();
+
+
+
+
+
+
+  // Função para abrir o modal
+  function openModal(modalId) {
+    var modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
+
+    // Fechar o modal quando clicar no fundo cinza
+    document.querySelectorAll('.modal-backdrop').forEach((backdrop) => {
+        backdrop.addEventListener('click', () => {
+            modal.hide();
+        });
+    });
+}
+
+
+
+
+
+
+// Função para abrir o modal
+function abrirModal() {
+  document.getElementById('modal-editar').style.display = 'flex';
+}
+
+// Função para fechar o modal
+function fecharModal() {
+  document.getElementById('modal-editar').style.display = 'none';
+}
+
+// Função para salvar a edição (adapte conforme a lógica do seu site)
+function salvarEdicao() {
+  const novoValor = document.getElementById('input-editar').value;
+  if (novoValor) {
+    // Atualize o conteúdo do item aqui
+    alert("Novo valor salvo: " + novoValor);
+    fecharModal();
+  } else {
+    alert("Por favor, insira um valor.");
+  }
+}
+
+// Função para excluir o item
+function excluirItem() {
+  // Exemplo de confirmação antes de excluir
+  const confirmacao = confirm("Tem certeza de que deseja excluir este Animal?");
+  
+  if (confirmacao) {
+      // Lógica para remover o elemento ou item
+      // Exemplo: remove um elemento do DOM
+      const elementoParaRemover = document.getElementById('idDoElemento');
+      elementoParaRemover.remove();
+      alert("Item excluído com sucesso!");
+  }
+}
+
