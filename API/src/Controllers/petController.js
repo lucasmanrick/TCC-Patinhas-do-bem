@@ -78,8 +78,6 @@ const petManagement = {
       const {ID,Estado} = req.dataUser;
       const {gapQuantity} = req.body;
 
-      console.log(ID,Estado,gapQuantity);
-      
 
       if(Estado,ID) {
         const receivePets = await Pet.petsParaAdocaoQuery(Estado,ID,gapQuantity);

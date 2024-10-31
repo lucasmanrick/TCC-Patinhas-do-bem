@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import Swiper from "react-native-deck-swiper";
+import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import api from "../../Service/tokenService"; 
+import api from "../../Service/tokenService";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
@@ -21,13 +22,16 @@ const TelaDePets = ({ navigation }) => {
         return;
       }
       setIsLoading(true);
-      const response = await api.post('/PetsAdocao', {gapQuantity:0} ,{
+
+      const response = await api.post('/PetsAdocao', { gapQuantity: 0 }, {
         headers: { authorization: token },
       }).then((e) => {
         console.log(e);
-        
         const petsData = e.data.dataResponse;
-        
+        console.log(petsData);
+        // const petIDs = petsData.map(pet => pet.petID);
+        // console.log(petIDs);
+
         setPetts(petsData);
         setIsLoading(false);
         if (!petsData) {
@@ -43,12 +47,48 @@ const TelaDePets = ({ navigation }) => {
     }
   };
 
+
+  const handleSwipeRight = (petID) => {
+    console.log(petID);
+    AsyncStorage.getItem('token')
+      .then(token => {
+        if (!token) {
+          Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+          throw new Error('Usuário não autenticado'); // Interrompe o fluxo
+        }
+
+        // Exemplo de endpoint ao swipar para a direita
+        return api.post(`/DemonstrarInteressePet`, { PetID: petID }, {
+          headers: { authorization: token },
+        });
+      })
+      .then(response => {
+        console.log('teste');
+        console.log(response);
+
+        Toast.show({
+          text1: 'Sucesso',
+          text2: 'Você demonstrou interesse neste pet!',
+          position: 'top',
+          type: 'success',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
+      })
+      .catch(error => {
+        console.error("Erro ao marcar interesse no pet:", error);
+        Alert.alert("Erro", "Não foi possível marcar o interesse no pet.");
+      })
+
+  };
+
+
   useEffect(() => {
     fetchPets();
   }, []);
 
   return (
     <View style={styles.container}>
+      
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#3DAAD9" />
@@ -80,6 +120,7 @@ const TelaDePets = ({ navigation }) => {
             cardIndex={0}
             backgroundColor="#f0f0f0"
             onSwipedAll={() => Alert.alert("Fim da lista!")}
+            onSwipedRight={(cardIndex) => handleSwipeRight(Petts[cardIndex].petID)}
             overlayLabels={{
               left: {
                 title: "Não tenho interesse",
@@ -125,7 +166,7 @@ const TelaDePets = ({ navigation }) => {
           <Text style={styles.noPetsText}>Nenhum pet disponível no momento.</Text>
         )
       )}
-      </View>
+    </View>
   );
 };
 
@@ -146,7 +187,7 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: 450,
     borderRadius: 15,
-    marginTop: 50,
+    marginTop: 100,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
