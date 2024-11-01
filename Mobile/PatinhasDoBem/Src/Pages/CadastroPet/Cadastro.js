@@ -14,6 +14,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import api from "../../Service/tokenService";
+import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Para armazenamento do token
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'; // Importações do Firebase Storage
 import { storage } from "../../Firebase/FirebaseConfig";
@@ -40,12 +41,25 @@ const CadastroPet = ({ navigation, route }) => {
   const handleCadastroPet = async () => {
     // Validação das entradas
     if (!TipoAnimal || !Linhagem || !Idade || !Sexo || !Cor || !Descricao) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      Toast.show({
+        text1: 'Erro',
+        text2: 'Por favor, preencha todos os campos.',
+        position: 'top',
+        type: 'error',
+        visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+      });
       return;
     }
   
     if (!imagemSelecionada) {
-      Alert.alert("Erro", "Por favor, selecione uma imagem.");
+      Toast.show({
+        text1: 'Erro',
+        text2: 'Por favor, selecione uma imagem.',
+        position: 'top',
+        type: 'error',
+        visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+      });
+
       return;
     }
   
@@ -100,17 +114,36 @@ const CadastroPet = ({ navigation, route }) => {
       })
       .then(() => {
         // Caso a requisição e upload tenham sucesso
-        Alert.alert("Sucesso", "Cadastro realizado com sucesso!");
+        Toast.show({
+          text1: 'Sucesso',
+          text2: 'Cadastro realizado com sucesso!',
+          position: 'top',
+          type: 'success',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
         navigation.goBack();
       })
       .catch((error) => {
         console.error("Erro ao cadastrar pet:", error);
-        Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
+        Toast.show({
+          text1: 'Erro',
+          text2: 'Ocorreu um erro ao cadastrar o pet.',
+          position: 'top',
+          type: 'error',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
       });
   
     } catch (error) {
       console.error("Erro ao cadastrar pet:", error);
-      Alert.alert("Erro", "Ocorreu um erro ao cadastrar o pet.");
+      Toast.show({
+        text1: 'Erro',
+        text2: 'Ocorreu um erro ao cadastrar o pet.',
+        position: 'top',
+        type: 'error',
+        visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+      });
+      
     }
   };
   

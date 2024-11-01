@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function TelaBiblioteca({ navigation }) {
+export default function TelaBibliotecaPerfil({ navigation }) {
   const [galleryImages, setGalleryImages] = useState([]);
   const [permission, setPermission] = useState(null);
 
@@ -51,7 +51,6 @@ export default function TelaBiblioteca({ navigation }) {
       if (!result.cancelled) {
         await MediaLibrary.saveToLibraryAsync(result.assets[0].uri);
         setGalleryImages([result.assets[0].uri, ...galleryImages]);
-      
         Toast.show({
           text1: 'Sucesso',
           text2: 'Foto salva na galeria',
@@ -59,17 +58,17 @@ export default function TelaBiblioteca({ navigation }) {
           type: 'success',
           visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
         });
+        
       }
     } else {
       console.log('Permissão para usar a câmera negada');
       Toast.show({
         text1: 'Atenção',
-        text2: 'Permissão  para usar a câmera negada',
+        text2: 'Permissão para usar a câmera negada.',
         position: 'top',
         type: 'warning',
         visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
       });
-  
     }
   };
 
@@ -80,7 +79,7 @@ export default function TelaBiblioteca({ navigation }) {
       [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Usar como perfil', onPress: () => {
-            navigation.navigate('Pet', { imagemSelecionada: uri });
+            navigation.navigate('Register', { imagemSelecionada: uri });
             Alert.alert('Foto de perfil atualizada!');
           }},
       ],

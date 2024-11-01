@@ -15,6 +15,7 @@ import {
 import { Ionicons } from '@expo/vector-icons'; // Ícones do Ionicons
 import api from '../../Service/tokenService'; // Importa o Axios já configurado
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 import * as Font from 'expo-font'; // Importa a biblioteca de fontes
 import { auth } from '../../Firebase/FirebaseConfig';
 
@@ -44,7 +45,13 @@ class LoginScreen extends Component {
     const { Email, Senha } = this.state;
 
     if (!Email || !Senha) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      Toast.show({
+        text1: 'Atenção',
+        text2: 'Por favor, preencha todos os campos.',
+        position: 'top',
+        type: 'warning',
+        visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+      });
       return; // Verifica se os campos estão preenchidos
     }
 
@@ -59,6 +66,7 @@ class LoginScreen extends Component {
       });
 
       console.log('Resposta do backend:', response.data.token); // Verifique a resposta do backend aqui
+      console.log(response);
 
       if (response.data.token) {
         console.log("Login bem-sucedido, token recebido:", response.data.token);
@@ -67,16 +75,35 @@ class LoginScreen extends Component {
          await AsyncStorage.setItem('token',response.data.token);
          console.log( await AsyncStorage.getItem('token'));
   
-        // Navega para a tela "Home"
+      
         this.props.navigation.navigate('Home');
+        Toast.show({
+          text1: 'Sucesso',
+          text2: 'Bem-vindo de volta! Preparado para explorar mais hoje?',
+          position: 'top',
+          type: 'success',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
       } else {
-        // Se o token não for retornado, exibe mensagem de erro
-        this.setState({ errorMessage: 'Usuário inválido.' });
+        Toast.show({
+          text1: 'Erro',
+          text2: 'Senha ou Email incorreto!',
+          position: 'top',
+          type: 'error',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
         console.log('Login inválido');
       }
       
     } catch (error) {
-      console.log('Erro ao fazer login:', error);
+      console.log('Erro ao fazer login:', error),
+      Toast.show({
+        text1: 'Erro',
+        text2: 'Usuário invalido',
+        position: 'top',
+        type: 'warning',
+        visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+      });
       this.setState({ errorMessage: 'Erro ao conectar ao servidor. Tente novamente.' });
     }
   };
