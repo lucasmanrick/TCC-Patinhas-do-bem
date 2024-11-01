@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  ScrollView,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -48,7 +49,7 @@ const TelaMeusInteresses = ({ navigation }) => {
         console.log(petIDs); // Mostra todos os IDs
 
         // Supondo que o primeiro ID do Doador é o seu (ou escolha a lógica que se aplica)
-        setYourUserID(DoadorIDs[0]); // Aqui você define como obter o seu ID
+        setYourUserID(DoadorIDs); // Aqui você define como obter o seu ID
         setPetts(petsData);
         setIsLoading(false);
       })
@@ -120,6 +121,7 @@ const TelaMeusInteresses = ({ navigation }) => {
           <ActivityIndicator size="large" color="#3DAAD9" />
         </View>
       ) : (
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.cardsContainer}>
           {Petts.length > 0 ? (
             Petts.filter((pet) => pet.IDDoador !== yourUserID) // Filtrando os pets que não pertencem a você
@@ -187,6 +189,7 @@ const TelaMeusInteresses = ({ navigation }) => {
             </Text>
           )}
         </View>
+        </ScrollView>
       )}
     </View>
   );
