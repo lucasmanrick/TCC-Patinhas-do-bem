@@ -90,6 +90,18 @@ class TelaRegistro extends Component {
     }
   };
 
+  selecionarImagem = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      this.setState({ imagemSelecionada: result.assets[0].uri });
+    }
+  };
+
   handleRegister = async () => {
     const { NomeUsuario, Email, Senha, confirmarSenha, Cep, Rua, Numero, Bairro, Cidade, Estado, dataNascimento } = this.state;
 
@@ -258,7 +270,7 @@ class TelaRegistro extends Component {
           {this.state.imagemSelecionada ? (
             <Image
               source={{ uri: this.state.imagemSelecionada }}
-              style={{ width: 40, height: 40, borderRadius: 50 }}
+              style={{ width: 100, height: 100, borderRadius: 50 }}
             />
           ) : (
             <Ionicons name="add-outline" size={40} color="#fff" style={{ marginTop: 6 }} />

@@ -1,24 +1,24 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Usando react-navigation/bottom-tabs
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"; // Usando react-navigation/bottom-tabs
 import { FontAwesome } from "react-native-vector-icons";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 
-
-import TelaLogin from './Src/Pages/Login/TelaLogin';
-import TelaLoading from './Src/Pages/Loading/TelaLoading';
-import TelaInicial from './Src/Pages/Home/TelaInicial';
-import TelaDeRegistro from './Src/Pages/Register/TelaDeRegistro';
-import TelaDeApresentacao from './Src/Pages/TelaApresentacao/TelaApresentacao';
-import TelaDeMensagem from './Src/Pages/Chat/TelaContato';
-import TelaDeNotificacao from './Src/Pages/Notification/TelaDeNotificacao';
-import TelaDePerfil from './Src/Pages/Profile/TelaDePerfil';
-import TelaDePost from './Src/Pages/Post/TelaPost';
-import TelaDePets from './Src/Pages/Animals/VisualizarPet';
-import CadastroPet from './Src/Pages/CadastroPet/Cadastro';
-import TelaBiblioteca from './Src/Pages/Biblioteca/telaBiblioteca';
-import TelaBibliotecaPerfil from './Src/Pages/Biblioteca perfil/telaBibliotecaPerfil';
+import TelaLogin from "./Src/Pages/Login/TelaLogin";
+import TelaLoading from "./Src/Pages/Loading/TelaLoading";
+import TelaInicial from "./Src/Pages/Home/TelaInicial";
+import TelaDeRegistro from "./Src/Pages/Register/TelaDeRegistro";
+import TelaDeApresentacao from "./Src/Pages/TelaApresentacao/TelaApresentacao";
+import TelaDeMensagem from "./Src/Pages/Chat/TelaContato";
+import TelaDeNotificacao from "./Src/Pages/Notification/TelaDeNotificacao";
+import TelaDePerfil from "./Src/Pages/Profile/TelaDePerfil";
+import TelaDePost from "./Src/Pages/Post/TelaPost";
+import TelaDePets from "./Src/Pages/Animals/VisualizarPet";
+import CadastroPet from "./Src/Pages/CadastroPet/Cadastro";
+import TelaBiblioteca from "./Src/Pages/Biblioteca/telaBiblioteca";
+import TelaBibliotecaPerfil from "./Src/Pages/Biblioteca perfil/telaBibliotecaPerfil";
+import TelaMeusInteresses from "./Src/Pages/MeusInteresses/Interesses";
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -35,28 +35,28 @@ function HomeTabs() {
           let iconName;
           let iconStyle = {}; // Estilo para aplicar o sombreamento
 
-          if (route.name === 'Home') {
-            iconName = 'home';
+          if (route.name === "Home") {
+            iconName = "home";
             size = 24;
-          } else if (route.name === 'Mensagem') {
-            iconName = 'comments';
+          } else if (route.name === "Mensagem") {
+            iconName = "comments";
             size = 24;
-          } else if (route.name === 'Pets') {
-            iconName = 'paw';
+          } else if (route.name === "Pets") {
+            iconName = "paw";
             size = focused ? 50 : 40; // Maior quando focado
-            color = '#3DAAD9'; // Cor personalizada
+            color = "#3DAAD9"; // Cor personalizada
             iconStyle = {
-              shadowColor: '#000',
+              shadowColor: "#000",
               shadowOffset: { width: 0, height: 10 },
               shadowOpacity: 0.3,
               shadowRadius: 5,
               elevation: 10, // Para Android
             }; // Efeito de sombra
-          } else if (route.name === 'Notificação') {
-            iconName = 'bell';
+          } else if (route.name === "Notificação") {
+            iconName = "bell";
             size = 24;
-          } else if (route.name === 'Perfil') {
-            iconName = 'user';
+          } else if (route.name === "Perfil") {
+            iconName = "user";
             size = 24;
           }
 
@@ -65,7 +65,9 @@ function HomeTabs() {
               name={iconName}
               size={size}
               color={color}
-              style={route.name === 'Post' ? { ...iconStyle, marginBottom: 0 } : {}}
+              style={
+                route.name === "Post" ? { ...iconStyle, marginBottom: 0 } : {}
+              }
             />
           );
         },
@@ -77,7 +79,11 @@ function HomeTabs() {
     >
       <Tab.Screen name="Home" component={TelaInicial} />
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
-      <Tab.Screen name="Pets" component={TelaDePets} options={{ headerShown: false }} />
+      <Tab.Screen
+        name="Pets"
+        component={TelaDePets}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Notificação" component={TelaDeNotificacao} />
       <Tab.Screen name="Perfil" component={TelaDePerfil} />
     </Tab.Navigator>
@@ -88,7 +94,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="TelaApresentacao">
-
         <Stack.Screen
           name="TelaApresentacao"
           component={TelaDeApresentacao}
@@ -129,6 +134,11 @@ export default function App() {
           options={{ headerShown: false }} // Oculta o header
         />
 
+        <Stack.Screen
+          name="interesses"
+          component={TelaMeusInteresses}
+          options={{ headerShown: false }} // Oculta o header
+        />
 
         {/* Tela Home agora usa Bottom Tabs */}
         <Stack.Screen
