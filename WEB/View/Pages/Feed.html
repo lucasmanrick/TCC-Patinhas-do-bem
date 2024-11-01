@@ -42,7 +42,7 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
       <!------------------ NOTIFICAÇÕES E SOLICITAÇÕES DE AMIZADE ------------------>
 
       <!-- Botão de Notificação -->
-      <div class="dropdown">
+      <div class="dropdown" id="notify">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="notificationButton"
           data-bs-toggle="dropdown" aria-expanded="false">
           <i class="fa-solid fa-bell"></i>
@@ -154,8 +154,9 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
 
 
       <div class="dropdown">
-        <img id="userImage" src="../../Public/Image/user (1).png" alt="Perfil" class="profile-dropdown-pic" data-bs-toggle="dropdown">
+        <img id="userImage" src="../../Public/Image/user (1).png" class="profile-dropdown-pic" data-bs-toggle="dropdown">
         <!-- Imagem do perfil -->
+         <p id="userNameContent"></p>
 
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="/MeuPerfil">Ver Perfil</a></li>
@@ -392,9 +393,8 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
 
         <div id="view-animals-content" style="display:none;">
           <h2>Ver Animais</h2>
-
-
-          <div class="post">
+          
+          <!-- <div class="post">
             <div class="user-info">
               <div class="titulo-pet">
                 <p>Informações do pet</p>
@@ -414,27 +414,10 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
             <div class="animal-post">
               <img src="" alt="Imagem do animal" class="animal-photo">
             </div>
-          </div>
+          </div> -->
 
-          <div class="post">
-            <div class="user-info">
-              <div class="titulo-pet">
-                <p>Informações do pet</p>
-              </div>
 
-              <div class="formulario-do-pet">
-                <p class="descrição"><strong>Tipo de Animal:</strong> Cachorro</p>
-                <p class="descrição"><strong>Linhagem:</strong> Vira Lata</p>
-                <p class="descrição"><strong>Idade:</strong> 2 anos</p>
-                <p class="descrição"><strong>Sexo:</strong> Femêa</p>
-                <p class="descrição"><strong>Cor:</strong> preto</p>
-                <p class="descrição"><strong>Descrição:</strong> Quieto e carinhoso.</p>
-              </div>
-
-              <button class="btn-interesse">Tenho Interesse</button>
-            </div>
-
-          </div>
+         
         </div>
         <!---------------------- fim da Area para ver os animais --------------------------->
       </div>
@@ -515,7 +498,7 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
   <!-------------------------------------- Fim do Rodapé ----------------------------------->
 
 
-  <script src="../../Public/JavaScript/Feed.js" type="module"></script>
+  <script src="../../Public/JavaScript/Feed.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>

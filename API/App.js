@@ -31,8 +31,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('sendMessage', (dataMessage) => {
+    console.log(dataMessage)
     if (dataMessage.contatoID) {
-      io.to(`${dataMessage.contatoID}Message`).emit('sendMessage', {messageSender: dataMessage.myName, message: dataMessage.messageText, idMensagem: dataMessage.idMensagem} ); 
+      io.to(`${dataMessage.contatoID}Message`).emit('sendMessage', {messageSender: dataMessage.myName, message: dataMessage.messageText, idMensagem: dataMessage.idMensagem, myID: dataMessage.myID} ); 
     }
   })
 })

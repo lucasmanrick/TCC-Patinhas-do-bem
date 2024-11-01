@@ -57,7 +57,8 @@ class Interesse {
                 await conn.commit();
                 return { success: "O Usuário demonstrou interesse no pet e ja tem o dono do mesmo na sua lista de contatos" }
               }
-              const showInterest = await conn.query("UPDATE Contato SET Interessado = ? WHERE ID = ?", [1, verifyContact[0][0]])
+             
+              const showInterest = await conn.query("UPDATE Contato SET Interessado = ? WHERE ID = ?", [1, verifyContact[0][0].ID])
               if (showInterest[0].affectedRows >= 1) {
                 await conn.commit();
                 return { success: "O Usuário demonstrou interesse no pet, já possui o dono na lista de contato e agora o contato está na lista de interesse de ambos." }
@@ -130,7 +131,6 @@ class Interesse {
     try {
       await conn.beginTransaction();
       const analyzeToRemove = await conn.query("DELETE FROM INTERESSE WHERE IDInteressado=? AND IDPet = ?", [UserID, PetID])
-      console.log(analyzeToRemove)
       if (analyzeToRemove[0].affectedRows >= 1) {
       return { success: "interesse ao pet retirada com sucesso, mas a solicitação de amizade ao dono permanece!" }
         } else {
