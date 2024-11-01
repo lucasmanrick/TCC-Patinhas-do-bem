@@ -76,7 +76,13 @@ const TelaDePets = ({ navigation }) => {
       })
       .catch(error => {
         console.error("Erro ao marcar interesse no pet:", error);
-        Alert.alert("Erro", "Não foi possível marcar o interesse no pet.");
+        Toast.show({
+          text1: 'Erro',
+          text2: 'Erro ao demostrar interresse no pet!',
+          position: 'top',
+          type: 'error',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
       })
 
   };
@@ -88,6 +94,11 @@ const TelaDePets = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+
+       {/* Botão com ícone de patinha para navegar para outra tela */}
+      <TouchableOpacity style={styles.navigateButton} onPress={() => navigation.navigate('interesses')}>
+        <Icon name="paw" size={30} color="#3DAAD9" />
+      </TouchableOpacity>
       
       {isLoading ? (
         <View style={styles.loadingContainer}>
@@ -107,6 +118,7 @@ const TelaDePets = ({ navigation }) => {
                 <View style={styles.overlay}>
                   <Text style={styles.petName}>{item.TipoAnimal}</Text>
                   <Text style={styles.petDescription}>{item.Descricao}</Text>
+                  
                 </View>
                 <View style={styles.additionalInfo}>
                   <Text style={styles.petDetail}>Idade: {item.Idade}</Text>
@@ -176,6 +188,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     justifyContent: "center",
     alignItems: "center",
+  },
+  navigateButton: {
+    position: 'absolute', // Permite que o botão seja posicionado em relação ao seu pai
+    top: 30, // Ajuste a posição vertical conforme necessário
+    left: '95%', // Centraliza o botão horizontalmente
+    transform: [{ translateX: -50 }], // Ajusta a posição para centralizar corretamente
+    backgroundColor: '#000', // Cor de fundo do botão
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 50,
+    zIndex: 1, // Coloca o botão acima dos cards
+  },
+  buttonText: {
+    color: '#fff', // Cor do texto do botão
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   swiperContainer: {
     flex: 1,
