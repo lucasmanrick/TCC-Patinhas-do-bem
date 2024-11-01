@@ -1,23 +1,5 @@
 
 
-function searchContent() {
-  const query = document.getElementById('search-input').value.toLowerCase();
-  const posts = document.querySelectorAll('.post'); // Selecione todos os posts
-
-  posts.forEach(post => {
-      const title = post.querySelector('.post-title') ? post.querySelector('.post-title').textContent.toLowerCase() : '';
-      const content = post.querySelector('.post-content') ? post.querySelector('.post-content').textContent.toLowerCase() : '';
-      const animalInfo = post.querySelector('.formulario-do-pet') ? post.querySelector('.formulario-do-pet').textContent.toLowerCase() : ''; // Para informações do pet
-      
-      // Verifica se a busca está contida no título, no conteúdo ou nas informações do animal
-      if (title.includes(query) || content.includes(query) || animalInfo.includes(query)) {
-          post.style.display = 'block'; // Mostra o post se a busca corresponder
-      } else {
-          post.style.display = 'none'; // Esconde o post se não corresponder
-      }
-  });
-}
-
 
 function showContent(menuId) {
   // Esconde todos os conteúdos
@@ -41,50 +23,6 @@ function showContent(menuId) {
   }
   
 }
-
-function publishPost() {
-  const title = document.getElementById('post-title').value;
-  const content = document.getElementById('post-content').value;
-  const imageInput = document.getElementById('post-image');
-  const postsContainer = document.getElementById('posts-container');
-
-  if (title && content) {
-      const postDiv = document.createElement('div');
-      postDiv.className = 'post';
-
-      // Adiciona o título
-      const postTitle = document.createElement('h4');
-      postTitle.innerText = title;
-      postDiv.appendChild(postTitle);
-
-      // Adiciona a imagem, se houver
-      if (imageInput.files && imageInput.files[0]) {
-          const img = document.createElement('img');
-          img.src = URL.createObjectURL(imageInput.files[0]);
-          img.style.width = '100%'; // Ajusta a largura da imagem
-          img.style.maxWidth = '500px'; // Largura máxima
-          postDiv.appendChild(img);
-      }
-
-      // Adiciona o conteúdo
-      const postContent = document.createElement('p');
-      postContent.innerText = content;
-      postDiv.appendChild(postContent);
-
-      // Adiciona a nova postagem ao container
-      postsContainer.prepend(postDiv); // Adiciona ao início da lista de postagens
-
-      // Limpa os campos
-      document.getElementById('post-title').value = '';
-      document.getElementById('post-content').value = '';
-      imageInput.value = ''; // Limpa o campo de imagem
-
-      closePublishModal(); // Fecha o modal
-  } else {
-      alert('Por favor, preencha todos os campos!');
-  }
-}
-let currentChatUser = '';
 
 
 
@@ -128,8 +66,12 @@ document.querySelector('.submit-comment').addEventListener('click', function() {
   }
 });
 
-//CÓDIGO PARA PUXAR MEUS DADOS 
 
+
+//CONSUMO DE APIS 
+
+
+//MEUS DADOS
 function getMyData () {
   fetch("/MyProfile", {
     method: 'GET',
@@ -141,16 +83,21 @@ function getMyData () {
       return response.json();
     })
     .then(function (myBlob) {
-      console.log(myBlob)
+   
       if (myBlob.success) {
-          Cookies.remove('meusDados')
-          Cookies.remove('dadosMeusPets')
-          Cookies.remove('minhasPostagens')
-          Cookies.set("meusDados", myBlob.meusDados)
-          Cookies.set("dadosMeusPets", myBlob.dadosMeusPets)
-          Cookies.set("minhasPostagens", myBlob.minhasPostagens)
+          Cookies.remove('usuarioLogado')
+          Cookies.remove('imagemUsuario')
+          Cookies.remove("usuarioID")
 
-          document.getElementById("userImage").src = `${myBlob.meusDados.userPicture}`
+         
+
+          Cookies.set("usuarioLogado", myBlob.meusDados.Nome)
+          Cookies.set("usuarioID", myBlob.meusDados.ID)
+         
+          Cookies.set("imagemUsuario", myBlob.meusDados.UserPicture)
+
+          document.getElementById("userImage").src = `${myBlob.meusDados.UserPicture}`
+          document.getElementById("userNameContent").innerText = `${myBlob.meusDados.Nome}`
       }else {
        
       }
@@ -167,7 +114,7 @@ getMyData();
 
 //CODIGO DO CHAT EM TEMPO REAL, MANUNTENÇÕES FALAR COM LUCAS.
 
-
+//ENVIAR MENSAGEM E PUXAR MENSAGENS COM UM CONTATO
 const socket = io();
 
 socket.on('sendMessage', (msg) => {
@@ -184,7 +131,9 @@ function receberMensagem(mensagem) {
   var mensagemTexto = document.createElement("p");
   mensagemTexto.setAttribute("idmensagem",mensagem.idMensagem)
 
-  if(mensagem.messageSender !== 'Lucas') {
+  
+
+  if(mensagem.myID !== Cookies.get('usuarioID')) {
     mensagemTexto.textContent = mensagem.messageSender + ": " + mensagem.message;
     chatBody.appendChild(mensagemTexto);
   }else {
@@ -225,7 +174,7 @@ function enviarMensagem() {
       })
       .then(function (myBlob) {
         if (myBlob.success) {
-          const dataMessage = { contatoID: storageContact.contactID, messageText: chatInput, myName: 'Lucas', idMensagem:myBlob.idMensagem }
+          const dataMessage = { contatoID: storageContact.contactID, messageText: chatInput,messageSender:Cookies.get("usuarioLogado") ,myID:Cookies.get("usuarioID") , idMensagem:myBlob.idMensagem }
           socket.emit('sendMessage', dataMessage)
           let mensagemTexto = document.createElement("p");
           mensagemTexto.id = myBlob.idMensagem
@@ -273,7 +222,6 @@ function abrirChat(dataUsers) {
       return response.json();
     })
     .then(function (myBlob) {
-      console.log(myBlob)
       let mensagem = {}
       if (myBlob.success) {
         myBlob.messages.forEach(e => {
@@ -311,5 +259,147 @@ function fecharChat() {
   document.getElementById('chat-box').style.display = 'none';
 }
 
+
+
+
+
+// PUXANDO ANIMAIS QUE ESTÃO PARA ADOÇÃO.
+
+let petGap = 0;
+let postGap = 0;
+
+
+async function  getingPets () {
+ await fetch(`/PetsAdocao`, {
+    method: 'POST',
+    body: JSON.stringify({'gapQuantity': petGap}),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      console.log(myBlob)
+      if(myBlob.success) {
+        myBlob.dataResponse.forEach(e => {
+          const mainDiv = document.createElement('div')
+          mainDiv.className = "post"
+          mainDiv.id = e.petID
+
+          const divpetInfo = document.createElement('div')
+          divpetInfo.className = "user-info"
+
+          const divTitle = document.createElement('div')
+          divTitle.className = "titulo-pet"
+
+
+          const pContext = document.createElement('p');
+          pContext.innerText = "Informações do pet"
+
+          const formDiv = document.createElement('div')
+          formDiv.className = "formulario-do-pet";
+
+          const pType = document.createElement('p');
+          pType.className = "descrição"
+          pType.innerHTML = `<strong>Tipo de Animal:</strong> ${e.TipoAnimal}`
+
+          const pLine = document.createElement('p');
+          pLine.className = "descrição"
+          pLine.innerHTML = `<strong>Linhagem:</strong> ${e.Linhagem}`
+
+          const pAge = document.createElement('p');
+          pAge.className = "descrição"
+          pLine.innerHTML = `<strong>Idade:</strong>  ${e.Idade}`   
+
+          const pSex = document.createElement('p');
+          pSex.className = "descrição"
+          pSex.innerHTML = `<strong>Sexo:</strong> ${e.Sexo}`
+
+          const pColor = document.createElement('p');
+          pColor.className = "descrição"
+          pColor.innerHTML = `<strong>Cor:</strong> ${e.Cor}`
+
+          const pDescription = document.createElement('p');
+          pDescription.className = "descrição"
+          pDescription.innerHTML = `<strong>Descrição:</strong> ${e.Descricao}`
+
+          const divPhotoContent = document.createElement('div')
+          divPhotoContent.className = "animal-post"
+          
+          divPhotoContent.innerHTML = `<img src="${e.petPicture}" alt="Imagem do animal" class="animal-photo">`
+
+
+
+
+          
+          // const buttonInterest = document.createElement("button")
+          // buttonInterest.className = "btn-interesse"
+          // buttonInterest.id = `interest-${e.petID}`
+          // buttonInterest.onclick = showInterestOnPet(this)
+          // buttonInterest.innerText = "Tenho Interesse"
+          // formDiv.append(pType,pLine,pAge,pSex,pColor,pDescription)
+          // divTitle.append(pContext)
+          // divpetInfo.append(divTitle,formDiv,buttonInterest)
+          // mainDiv.append(divpetInfo,divPhotoContent)
+          // document.getElementById('view-animals-content').append(mainDiv)
+
+          document.getElementById('view-animals-content').innerHTML = `
+          <div class="post"">
+            <div class="user-info">
+              <div class="titulo-pet">
+                <p>Informações do pet</p>
+              </div>
+  
+              <div class="formulario-do-pet">
+                <p class="descrição"><strong>Tipo de Animal:</strong> ${e.TipoAnimal}</p>
+                <p class="descrição"><strong>Linhagem:</strong> ${e.Linhagem}</p>
+                <p class="descrição"><strong>Idade:</strong>  ${e.Idade}</p>
+                <p class="descrição"><strong>Sexo:</strong> ${e.Sexo}</p>
+                <p class="descrição"><strong>Cor:</strong> ${e.Cor}</p>
+                <p class="descrição"><strong>Descrição:</strong> ${e.Descricao}</p>
+              </div>
+  
+              <button class="btn-interesse" id="${e.petID}" onclick = "showInterestOnPet(this)"></button>
+            </div>
+            <div class="animal-post">
+              <img src="${e.petPicture}" alt="Imagem do animal" class="animal-photo">
+            </div>
+          </div>
+      `
+        })
+        
+      }
+  
+    })
+}
+
+getingPets()
+
+
+
+
+
+async function showInterestOnPet (PetID) {
+  console.log(PetID.id)
+  fetch(`/DemonstrarInteressePet`, {
+    method: 'POST',
+    body: JSON.stringify({'PetID': PetID.id}),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      console.log(myBlob)
+      if(myBlob.success) {
+       return alert("você demonstrou interesse no pet com sucesso, e enviou uma solicitação de contato para o dono do mesmo")
+      }
+      alert(myBlob.error)
+    })
+}
 
 

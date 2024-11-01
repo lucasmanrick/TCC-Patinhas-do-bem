@@ -5,6 +5,7 @@ const Pet = require("../Class/Pet");
 const Postagem = require('../Class/Postagem');
 
 const userInteractQueries = {
+
  
 
    async profileUserQuery(usuarioASerRetornado, userID) {
@@ -19,8 +20,13 @@ const userInteractQueries = {
       returnDataCleaned[0].forEach (e => {
          e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media`
       })
-
+      console.log("first attempt")
       if(returnDataCleaned[0].length >=1) {
+        console.log("chegou")
+        console.log(myPosts.postagens)
+        if(myPosts.postagens === undefined) {
+          return {success:"retornando dados do seu perfil para uso" ,meusDados: returnDataCleaned[0][0],dadosMeusPets:returnPetsUser.dataResponse}
+        } console.log("passou")
        const getingAnotherInfosAboutPost = await myPosts.postagens.map(async(el,index) => {
           const verifyComments = await Comentario.verComentariosDeUmPostQuery(el.ID);
           const likesQuantity = await Avaliacao.verReacoesPostagemQuery(el.ID)
@@ -48,6 +54,9 @@ const userInteractQueries = {
   
 
       if(returnAnotherUserProfile[0].length >=1) {
+        if(userPosts.postagens.length < 1) {
+          return {success: "retornando dados de perfil do usuário solicitado", dadosUsuario:returnAnotherUserProfile[0][0], dadosPetsUsuario:returnPetsOfThisUser.dataResponse, saoAmigos:saoAmigos,envioAmizadeFoiFeito:envioAmizadePendente, postagensDoUsuario:await Promise.all(getingPostsUser)}
+        }
         const getingPostsUser = await userPosts.postagens.map(async(el,index) => {
           const verifyComments = await Comentario.verComentariosDeUmPostQuery(el.ID);
           const likesQuantity = await Avaliacao.verReacoesPostagemQuery(el.ID)
