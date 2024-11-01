@@ -13,8 +13,16 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { ref, uploadBytes } from 'firebase/storage'; // Importações do Firebase Storage
+import { storage } from '../../Firebase/FirebaseConfig';
+import Toast from 'react-native-toast-message';
 import axios from "axios"; // Importando axios
 import api from "../../Service/tokenService";
+
+
+
 
 class TelaRegistro extends Component {
   state = {
@@ -33,11 +41,17 @@ class TelaRegistro extends Component {
     dataNascimento: new Date(),
     showDatePicker: false,
     fontLoaded: false,
+    imagemSelecionada: null,
   };
 
   async componentDidMount() {
     await this.loadFonts();
+    const { route } = this.props;
+    if (route.params?.imagemSelecionada) {
+      this.setState({ imagemSelecionada: route.params.imagemSelecionada });
+    }
   }
+
 
   loadFonts = async () => {
     await Font.loadAsync({
@@ -77,7 +91,6 @@ class TelaRegistro extends Component {
   };
 
   handleRegister = async () => {
-
     const { NomeUsuario, Email, Senha, confirmarSenha, Cep, Rua, Numero, Bairro, Cidade, Estado, dataNascimento } = this.state;
 
     if (Senha !== confirmarSenha) {
@@ -96,16 +109,25 @@ class TelaRegistro extends Component {
       return;
     }
 
+    if (!this.state.imagemSelecionada) {
+      Toast.show({
+        text1: 'Erro',
+        text2: 'Por favor, selecione uma imagem.',
+        position: 'top',
+        type: 'error',
+        visibilityTime: 3000,
+      });
+      return;
+    }
+
     const numeroFormatado = parseInt(Numero, 10);
     if (isNaN(numeroFormatado)) {
       Alert.alert("Erro", "O campo Número deve ser um valor numérico.");
       return;
     }
 
-
     const formattedDate = dataNascimento.toISOString().split('T')[0];
 
-    // Log dos dados que serão enviados
     console.log("Dados a serem enviados:", {
       NomeUsuario,
       DataNasc: formattedDate,
@@ -113,17 +135,14 @@ class TelaRegistro extends Component {
       Senha,
       Cep,
       Rua,
-      Numero:numeroFormatado ,
+      Numero: numeroFormatado,
       Bairro,
       Cidade,
       Estado,
     });
 
-
-
-
     try {
-      const response = await api.post('/Cadastro', {
+      await api.post('/Cadastro', {
         NomeUsuario,
         DataNasc: formattedDate,
         Email,
@@ -134,17 +153,41 @@ class TelaRegistro extends Component {
         Bairro,
         Cidade,
         Estado,
-      }).then(e => (
-        console.log(e.data),
+      })
+        .then(async (response) => {
+          console.log(response.data);
+          const IDUsuario = response.data.IDUsuario;
 
-        Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
-        this.props.navigation.navigate('Login')
-      )).catch(error => (
-        console.log(error)
+          if (!IDUsuario) {
+            throw new Error("Erro ao obter o IDUsuario");
+          }
 
-      ));
+          const manipResult = await ImageManipulator.manipulateAsync(
+            this.state.imagemSelecionada,
+            [{ resize: { width: 800 } }],
+            { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+          );
 
+          const responseImage = await fetch(manipResult.uri);
+          const blob = await responseImage.blob();
 
+          const imageRef = ref(storage, `perfil/${IDUsuario}.jpg`);
+          return uploadBytes(imageRef, blob);
+        })
+        .then(() => {
+          Toast.show({
+            text1: 'Sucesso',
+            text2: 'Cadastro realizado com sucesso!',
+            position: 'top',
+            type: 'success',
+            visibilityTime: 3000,
+          });
+          this.props.navigation.navigate('Login');
+        })
+        .catch((error) => {
+          console.error("Upload Error:", error);
+          Alert.alert("Erro", "Ocorreu um erro ao fazer upload da imagem.");
+        });
     } catch (error) {
       if (error.response) {
         console.error("Response Error:", error.response.data);
@@ -152,10 +195,10 @@ class TelaRegistro extends Component {
       } else {
         console.error("Network Error:", error.message);
         Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
-
       }
     }
   };
+
 
 
   showDatepicker = () => {
@@ -210,14 +253,18 @@ class TelaRegistro extends Component {
           <Text style={styles.greeting}>{"Bem-vindo ao\nPatinhas do Bem"}</Text>
         )}
 
-        <TouchableOpacity style={styles.avatar}>
-          <Ionicons
-            name="add-outline" //
-            size={40}
-            color="#fff"
-            style={{ marginTop: 6 }}
-          />
+
+        <TouchableOpacity style={styles.avatar} onPress={() => this.props.navigation.navigate("BibliotecaPerfil")}>
+          {this.state.imagemSelecionada ? (
+            <Image
+              source={{ uri: this.state.imagemSelecionada }}
+              style={{ width: 40, height: 40, borderRadius: 50 }}
+            />
+          ) : (
+            <Ionicons name="add-outline" size={40} color="#fff" style={{ marginTop: 6 }} />
+          )}
         </TouchableOpacity>
+
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {this.renderInput("Nome", "person-outline", "NomeUsuario")}

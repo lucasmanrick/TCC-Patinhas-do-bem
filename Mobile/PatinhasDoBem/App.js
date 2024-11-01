@@ -18,6 +18,7 @@ import TelaDePost from './Src/Pages/Post/TelaPost';
 import TelaDePets from './Src/Pages/Animals/VisualizarPet';
 import CadastroPet from './Src/Pages/CadastroPet/Cadastro';
 import TelaBiblioteca from './Src/Pages/Biblioteca/telaBiblioteca';
+import TelaBibliotecaPerfil from './Src/Pages/Biblioteca perfil/telaBibliotecaPerfil';
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -119,6 +120,12 @@ export default function App() {
         <Stack.Screen
           name="Biblioteca"
           component={TelaBiblioteca}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="BibliotecaPerfil"
+          component={TelaBibliotecaPerfil}
           options={{ headerShown: false }} // Oculta o header
         />
 
