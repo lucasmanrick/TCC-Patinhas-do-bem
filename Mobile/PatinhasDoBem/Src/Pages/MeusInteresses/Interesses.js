@@ -41,6 +41,7 @@ const TelaMeusInteresses = ({ navigation }) => {
         );
       })
       .then((response) => {
+        console.log('caraaaaaaaaaa',response.data);
         const petsData = response.data.myInterests;
         const petIDs = petsData.map((pet) => pet.ID);
         const DoadorIDs = petsData.map((user) => user.IDDoador);
@@ -72,7 +73,7 @@ const TelaMeusInteresses = ({ navigation }) => {
         setRemovingPetID(petID); // Define o pet que está sendo removido
         return api.delete(
           `/RemoverInteressePet`,
-          { petID
+          { PetID: petID
            },
           {
             headers: { authorization: token },
