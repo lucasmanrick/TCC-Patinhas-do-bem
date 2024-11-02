@@ -1,4 +1,4 @@
-const { connection } = require(`../../Config/db`);
+const { connection } = require('../../Config/db');
 
 
 
@@ -114,7 +114,7 @@ class Interesse {
   static async meusInteressesQuery(MeuID) { //retorna todos pets que demonstrei interesse
     const conn = await connection();
     try {
-      const verifyMyInterests = await conn.query("select p.ID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade,p.Sexo,p.Cor,p.Descricao, u.Nome as NomeDoDono, u.ID AS IDDoador FROM Pet as p JOIN interesse as I JOIN usuario As u WHERE I.IDInteressado = ? AND u.ID = p.IDDoador", [MeuID])
+      const verifyMyInterests = await conn.query("select p.ID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade,p.Sexo,p.Cor,p.Descricao, u.Nome as NomeDoDono, u.ID AS IDDoador FROM Pet as p JOIN interesse as I on I.IDPet = p.ID JOIN usuario As u WHERE I.IDInteressado = ? AND u.ID = p.IDDoador", [MeuID])
       if (verifyMyInterests[0].length >= 1) {
         return { success: "retornando pets no quais demonstrei interesse!", myInterests: verifyMyInterests[0] }
       } else {
