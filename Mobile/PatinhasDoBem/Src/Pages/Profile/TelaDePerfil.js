@@ -8,12 +8,12 @@ import {
   StyleSheet,
   Alert,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import Toast from "react-native-toast-message";
 import api from "../../Service/tokenService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from '@expo/vector-icons'; // Importando o ícone de configurações
+import { Ionicons } from "@expo/vector-icons";
 
 const TelaDePerfil = ({ route, navigation }) => {
   const [profileData, setProfileData] = useState(null);
@@ -45,18 +45,68 @@ const TelaDePerfil = ({ route, navigation }) => {
       });
   }, [userID]);
 
-  const handleSettings = () => {
-    navigation.navigate('EdicaoUser'); // Navegando para a tela de configurações
+  const handleEditPet = (pet) => {
+    navigation.navigate("EdicaoPet", { pet });
   };
 
-  const handleEditPet = (pet) => {
-    navigation.navigate('EdicaoPet', { pet }); // Navegando para a tela de edição do pet
+  const handleAddPet = () => {
+    navigation.navigate("Pet");
+  };
+
+  const handleEditProfile = () => {
+    navigation.navigate("EdicaoUser");
+  };
+
+  const handleDeletePet = (pet) => {
+    Alert.alert(
+      "Confirmação de Adoção",
+      "Esse pet foi adotado através da ONG?",
+      [
+        {
+          text: "Sim",
+          onPress: () => {
+            // Lógica para marcar o pet como adotado no sistema
+            api
+              .delete(`/RetiraPetAdocao`, { PetID: pet.id }, {
+                headers: { authorization: token },
+              })
+              .then(() => {
+                Toast.show({
+                  type: "success",
+                  text1: "Pet marcado como adotado!",
+                });
+                // Atualiza os dados do perfil para remover o pet da lista
+                setProfileData((prevData) => ({
+                  ...prevData,
+                  dadosMeusPets: prevData.dadosMeusPets.filter(
+                    (p) => p.id !== pet.id
+                  ),
+                }));
+              })
+              .catch((error) => {
+                console.error("Erro ao marcar pet como adotado:", error);
+                Toast.show({
+                  type: "error",
+                  text1: "Erro ao marcar o pet como adotado",
+                });
+              });
+          },
+        },
+        {
+          text: "Não",
+          onPress: () => {
+            Toast.show({ type: "info", text1: "Pet não foi marcado como adotado." });
+          },
+          style: "cancel",
+        },
+      ]
+    );
   };
 
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#1a73e8" />
       </View>
     );
   }
@@ -66,12 +116,20 @@ const TelaDePerfil = ({ route, navigation }) => {
       {profileData ? (
         <>
           <View style={styles.header}>
-            <Image
-              source={{
-                uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${profileData.meusDados.ID}.jpg?alt=media`,
-              }}
-              style={styles.profileImage}
-            />
+            <View style={styles.profileImageContainer}>
+              <Image
+                source={{
+                  uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${profileData.meusDados.ID}.jpg?alt=media`,
+                }}
+                style={styles.profileImage}
+              />
+              <TouchableOpacity
+                style={styles.editProfileButton}
+                onPress={handleEditProfile}
+              >
+                <Ionicons name="create-outline" size={20} color="#1a73e8" />
+              </TouchableOpacity>
+            </View>
             <View style={styles.statsContainer}>
               <Text style={styles.statNumber}>{profileData.posts}</Text>
               <Text style={styles.statLabel}>Posts</Text>
@@ -92,42 +150,44 @@ const TelaDePerfil = ({ route, navigation }) => {
             <Text style={styles.username}>{profileData.meusDados.Nome}</Text>
           </View>
 
-          {/* Exibir lista de posts */}
           <FlatList
             data={profileData.postsData || []}
             numColumns={3}
-            keyExtractor={(item) => item.id ? item.id.toString() : item.index.toString()} // Ajuste para garantir que você não tenha erro
+            keyExtractor={(item) => item.id ? item.id.toString() : item.index.toString()}
             renderItem={({ item }) => (
               <Image source={{ uri: item.image }} style={styles.postImage} />
             )}
           />
 
-          {/* Exibir lista de pets */}
           <View style={styles.petsContainer}>
             <Text style={styles.petsTitle}>Meus Pets</Text>
             <FlatList
-              data={profileData.dadosMeusPets} // Supondo que isso contém os dados dos pets
-              keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()} // Ajuste conforme a estrutura dos dados dos pets
+              data={profileData.dadosMeusPets}
+              keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleEditPet(item)} style={styles.petItem}>
-                  <Image source={{ uri: item.petPicture }} style={styles.petImage} />
+                <View style={styles.petItem}>
+                  <View style={styles.petImageContainer}>
+                    <Image source={{ uri: item.petPicture }} style={styles.petImage} />
+                    <TouchableOpacity onPress={() => handleEditPet(item)} style={styles.editIcon}>
+                      <Ionicons name="create-outline" size={20} color="#1a73e8" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDeletePet(item)} style={styles.deleteIcon}>
+                      <Ionicons name="trash-outline" size={20} color="red" />
+                    </TouchableOpacity>
+                  </View>
                   <Text style={styles.petName}>{item.TipoAnimal}</Text>
-                </TouchableOpacity>
+                </View>
               )}
-              horizontal={false} // Pode ser alterado para false se você quiser uma lista vertical
+              horizontal={false}
             />
           </View>
         </>
       ) : (
-        <Text style={styles.errorText}>
-          Não foi possível carregar os dados do perfil.
-        </Text>
+        <Text style={styles.errorText}>Não foi possível carregar os dados do perfil.</Text>
       )}
 
-
-      {/* Ícone de configurações no canto superior direito */}
-      <TouchableOpacity style={styles.settingsIcon} onPress={handleSettings}>
-        <Ionicons name="settings-outline" size={30} color="black" />
+      <TouchableOpacity style={styles.settingsIcon} onPress={handleAddPet}>
+        <Ionicons name="paw" size={30} color="#1a73e8" />
       </TouchableOpacity>
     </ScrollView>
   );
@@ -146,10 +206,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: "#ddd",
   },
+  profileImageContainer: {
+    position: "relative",
+  },
   profileImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
+  },
+  editProfileButton: {
+    position: "absolute",
+    top: -5,
+    right: -15,
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 5,
   },
   statsContainer: {
     alignItems: "center",
@@ -182,6 +253,9 @@ const styles = StyleSheet.create({
     marginRight: 10,
     alignItems: "center",
   },
+  petImageContainer: {
+    position: "relative",
+  },
   petImage: {
     width: 80,
     height: 80,
@@ -190,6 +264,16 @@ const styles = StyleSheet.create({
   petName: {
     marginTop: 5,
     textAlign: "center",
+  },
+  editIcon: {
+    position: "absolute",
+    top: 5,
+    left: 5,
+  },
+  deleteIcon: {
+    position: "absolute",
+    top: 5,
+    right: 5,
   },
   postImage: {
     width: "33%",

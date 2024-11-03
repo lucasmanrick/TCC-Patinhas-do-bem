@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,11 +10,9 @@ import {
 } from "react-native";
 import api from "../../Service/tokenService"; // Importe seu serviço API
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 const TelaDeEdicaoUsuario = ({ navigation }) => {
-  const [nomeUsuario, setNomeUsuario] = useState("");
-  const [dataNasc, setDataNasc] = useState("");
-  const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmaSenha, setConfirmaSenha] = useState("");
   const [cep, setCep] = useState("");
@@ -25,49 +23,98 @@ const TelaDeEdicaoUsuario = ({ navigation }) => {
   const [cidade, setCidade] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleEditUser = async () => {
-    setLoading(true);
-    try {
-      const token = await AsyncStorage.getItem("token");
-      if (!token) {
-        Alert.alert("Erro", "Usuário não autenticado.");
-        return;
-      }
+  // Função para buscar dados do usuário e preencher os campos
+  const buscarDadosUsuario = () => {
+    AsyncStorage.getItem("token")
+      .then(token => {
+        if (!token) {
+          Alert.alert("Erro", "Usuário não autenticado.");
+          return;
+        }
 
-      // Validação da confirmação de senha
-      if (senha !== confirmaSenha) {
-        Alert.alert("Erro", "As senhas não coincidem.");
-        setLoading(false);
-        return;
-      }
-
-      const response = await api.put(`/EditaDados`, {
-        NomeUsuario: nomeUsuario,
-        DataNasc: dataNasc,
-        Email: email,
-        Senha: senha,
-        Cep: cep,
-        Rua: rua,
-        Numero: numero,
-        Bairro: bairro,
-        Estado: estado,
-        Cidade: cidade,
-      }, {
-        headers: { authorization: token },
+        api.get("/MyProfile", {}, {
+          headers: { authorization: token },
+        })
+        .then(response => {
+          const dados = response.data;
+          setCep(dados.cep || "");
+          setRua(dados.rua || "");
+          setNumero(dados.numero || "");
+          setBairro(dados.bairro || "");
+          setEstado(dados.estado || "");
+          setCidade(dados.cidade || "");
+        })      
+        .catch(error => {
+          console.error(error);
+          Alert.alert("Erro", "Erro ao carregar dados do usuário.");
+        });
       });
+  };
 
-      if (response.data.error) {
-        Alert.alert("Erro", response.data.error);
-      } else {
-        Alert.alert("Sucesso", "Dados editados com sucesso!");
-        navigation.goBack(); // Voltar à tela anterior
-      }
-    } catch (error) {
-      console.error(error);
-      Alert.alert("Erro", "Ocorreu um erro ao editar os dados.");
-    } finally {
-      setLoading(false);
-    }
+  // Chama a função buscarDadosUsuario ao montar o componente
+  useEffect(() => {
+    buscarDadosUsuario();
+  }, []);
+
+  // Função para buscar endereço pelo CEP
+  const buscarEndereco = () => {
+    axios.get(`https://viacep.com.br/ws/${cep}/json/`)
+      .then(response => {
+        const { logradouro, bairro, localidade, uf } = response.data;
+        setRua(logradouro || "");
+        setBairro(bairro || "");
+        setCidade(localidade || "");
+        setEstado(uf || "");
+      })
+      .catch(error => {
+        Alert.alert("Erro", "CEP inválido ou erro na busca de endereço.");
+      });
+  };
+
+  const handleEditUser = () => {
+    setLoading(true);
+    AsyncStorage.getItem("token")
+      .then(token => {
+        if (!token) {
+          Alert.alert("Erro", "Usuário não autenticado.");
+          setLoading(false);
+          return;
+        }
+
+        // Validação da confirmação de senha
+        if (senha !== confirmaSenha) {
+          Alert.alert("Erro", "As senhas não coincidem.");
+          setLoading(false);
+          return;
+        }
+
+        api.put("/EditaDados", {
+          Senha: senha,
+          Cep: cep,
+          Rua: rua,
+          Numero: numero,
+          Bairro: bairro,
+          Estado: estado,
+          Cidade: cidade,
+        }, {
+          headers: { authorization: token },
+        })
+        .then(response => {
+          if (response.data.error) {
+            Alert.alert("Erro", response.data.error);
+          } else {
+            Alert.alert("Sucesso", "Dados editados com sucesso!");
+            navigation.goBack(); // Voltar à tela anterior
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          Alert.alert("Erro", "Ocorreu um erro ao editar os dados.");
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+      });
   };
 
   return (
@@ -76,42 +123,11 @@ const TelaDeEdicaoUsuario = ({ navigation }) => {
 
       <TextInput
         style={styles.input}
-        placeholder="Nome de Usuário"
-        value={nomeUsuario}
-        onChangeText={setNomeUsuario}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Data de Nascimento (DD/MM/AAAA)"
-        value={dataNasc}
-        onChangeText={setDataNasc}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Senha"
-        value={senha}
-        onChangeText={setSenha}
-        secureTextEntry
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Confirmação de Senha"
-        value={confirmaSenha}
-        onChangeText={setConfirmaSenha}
-        secureTextEntry
-      />
-      <TextInput
-        style={styles.input}
         placeholder="CEP"
         value={cep}
         onChangeText={setCep}
+        onBlur={buscarEndereco} // Dispara a busca do endereço ao sair do campo CEP
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
@@ -143,6 +159,20 @@ const TelaDeEdicaoUsuario = ({ navigation }) => {
         placeholder="Cidade"
         value={cidade}
         onChangeText={setCidade}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Nova Senha"
+        value={senha}
+        onChangeText={setSenha}
+        secureTextEntry
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirmação de Senha"
+        value={confirmaSenha}
+        onChangeText={setConfirmaSenha}
+        secureTextEntry
       />
 
       <TouchableOpacity

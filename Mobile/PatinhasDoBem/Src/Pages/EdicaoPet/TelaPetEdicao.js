@@ -7,15 +7,15 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
+  Image
 } from "react-native";
 import api from "../../Service/tokenService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TelaDeEdicao = ({ route, navigation }) => {
-  const { pet } = route.params; // Recebendo os dados do pet
+  const { pet } = route.params;
   const [tipoAnimal, setTipoAnimal] = useState(pet.TipoAnimal);
   const [linhagem, setLinhagem] = useState(pet.Linhagem);
-  const [status, setStatus] = useState(pet.Status);
   const [idade, setIdade] = useState(pet.Idade);
   const [sexo, setSexo] = useState(pet.Sexo);
   const [cor, setCor] = useState(pet.Cor);
@@ -37,12 +37,11 @@ const TelaDeEdicao = ({ route, navigation }) => {
           {
             TipoAnimal: tipoAnimal,
             Linhagem: linhagem,
-            Status: status,
             Idade: idade,
             Sexo: sexo,
             Cor: cor,
             Descricao: descricao,
-            PetID: pet.PetID, // ID do pet para edição
+            PetID: pet.PetID,
           },
           {
             headers: { authorization: token },
@@ -50,13 +49,11 @@ const TelaDeEdicao = ({ route, navigation }) => {
         );
       })
       .then((response) => {
-        console.log(response);
-        
         if (response.data.error) {
           Alert.alert("Erro", response.data.error);
         } else {
           Alert.alert("Sucesso", "Informações do pet editadas com sucesso!");
-          navigation.goBack(); // Voltar à tela anterior
+          navigation.goBack();
         }
       })
       .catch((error) => {
@@ -72,6 +69,15 @@ const TelaDeEdicao = ({ route, navigation }) => {
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Editar Informações do Pet</Text>
 
+      <View style={styles.imageContainer}>
+        <Image
+          source={{
+            uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${pet.ID}.jpg?alt=media`,
+          }}
+          style={styles.petImage}
+        />
+      </View>
+
       <TextInput
         style={styles.input}
         placeholder="Tipo de Animal"
@@ -84,12 +90,7 @@ const TelaDeEdicao = ({ route, navigation }) => {
         value={linhagem}
         onChangeText={setLinhagem}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Status"
-        value={status}
-        onChangeText={setStatus}
-      />
+
       <TextInput
         style={styles.input}
         placeholder="Idade"
@@ -110,7 +111,7 @@ const TelaDeEdicao = ({ route, navigation }) => {
         onChangeText={setCor}
       />
       <TextInput
-        style={styles.input}
+        style={[styles.input, styles.textArea]}
         placeholder="Descrição"
         value={descricao}
         onChangeText={setDescricao}
@@ -135,42 +136,63 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#f0f2f5",
   },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-    color: "#343a40",
+    color: "#333",
+  },
+  imageContainer: {
+    alignItems: "center",
+    marginBottom: 20,
+    borderRadius: 15,
+    overflow: "hidden",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  petImage: {
+    width: "100%",
+    height: 250,
+    resizeMode: "cover",
   },
   input: {
     height: 50,
-    borderColor: "#ced4da",
+    borderColor: "#ddd",
     borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
+    borderRadius: 10,
+    paddingHorizontal: 15,
     marginBottom: 15,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 1,
   },
+  textArea: {
+    height: 80,
+    paddingTop: 10,
+  },
   button: {
-    backgroundColor: "#007BFF",
+    backgroundColor: "#007bff",
     padding: 15,
-    borderRadius: 8,
+    borderRadius: 10,
     alignItems: "center",
+    marginTop: 10,
   },
   buttonDisabled: {
-    backgroundColor: "#007BFF70",
+    backgroundColor: "#007bff80",
   },
   buttonText: {
-    color: "#ffffff",
+    color: "#fff",
     fontSize: 18,
-    fontWeight: "500",
+    fontWeight: "600",
   },
 });
 
