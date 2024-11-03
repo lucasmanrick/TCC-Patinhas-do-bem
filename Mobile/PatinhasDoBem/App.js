@@ -19,6 +19,10 @@ import CadastroPet from "./Src/Pages/CadastroPet/Cadastro";
 import TelaBiblioteca from "./Src/Pages/Biblioteca/telaBiblioteca";
 import TelaBibliotecaPerfil from "./Src/Pages/Biblioteca perfil/telaBibliotecaPerfil";
 import TelaMeusInteresses from "./Src/Pages/MeusInteresses/Interesses";
+import UserProfileScreen from "./Src/Pages/User/Users";
+import TelaDeEdicao from "./Src/Pages/EdicaoPet/TelaPetEdicao";
+import TelaDeEdicaoUsuario from "./Src/Pages/PerfilConfig/TelaConfigPerfil";
+import FeedDePostagens from "./Src/Pages/Post/TelaPost";
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -35,7 +39,7 @@ function HomeTabs() {
           let iconName;
           let iconStyle = {}; // Estilo para aplicar o sombreamento
 
-          if (route.name === "Home") {
+          if (route.name === "Feed") {
             iconName = "home";
             size = 24;
           } else if (route.name === "Mensagem") {
@@ -77,7 +81,7 @@ function HomeTabs() {
         tabBarStyle: { display: "flex" }, // Estilo da barra de navegação
       })}
     >
-      <Tab.Screen name="Home" component={TelaInicial} />
+      <Tab.Screen name="Feed" component={FeedDePostagens} />
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
       <Tab.Screen
         name="Pets"
@@ -135,8 +139,26 @@ export default function App() {
         />
 
         <Stack.Screen
+          name="User"
+          component={UserProfileScreen}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
           name="interesses"
           component={TelaMeusInteresses}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="EdicaoPet"
+          component={TelaDeEdicao}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="EdicaoUser"
+          component={TelaDeEdicaoUsuario}
           options={{ headerShown: false }} // Oculta o header
         />
 
