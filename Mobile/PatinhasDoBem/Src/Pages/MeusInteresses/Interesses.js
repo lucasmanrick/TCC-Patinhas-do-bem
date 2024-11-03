@@ -134,8 +134,8 @@ const TelaMeusInteresses = ({ navigation }) => {
                       <TouchableOpacity
                         style={styles.doadorImageContainer}
                         onPress={() =>
-                          navigation.navigate("Perfil", {
-                            userId: pet.IDDoador,
+                          navigation.navigate("User", {
+                            userID: pet.IDDoador,
                           })
                         } // Navega para a tela de perfil com o ID do doador
                       >

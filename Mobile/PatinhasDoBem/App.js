@@ -19,6 +19,9 @@ import CadastroPet from "./Src/Pages/CadastroPet/Cadastro";
 import TelaBiblioteca from "./Src/Pages/Biblioteca/telaBiblioteca";
 import TelaBibliotecaPerfil from "./Src/Pages/Biblioteca perfil/telaBibliotecaPerfil";
 import TelaMeusInteresses from "./Src/Pages/MeusInteresses/Interesses";
+import UserProfileScreen from "./Src/Pages/User/Users";
+import TelaDeEdicao from "./Src/Pages/EdicaoPet/TelaPetEdicao";
+import TelaDeEdicaoUsuario from "./Src/Pages/PerfilConfig/TelaConfigPerfil";
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -135,8 +138,26 @@ export default function App() {
         />
 
         <Stack.Screen
+          name="User"
+          component={UserProfileScreen}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
           name="interesses"
           component={TelaMeusInteresses}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="EdicaoPet"
+          component={TelaDeEdicao}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="EdicaoUser"
+          component={TelaDeEdicaoUsuario}
           options={{ headerShown: false }} // Oculta o header
         />
 
