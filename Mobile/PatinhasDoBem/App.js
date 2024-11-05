@@ -81,7 +81,7 @@ function HomeTabs() {
         tabBarStyle: { display: "flex" }, // Estilo da barra de navegação
       })}
     >
-      <Tab.Screen name="Feed" component={FeedDePostagens} />
+      <Tab.Screen name="Feed" component={FeedDePostagens}  options={{ headerShown: false }}/>
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
       <Tab.Screen
         name="Pets"
