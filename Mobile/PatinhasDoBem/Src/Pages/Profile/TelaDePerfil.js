@@ -18,6 +18,7 @@ import { Ionicons } from "@expo/vector-icons";
 const TelaDePerfil = ({ route, navigation }) => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [numColumns, setNumColumns] = useState(3); // Estado para o número de colunas
   const userID = route.params?.userID;
 
   useEffect(() => {
@@ -29,9 +30,13 @@ const TelaDePerfil = ({ route, navigation }) => {
         }
 
         setLoading(true);
-        return api.get(`/MyProfile`, {}, {
-          headers: { authorization: token },
-        });
+        return api.get(
+          `/MyProfile`,
+          {},
+          {
+            headers: { authorization: token },
+          }
+        );
       })
       .then((response) => {
         console.log("Dados do perfil:", response.data);
@@ -65,37 +70,44 @@ const TelaDePerfil = ({ route, navigation }) => {
         {
           text: "Sim",
           onPress: () => {
-            // Lógica para marcar o pet como adotado no sistema
-            api
-              .delete(`/RetiraPetAdocao`, { PetID: pet.id }, {
-                headers: { authorization: token },
-              })
-              .then(() => {
-                Toast.show({
-                  type: "success",
-                  text1: "Pet marcado como adotado!",
+            AsyncStorage.getItem("token").then((token) => {
+              api
+                .delete(
+                  `/RetiraPetAdocao`,
+                  { PetID: pet.id },
+                  {
+                    headers: { authorization: token },
+                  }
+                )
+                .then(() => {
+                  Toast.show({
+                    type: "success",
+                    text1: "Pet marcado como adotado!",
+                  });
+                  setProfileData((prevData) => ({
+                    ...prevData,
+                    dadosMeusPets: prevData.dadosMeusPets.filter(
+                      (p) => p.id !== pet.id
+                    ),
+                  }));
+                })
+                .catch((error) => {
+                  console.error("Erro ao marcar pet como adotado:", error);
+                  Toast.show({
+                    type: "error",
+                    text1: "Erro ao marcar o pet como adotado",
+                  });
                 });
-                // Atualiza os dados do perfil para remover o pet da lista
-                setProfileData((prevData) => ({
-                  ...prevData,
-                  dadosMeusPets: prevData.dadosMeusPets.filter(
-                    (p) => p.id !== pet.id
-                  ),
-                }));
-              })
-              .catch((error) => {
-                console.error("Erro ao marcar pet como adotado:", error);
-                Toast.show({
-                  type: "error",
-                  text1: "Erro ao marcar o pet como adotado",
-                });
-              });
+            });
           },
         },
         {
           text: "Não",
           onPress: () => {
-            Toast.show({ type: "info", text1: "Pet não foi marcado como adotado." });
+            Toast.show({
+              type: "info",
+              text1: "Pet não foi marcado como adotado.",
+            });
           },
           style: "cancel",
         },
@@ -112,6 +124,10 @@ const TelaDePerfil = ({ route, navigation }) => {
   }
 
   return (
+
+  
+      
+    
     <ScrollView style={styles.container}>
       {profileData ? (
         <>
@@ -131,12 +147,16 @@ const TelaDePerfil = ({ route, navigation }) => {
               </TouchableOpacity>
             </View>
             <View style={styles.statsContainer}>
-              <Text style={styles.statNumber}>{profileData.posts}</Text>
+              <Text style={styles.statNumber}>
+                {profileData.minhasPostagens.length}
+              </Text>
               <Text style={styles.statLabel}>Posts</Text>
             </View>
             <View style={styles.statsContainer}>
               <Text style={styles.statNumber}>
-                {profileData.dadosMeusPets ? profileData.dadosMeusPets.length : 0}
+                {profileData.dadosMeusPets
+                  ? profileData.dadosMeusPets.length
+                  : 0}
               </Text>
               <Text style={styles.statLabel}>Meus Pets</Text>
             </View>
@@ -150,28 +170,58 @@ const TelaDePerfil = ({ route, navigation }) => {
             <Text style={styles.username}>{profileData.meusDados.Nome}</Text>
           </View>
 
+          {/* Lista de Posts */}
           <FlatList
-            data={profileData.postsData || []}
-            numColumns={3}
-            keyExtractor={(item) => item.id ? item.id.toString() : item.index.toString()}
+            data={profileData.minhasPostagens || []}
+            keyExtractor={(item) => item.ID.toString()}
+            numColumns={numColumns}
             renderItem={({ item }) => (
-              <Image source={{ uri: item.image }} style={styles.postImage} />
+              <TouchableOpacity
+                style={styles.postItem}
+                onPress={() =>
+                  navigation.navigate("DetalhesPost", { post: item })
+                } // Navega para a tela de detalhes
+              >
+                <Image
+                  source={{
+                    uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${item.ID}?alt=media`,
+                  }}
+                  style={styles.postImage}
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
             )}
+            key={numColumns}
           />
-
+          {/* Lista de Pets */}
           <View style={styles.petsContainer}>
             <Text style={styles.petsTitle}>Meus Pets</Text>
             <FlatList
               data={profileData.dadosMeusPets}
-              keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+              keyExtractor={(item, index) =>
+                item.id ? item.id.toString() : index.toString()
+              }
               renderItem={({ item }) => (
                 <View style={styles.petItem}>
                   <View style={styles.petImageContainer}>
-                    <Image source={{ uri: item.petPicture }} style={styles.petImage} />
-                    <TouchableOpacity onPress={() => handleEditPet(item)} style={styles.editIcon}>
-                      <Ionicons name="create-outline" size={20} color="#1a73e8" />
+                    <Image
+                      source={{ uri: item.petPicture }}
+                      style={styles.petImage}
+                    />
+                    <TouchableOpacity
+                      onPress={() => handleEditPet(item)}
+                      style={styles.editIcon}
+                    >
+                      <Ionicons
+                        name="create-outline"
+                        size={20}
+                        color="#1a73e8"
+                      />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDeletePet(item)} style={styles.deleteIcon}>
+                    <TouchableOpacity
+                      onPress={() => handleDeletePet(item)}
+                      style={styles.deleteIcon}
+                    >
                       <Ionicons name="trash-outline" size={20} color="red" />
                     </TouchableOpacity>
                   </View>
@@ -183,7 +233,9 @@ const TelaDePerfil = ({ route, navigation }) => {
           </View>
         </>
       ) : (
-        <Text style={styles.errorText}>Não foi possível carregar os dados do perfil.</Text>
+        <Text style={styles.errorText}>
+          Não foi possível carregar os dados do perfil.
+        </Text>
       )}
 
       <TouchableOpacity style={styles.settingsIcon} onPress={handleAddPet}>
@@ -249,36 +301,48 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  postItem: {
+    flex: 1,
+    margin: 5,
+    aspectRatio: 1, // Mantém a proporção quadrada
+    backgroundColor: "#f0f0f0", // Cor de fundo opcional
+    borderRadius: 10, // Arredondamento dos cantos
+    overflow: "hidden", // Esconde partes que excedem o limite
+    height: 100, // Definindo uma altura fixa
+  },
+  postImage: {
+    width: "100%", // Largura total do item
+    height: "100%", // Altura total do item para garantir que ocupe todo o espaço
+  },
   petItem: {
-    marginRight: 10,
+    flexDirection: "row",
     alignItems: "center",
+    marginVertical: 5,
   },
   petImageContainer: {
     position: "relative",
+    marginRight: 10,
   },
   petImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-  },
-  petName: {
-    marginTop: 5,
-    textAlign: "center",
+    width: 60,
+    height: 60,
+    borderRadius: 30,
   },
   editIcon: {
     position: "absolute",
-    top: 5,
-    left: 5,
+    top: 0,
+    right: 0,
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 5,
   },
   deleteIcon: {
     position: "absolute",
-    top: 5,
-    right: 5,
-  },
-  postImage: {
-    width: "33%",
-    height: 120,
-    margin: 1,
+    top: 0,
+    right: 35,
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 5,
   },
   centered: {
     flex: 1,
@@ -286,13 +350,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   errorText: {
-    color: "red",
     textAlign: "center",
+    margin: 20,
   },
   settingsIcon: {
     position: "absolute",
-    top: -1,
-    right: 10,
+    bottom: 30,
+    right: 30,
+    backgroundColor: "#fff",
+    borderRadius: 30,
+    padding: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 

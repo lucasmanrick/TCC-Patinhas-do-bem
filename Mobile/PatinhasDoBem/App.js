@@ -23,6 +23,7 @@ import UserProfileScreen from "./Src/Pages/User/Users";
 import TelaDeEdicao from "./Src/Pages/EdicaoPet/TelaPetEdicao";
 import TelaDeEdicaoUsuario from "./Src/Pages/PerfilConfig/TelaConfigPerfil";
 import FeedDePostagens from "./Src/Pages/Post/TelaPost";
+import DetalhesPost from "./Src/Pages/Detalhes/DetalhesPost";
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -81,7 +82,11 @@ function HomeTabs() {
         tabBarStyle: { display: "flex" }, // Estilo da barra de navegação
       })}
     >
-      <Tab.Screen name="Feed" component={FeedDePostagens}  options={{ headerShown: false }}/>
+      <Tab.Screen
+        name="Feed"
+        component={FeedDePostagens}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
       <Tab.Screen
         name="Pets"
@@ -159,6 +164,12 @@ export default function App() {
         <Stack.Screen
           name="EdicaoUser"
           component={TelaDeEdicaoUsuario}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="DetalhesPost"
+          component={DetalhesPost}
           options={{ headerShown: false }} // Oculta o header
         />
 
