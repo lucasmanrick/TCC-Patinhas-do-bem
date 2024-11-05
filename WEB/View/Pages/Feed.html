@@ -438,15 +438,9 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
             onclick="toggleList('interessados')">Interessados</button>
         </div>
         <div id="amigos" class="content-list active">
-          <ul>
-            <li id="1" class="thiago" onclick="abrirChat(this)">
-              <img class="img1" src="" alt="">
-              Thiago Antonio
-            </li>
-            <li id="2" class="lucas" onclick="abrirChat(this)">
-              <img class="img1" src="" alt="">
-              Lucas
-            </li>
+          <ul id="listContent">
+          </ul>
+          <ul id="interestedContent" style="display: none;">
           </ul>
         </div>
       </aside>
@@ -457,7 +451,7 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
 
       <!-------------------------------------- Caixa de chat --------------------------------------------->
       <div id="chat-box">
-        <div id="chat-header">Converse com <span id="chat-nome">Fulano</span> <span style="float:right; cursor:pointer;"
+        <div id="chat-header"><span id="chat-nome"></span> <span style="float:right; cursor:pointer;"
             onclick="fecharChat()">X</span></div>
 
         <div id="chat-body">

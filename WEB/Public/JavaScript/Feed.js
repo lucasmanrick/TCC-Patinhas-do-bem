@@ -194,20 +194,20 @@ function enviarMensagem() {
 
 
 function toggleList(list) {
-  const amigosList = document.getElementById('amigos');
-  const interessadosList = document.getElementById('interessados');
+  const amigosList = document.getElementById('listContent');
+  const interessadosList = document.getElementById('interestedContent');
 
   if (list === 'amigos') {
-    amigosList.classList.add('active');
-    interessadosList.classList.remove('active');
+    amigosList.style = `display:block`
+    interessadosList.style = `display:none`
   } else {
-    interessadosList.classList.add('active');
-    amigosList.classList.remove('active');
+    amigosList.style = `display:none`
+    interessadosList.style = `display:block`
   }
 }
 
 function abrirChat(dataUsers) {
-
+  console.log(dataUsers)
   document.getElementById('chat-body').innerHTML = ''
   localStorage.clear('talkingNow')
 
@@ -222,6 +222,7 @@ function abrirChat(dataUsers) {
       return response.json();
     })
     .then(function (myBlob) {
+      console.log(myBlob)
       let mensagem = {}
       if (myBlob.success) {
         myBlob.messages.forEach(e => {
@@ -281,54 +282,54 @@ async function  getingPets () {
       return response.json();
     })
     .then(function (myBlob) {
-      console.log(myBlob)
       if(myBlob.success) {
         myBlob.dataResponse.forEach(e => {
-          const mainDiv = document.createElement('div')
-          mainDiv.className = "post"
-          mainDiv.id = e.petID
+          petGap = petGap + 1
+          // const mainDiv = document.createElement('div')
+          // mainDiv.className = "post"
+          // mainDiv.id = e.petID
 
-          const divpetInfo = document.createElement('div')
-          divpetInfo.className = "user-info"
+          // const divpetInfo = document.createElement('div')
+          // divpetInfo.className = "user-info"
 
-          const divTitle = document.createElement('div')
-          divTitle.className = "titulo-pet"
+          // const divTitle = document.createElement('div')
+          // divTitle.className = "titulo-pet"
 
 
-          const pContext = document.createElement('p');
-          pContext.innerText = "Informações do pet"
+          // const pContext = document.createElement('p');
+          // pContext.innerText = "Informações do pet"
 
-          const formDiv = document.createElement('div')
-          formDiv.className = "formulario-do-pet";
+          // const formDiv = document.createElement('div')
+          // formDiv.className = "formulario-do-pet";
 
-          const pType = document.createElement('p');
-          pType.className = "descrição"
-          pType.innerHTML = `<strong>Tipo de Animal:</strong> ${e.TipoAnimal}`
+          // const pType = document.createElement('p');
+          // pType.className = "descrição"
+          // pType.innerHTML = `<strong>Tipo de Animal:</strong> ${e.TipoAnimal}`
 
-          const pLine = document.createElement('p');
-          pLine.className = "descrição"
-          pLine.innerHTML = `<strong>Linhagem:</strong> ${e.Linhagem}`
+          // const pLine = document.createElement('p');
+          // pLine.className = "descrição"
+          // pLine.innerHTML = `<strong>Linhagem:</strong> ${e.Linhagem}`
 
-          const pAge = document.createElement('p');
-          pAge.className = "descrição"
-          pLine.innerHTML = `<strong>Idade:</strong>  ${e.Idade}`   
+          // const pAge = document.createElement('p');
+          // pAge.className = "descrição"
+          // pLine.innerHTML = `<strong>Idade:</strong>  ${e.Idade}`   
 
-          const pSex = document.createElement('p');
-          pSex.className = "descrição"
-          pSex.innerHTML = `<strong>Sexo:</strong> ${e.Sexo}`
+          // const pSex = document.createElement('p');
+          // pSex.className = "descrição"
+          // pSex.innerHTML = `<strong>Sexo:</strong> ${e.Sexo}`
 
-          const pColor = document.createElement('p');
-          pColor.className = "descrição"
-          pColor.innerHTML = `<strong>Cor:</strong> ${e.Cor}`
+          // const pColor = document.createElement('p');
+          // pColor.className = "descrição"
+          // pColor.innerHTML = `<strong>Cor:</strong> ${e.Cor}`
 
-          const pDescription = document.createElement('p');
-          pDescription.className = "descrição"
-          pDescription.innerHTML = `<strong>Descrição:</strong> ${e.Descricao}`
+          // const pDescription = document.createElement('p');
+          // pDescription.className = "descrição"
+          // pDescription.innerHTML = `<strong>Descrição:</strong> ${e.Descricao}`
 
-          const divPhotoContent = document.createElement('div')
-          divPhotoContent.className = "animal-post"
+          // const divPhotoContent = document.createElement('div')
+          // divPhotoContent.className = "animal-post"
           
-          divPhotoContent.innerHTML = `<img src="${e.petPicture}" alt="Imagem do animal" class="animal-photo">`
+          // divPhotoContent.innerHTML = `<img src="${e.petPicture}" alt="Imagem do animal" class="animal-photo">`
 
 
 
@@ -361,7 +362,7 @@ async function  getingPets () {
                 <p class="descrição"><strong>Descrição:</strong> ${e.Descricao}</p>
               </div>
   
-              <button class="btn-interesse" id="${e.petID}" onclick = "showInterestOnPet(this)"></button>
+              <button class="btn-interesse" id="${e.petID}" onclick = "showInterestOnPet(this)">Tenho Interesse</button>
             </div>
             <div class="animal-post">
               <img src="${e.petPicture}" alt="Imagem do animal" class="animal-photo">
@@ -375,11 +376,13 @@ async function  getingPets () {
     })
 }
 
-getingPets()
 
 
 
 
+
+
+//função para demonstrar interesse em um pet
 
 async function showInterestOnPet (PetID) {
   console.log(PetID.id)
@@ -397,9 +400,54 @@ async function showInterestOnPet (PetID) {
       console.log(myBlob)
       if(myBlob.success) {
        return alert("você demonstrou interesse no pet com sucesso, e enviou uma solicitação de contato para o dono do mesmo")
+      }else if (myBlob.error) {
+        alert(myBlob.error)
       }
-      alert(myBlob.error)
+      
     })
 }
 
 
+
+
+async function getingMyContacts () {
+  await fetch(`/MeusContatos`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      if(myBlob.success) {
+       if(myBlob.contatosDeInteresses.length >= 1) {
+        myBlob.contatosDeInteresses.forEach(e => {
+           document.getElementById('interestedContent').innerHTML = `
+           <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)">
+              <img class="img1" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt="">
+             ${e.Nome}
+            </li>`
+        })
+       }
+
+       if(myBlob.contatosSemInteresses.length >= 1)
+        myBlob.contatosSemInteresses.forEach(e => {
+          document.getElementById('listContent').innerHTML = `
+          <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)">
+             <img class="img1" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt="">
+            ${e.Nome}
+           </li>`
+       })
+      } else if (myBlob.error) {
+        console.error(myBlob.error)
+      } 
+    })
+}
+
+
+
+
+getingPets()
+getingMyContacts()
