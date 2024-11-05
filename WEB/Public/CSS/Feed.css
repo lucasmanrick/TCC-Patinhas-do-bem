@@ -770,7 +770,7 @@ h2 {
     display: none;
     z-index: 1000;
     margin-left: 78%;
-    margin-top: -50px;
+    margin-top: 10px;
 }
 
 #chat-header {
