@@ -94,91 +94,90 @@ const TelaDePets = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-
-       {/* Botão com ícone de patinha para navegar para outra tela */}
-      <TouchableOpacity style={styles.navigateButton} onPress={() => navigation.navigate('interesses')}>
-        <Icon name="paw" size={30} color="#3DAAD9" />
-      </TouchableOpacity>
-      
-      {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#3DAAD9" />
-        </View>
-      ) : (
-        Petts.length > 0 ? (
-          <Swiper
-            cards={Petts}
-            renderCard={(item) => (
-              <View style={styles.card}>
-                {item.petPicture ? (
-                  <Image source={{ uri: item.petPicture }} style={styles.petImage} />
-                ) : (
-                  <Text style={styles.noImageText}>Sem Imagem</Text>
-                )}
-                <View style={styles.overlay}>
-                  <Text style={styles.petName}>{item.TipoAnimal}</Text>
-                  <Text style={styles.petDescription}>{item.Descricao}</Text>
-                  
-                </View>
-                <View style={styles.additionalInfo}>
-                  <Text style={styles.petDetail}>Idade: {item.Idade}</Text>
-                  <Text style={styles.petDetail}>Raça: {item.Linhagem}</Text>
-                  <Text style={styles.petDetail}>Cor: {item.Cor}</Text>
-                  <Text style={styles.petDetail}>Sexo: {item.Sexo}</Text>
-                </View>
+    
+    {/* Botão com ícone de patinha para navegar para outra tela */}
+    <TouchableOpacity style={styles.navigateButton} onPress={() => navigation.navigate('interesses')}>
+      <Icon name="paw" size={30} color="#3DAAD9" />
+    </TouchableOpacity>
+    
+    {isLoading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3DAAD9" />
+      </View>
+    ) : (
+      Petts && Petts.length > 0 ? (
+        <Swiper
+          cards={Petts}
+          renderCard={(item) => (
+            <View style={styles.card}>
+              {item.petPicture ? (
+                <Image source={{ uri: item.petPicture }} style={styles.petImage} />
+              ) : (
+                <Text style={styles.noImageText}>Sem Imagem</Text>
+              )}
+              <View style={styles.overlay}>
+                <Text style={styles.petName}>{item.TipoAnimal}</Text>
+                <Text style={styles.petDescription}>{item.Descricao}</Text>
               </View>
-            )}
-            stackSize={3}
-            cardIndex={0}
-            backgroundColor="#f0f0f0"
-            onSwipedAll={() => Alert.alert("Fim da lista!")}
-            onSwipedRight={(cardIndex) => handleSwipeRight(Petts[cardIndex].petID)}
-            overlayLabels={{
-              left: {
-                title: "Não tenho interesse",
-                style: {
-                  label: {
-                    backgroundColor: "red",
-                    borderColor: "red",
-                    color: "white",
-                    borderWidth: 1,
-                    fontSize: 24,
-                  },
-                  wrapper: {
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                    marginTop: 20,
-                    marginLeft: -20,
-                  },
+              <View style={styles.additionalInfo}>
+                <Text style={styles.petDetail}>Idade: {item.Idade}</Text>
+                <Text style={styles.petDetail}>Raça: {item.Linhagem}</Text>
+                <Text style={styles.petDetail}>Cor: {item.Cor}</Text>
+                <Text style={styles.petDetail}>Sexo: {item.Sexo}</Text>
+              </View>
+            </View>
+          )}
+          stackSize={3}
+          cardIndex={0}
+          backgroundColor="#f0f0f0"
+          onSwipedAll={() => Alert.alert("Fim da lista!")}
+          onSwipedRight={(cardIndex) => handleSwipeRight(Petts[cardIndex]?.petID)}
+          overlayLabels={{
+            left: {
+              title: "Não tenho interesse",
+              style: {
+                label: {
+                  backgroundColor: "red",
+                  borderColor: "red",
+                  color: "white",
+                  borderWidth: 1,
+                  fontSize: 24,
+                },
+                wrapper: {
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  marginTop: 20,
+                  marginLeft: -20,
                 },
               },
-              right: {
-                title: "Tenho interesse",
-                style: {
-                  label: {
-                    backgroundColor: "green",
-                    borderColor: "green",
-                    color: "white",
-                    borderWidth: 1,
-                    fontSize: 24,
-                  },
-                  wrapper: {
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    justifyContent: "center",
-                    marginTop: 20,
-                    marginLeft: 20,
-                  },
+            },
+            right: {
+              title: "Tenho interesse",
+              style: {
+                label: {
+                  backgroundColor: "green",
+                  borderColor: "green",
+                  color: "white",
+                  borderWidth: 1,
+                  fontSize: 24,
+                },
+                wrapper: {
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  marginTop: 20,
+                  marginLeft: 20,
                 },
               },
-            }}
-          />
-        ) : (
-          <Text style={styles.noPetsText}>Nenhum pet disponível no momento.</Text>
-        )
-      )}
-    </View>
+            },
+          }}
+        />
+      ) : (
+        <Text style={styles.noPetsText}>Nenhum pet disponível no momento.</Text>
+      )
+    )}
+  </View>
   );
 };
 

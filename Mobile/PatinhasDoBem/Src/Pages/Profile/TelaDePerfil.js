@@ -125,9 +125,9 @@ const TelaDePerfil = ({ route, navigation }) => {
 
   return (
 
-  
-      
-    
+
+
+
     <ScrollView style={styles.container}>
       {profileData ? (
         <>
@@ -148,26 +148,28 @@ const TelaDePerfil = ({ route, navigation }) => {
             </View>
             <View style={styles.statsContainer}>
               <Text style={styles.statNumber}>
-                {profileData.minhasPostagens.length}
+                {profileData.minhasPostagens ? profileData.minhasPostagens.length : 0}
               </Text>
               <Text style={styles.statLabel}>Posts</Text>
             </View>
             <View style={styles.statsContainer}>
               <Text style={styles.statNumber}>
-                {profileData.dadosMeusPets
-                  ? profileData.dadosMeusPets.length
-                  : 0}
+                {profileData.dadosMeusPets ? profileData.dadosMeusPets.length : 0}
               </Text>
               <Text style={styles.statLabel}>Meus Pets</Text>
             </View>
             <View style={styles.statsContainer}>
-              <Text style={styles.statNumber}>{profileData.following}</Text>
+              <Text style={styles.statNumber}>
+                {profileData.following ?? 0}
+              </Text>
               <Text style={styles.statLabel}>Seguindo</Text>
             </View>
           </View>
 
           <View style={styles.bioContainer}>
-            <Text style={styles.username}>{profileData.meusDados.Nome}</Text>
+            <Text style={styles.username}>
+              {profileData.meusDados?.Nome ?? "Usuário"}
+            </Text>
           </View>
 
           {/* Lista de Posts */}
@@ -180,7 +182,7 @@ const TelaDePerfil = ({ route, navigation }) => {
                 style={styles.postItem}
                 onPress={() =>
                   navigation.navigate("DetalhesPost", { post: item })
-                } // Navega para a tela de detalhes
+                }
               >
                 <Image
                   source={{
@@ -193,11 +195,12 @@ const TelaDePerfil = ({ route, navigation }) => {
             )}
             key={numColumns}
           />
+
           {/* Lista de Pets */}
           <View style={styles.petsContainer}>
             <Text style={styles.petsTitle}>Meus Pets</Text>
             <FlatList
-              data={profileData.dadosMeusPets}
+              data={profileData.dadosMeusPets || []}
               keyExtractor={(item, index) =>
                 item.id ? item.id.toString() : index.toString()
               }
@@ -242,6 +245,7 @@ const TelaDePerfil = ({ route, navigation }) => {
         <Ionicons name="paw" size={30} color="#1a73e8" />
       </TouchableOpacity>
     </ScrollView>
+
   );
 };
 

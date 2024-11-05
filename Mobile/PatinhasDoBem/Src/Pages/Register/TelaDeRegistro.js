@@ -15,18 +15,14 @@ import * as Font from "expo-font";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
-import { ref, uploadBytes } from 'firebase/storage'; // Importações do Firebase Storage
+import { ref, uploadBytes } from 'firebase/storage';
 import { storage } from '../../Firebase/FirebaseConfig';
 import Toast from 'react-native-toast-message';
-import axios from "axios"; // Importando axios
+import axios from "axios";
 import api from "../../Service/tokenService";
-
-
-
 
 class TelaRegistro extends Component {
   state = {
-
     NomeUsuario: '',
     DataNasc: '',
     Email: '',
@@ -52,7 +48,6 @@ class TelaRegistro extends Component {
     }
   }
 
-
   loadFonts = async () => {
     await Font.loadAsync({
       Kavoon: require("../../../assets/font/Kavoon-Regular.ttf"),
@@ -64,7 +59,6 @@ class TelaRegistro extends Component {
     try {
       const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
       const { logradouro, bairro, localidade, uf } = response.data;
-
       if (logradouro) {
         this.setState({
           Rua: logradouro,
@@ -96,7 +90,6 @@ class TelaRegistro extends Component {
       allowsEditing: true,
       quality: 0.7,
     });
-
     if (!result.canceled) {
       this.setState({ imagemSelecionada: result.assets[0].uri });
     }
@@ -167,13 +160,7 @@ class TelaRegistro extends Component {
         Estado,
       })
         .then(async (response) => {
-          console.log(response.data);
           const IDUsuario = response.data.IDUsuario;
-
-          if (!IDUsuario) {
-            throw new Error("Erro ao obter o IDUsuario");
-          }
-
           const manipResult = await ImageManipulator.manipulateAsync(
             this.state.imagemSelecionada,
             [{ resize: { width: 800 } }],
@@ -201,56 +188,36 @@ class TelaRegistro extends Component {
           Alert.alert("Erro", "Ocorreu um erro ao fazer upload da imagem.");
         });
     } catch (error) {
-      if (error.response) {
-        console.error("Response Error:", error.response.data);
-        Alert.alert("Erro", error.response.data.message || "Ocorreu um erro ao registrar o usuário.");
-      } else {
-        console.error("Network Error:", error.message);
-        Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
-      }
+      Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário.");
     }
   };
 
-
-
-  showDatepicker = () => {
-    this.setState({ showDatePicker: true });
-  };
-
-  onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || this.state.dataNascimento;
-    this.setState({ showDatePicker: false, dataNascimento: currentDate });
-  };
-
-
-  renderInput(title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) {
-    return (
-      <View style={styles.form}>
-        <Text style={styles.inputTitle}>{title}</Text>
-        <View style={styles.inputContainer}>
-          <Ionicons name={iconName} size={20} color="#134973" />
-          <TextInput
-            style={styles.input}
-            keyboardType={keyboardType}
-            secureTextEntry={secureTextEntry}
-            placeholder={placeholder}
-            onChangeText={(value) => {
-              if (stateKey === "Cep") {
-                this.handleCepChange(value);
-              } else {
-                this.setState({ [stateKey]: value });
-              }
-            }}
-            value={this.state[stateKey]}
-            editable={editable}
-          />
-        </View>
+  renderInput = (title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) => (
+    <View style={styles.form}>
+      <Text style={styles.inputTitle}>{title}</Text>
+      <View style={styles.inputContainer}>
+        <Ionicons name={iconName} size={20} color="#134973" />
+        <TextInput
+          style={styles.input}
+          keyboardType={keyboardType}
+          secureTextEntry={secureTextEntry}
+          placeholder={placeholder}
+          onChangeText={(value) => {
+            if (stateKey === "Cep") {
+              this.handleCepChange(value);
+            } else {
+              this.setState({ [stateKey]: value });
+            }
+          }}
+          value={this.state[stateKey]}
+          editable={editable}
+        />
       </View>
-    );
-  }
+    </View>
+  );
 
   render() {
-    const { showDatePicker, dataNascimento } = this.state;
+    const { showDatePicker, dataNascimento, imagemSelecionada } = this.state;
 
     return (
       <View style={styles.container}>
@@ -265,11 +232,10 @@ class TelaRegistro extends Component {
           <Text style={styles.greeting}>{"Bem-vindo ao\nPatinhas do Bem"}</Text>
         )}
 
-
-        <TouchableOpacity style={styles.avatar} onPress={() => this.props.navigation.navigate("BibliotecaPerfil")}>
-          {this.state.imagemSelecionada ? (
+        <TouchableOpacity style={styles.avatar} onPress={this.selecionarImagem}>
+          {imagemSelecionada ? (
             <Image
-              source={{ uri: this.state.imagemSelecionada }}
+              source={{ uri: imagemSelecionada }}
               style={{ width: 100, height: 100, borderRadius: 50 }}
             />
           ) : (
@@ -277,27 +243,23 @@ class TelaRegistro extends Component {
           )}
         </TouchableOpacity>
 
-
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {this.renderInput("Nome", "person-outline", "NomeUsuario")}
           {this.renderInput("CEP", "pin", "Cep", "numeric")}
-
           {this.renderInput("Rua", "home-outline", "Rua", "default", "", false, false)}
           {this.renderInput("Número", "pin", "Numero", "numeric")}
           {this.renderInput("Bairro", "home", "Bairro", "default", "", false, false)}
           {this.renderInput("Cidade", "location-outline", "Cidade", "default", "", false, false)}
           {this.renderInput("Estado", "flag", "Estado", "default", "", false, false)}
 
-
-          {/* Campo de Data de Nascimento */}
           <View style={styles.form}>
             <Text style={styles.inputTitle}>Data de Nascimento</Text>
             <TouchableOpacity
-              onPress={this.showDatepicker}
               style={styles.inputContainer}
+              onPress={() => this.setState({ showDatePicker: true })}
             >
               <Ionicons name="calendar-outline" size={20} color="#134973" />
-              <Text style={styles.input}>
+              <Text style={[styles.input, { paddingTop: 7 }]}>
                 {dataNascimento.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
@@ -305,18 +267,20 @@ class TelaRegistro extends Component {
               <DateTimePicker
                 value={dataNascimento}
                 mode="date"
-                display="spinner"
-                onChange={this.onChange}
-                style={{ width: "100%" }}
+                display="default"
+                onChange={(event, selectedDate) => {
+                  this.setState({
+                    dataNascimento: selectedDate || dataNascimento,
+                    showDatePicker: false,
+                  });
+                }}
               />
             )}
           </View>
 
-
-          {this.renderInput("Endereço de E-mail", "mail-outline", "Email", "none")}
-          {this.renderInput("Senha", "lock-closed-outline", "Senha", "none", null, true)}
-          {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "none", null, true)}
-
+          {this.renderInput("Email", "mail-outline", "Email", "email-address")}
+          {this.renderInput("Senha", "lock-closed-outline", "Senha", "default", "", true)}
+          {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "default", "", true)}
 
           <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
             <Text style={{ color: "#fff", fontWeight: "500" }}>Cadastrar</Text>
