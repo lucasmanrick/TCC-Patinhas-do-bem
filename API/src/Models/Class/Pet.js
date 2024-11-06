@@ -1,4 +1,5 @@
 const { connection } = require("../../Config/db");
+const Interesse = require("./Interesse");
 
 class Pet {
   constructor(dataRegistro,TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador,PetID) {
@@ -95,11 +96,21 @@ class Pet {
 
   static async petsParaAdocaoQuery(Estado, ID,gapQuantity) { // pega todos os pets e informações do dono do mesmo estado do usuário que estão para adoção desde que não seja do proprio usuário. 
     const conn = await connection();
-    console.log(Estado,ID,gapQuantity);
-    
+
     try {
+      const myInterests = await Interesse.meusInteressesQuery(ID);
       const verifyUsersClose = await conn.query(`select u.Estado, u.Cidade, p.IDDoador as IDDoador , p.ID as petID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade, p.Sexo, p.Cor, p.Descricao from pet as p join usuario as u on u.ID = p.IDDoador WHERE u.estado = ? AND u.ID <> ? AND p.Status = 1 LIMIT 50 OFFSET ${50 * gapQuantity}`, [Estado, ID]);
-     verifyUsersClose[0].forEach(e => {
+     verifyUsersClose[0].forEach((e,index) => {
+      if(myInterests.success) {
+        myInterests.myInterests.forEach(j => {
+          console.log(j.IDDoador, "j")
+          console.log(e.IDDoador, "e")
+          if(j.IDDoador === e.IDDoador) {
+            e.demonstrouInteresse = true
+          }
+        })
+      }
+     
       e.petPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.petID}.jpg?alt=media`
      })
       if(verifyUsersClose[0].length >= 1)  return { success: "retornando todos pets da proximidade do usuário, disponiveis para adoção.", dataResponse: verifyUsersClose[0] }
