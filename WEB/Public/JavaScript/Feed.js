@@ -19,6 +19,7 @@ function showContent(menuId) {
     document.getElementById('Cadastrar-Pets').style.display = 'block'
   }
   else if (menuId === 'view-animals') {
+    getingPets()
     document.getElementById('view-animals-content').style.display = 'block';
   }
 
@@ -40,14 +41,12 @@ inputs.forEach(input => {
 
 // Evento para o botão Curtir
 document.querySelector('.like-button').addEventListener('click', function () {
-  alert('Você curtiu a postagem!');
 });
 
 // Evento para o botão Comentar
 document.querySelector('.submit-comment').addEventListener('click', function () {
   const comment = document.querySelector('.comment-input').value;
   if (comment) {
-    alert('Comentário enviado: ' + comment);
     document.querySelector('.comment-input').value = ''; // Limpa o campo de comentário
   } else {
     alert('Por favor, escreva um comentário.');
@@ -268,7 +267,7 @@ function fecharChat() {
 
 let petGap = 0;
 let postGap = 0;
-
+let PetGapUpgrade = true;
 
 async function getingPets() {
   await fetch(`/PetsAdocao`, {
@@ -283,9 +282,8 @@ async function getingPets() {
     })
     .then(function (myBlob) {
       if (myBlob.success) {
-        console.log(myBlob, "chegou aki")
         myBlob.dataResponse.forEach(e => {
-          petGap = petGap + 1
+          
           // const mainDiv = document.createElement('div')
           // mainDiv.className = "post"
           // mainDiv.id = e.petID
@@ -333,12 +331,9 @@ async function getingPets() {
           // divPhotoContent.innerHTML = `<img src="${e.petPicture}" alt="Imagem do animal" class="animal-photo">`
 
 
-
-
-
           // const buttonInterest = document.createElement("button")
           // buttonInterest.className = "btn-interesse"
-          // buttonInterest.id = `interest-${e.petID}`
+          // buttonInterest.id = `${e.petID}`
           // buttonInterest.onclick = showInterestOnPet(this)
           // buttonInterest.innerText = "Tenho Interesse"
           // formDiv.append(pType,pLine,pAge,pSex,pColor,pDescription)
@@ -347,13 +342,9 @@ async function getingPets() {
           // mainDiv.append(divpetInfo,divPhotoContent)
           // document.getElementById('view-animals-content').append(mainDiv)
 
-          const divReceiver = document.createElement("div")
-          divReceiver.id = "petsReceiver"
-          document.getElementById('view-animals-content').append (divReceiver) 
-          
-          divReceiver.innerHTML = `
+          document.getElementById('view-animals-content').innerHTML = `
            <h2>Animais para adoção</h2> 
-          <button style="padding: 10px; border: 1px solid;" onclick="getMyInterests()">Meus Interesses</button>
+          <button style="padding: 10px; border: 1px solid; background-color:#4A5C6A ; color:white" onclick="getMyInterests()">Meus Interesses</button>
           <div class="post"">
             <div class="user-info">
               <div class="titulo-pet">
@@ -369,7 +360,7 @@ async function getingPets() {
                 <p class="descrição"><strong>Local:</strong> ${e.Cidade} - ${e.Estado}</p>
                 <p class="descrição"><strong>Descrição:</strong> ${e.Descricao}</p>
               </div>
-              ${e.demonstrouInteresse === true ? `<button class="btn-interesse" style = "background-color:red" id="${e.petID}" onclick = "">Já demonstrou interesse</button>` : ` <button class="btn-interesse" id="${e.petID}" onclick = "showInterestOnPet(this)">Tenho Interesse</button>`}
+              ${e.demonstrouInteresse === true ? `<button class="btn-interesse" style = "background-color:#11212D" id="${e.petID}" onclick = "">Já demonstrou interesse</button>` : ` <button class="btn-interesse" id="${e.petID}" onclick = "showInterestOnPet(this)">Tenho Interesse</button>`}
              
             </div>
             <div class="animal-post">
@@ -377,10 +368,13 @@ async function getingPets() {
             </div>
           </div>
       `
-
-
         })
 
+      } else {
+        document.getElementById('view-animals-content').innerHTML = `
+              <h2>Pets para adoção</h2> 
+               <h5>não foi identificado pets nas proximidades</h5> 
+         `
       }
 
     })
@@ -469,15 +463,10 @@ async function getMyInterests() {
     .then(function (myBlob) {
       if (myBlob.success) {
         myBlob.myInterests.forEach(e => {
-
-          const divReceiver = document.createElement("div")
-          divReceiver.id = "interestReceiver"
-          document.getElementById('view-animals-content').append (divReceiver) 
-          document.getElementById('view-animals-content').removeChild(document.getElementById('petsReceiver'))
-          
-          divReceiver.innerHTML = `
-          <h2>Animais para adoção</h2> 
-            <button style="padding: 10px; border: 1px solid;" onclick="getingPets">Animais para adoção</button>
+          console.log(myBlob)
+          document.getElementById('view-animals-content').innerHTML = `
+          <h2>Animais que você demonstrou interesse</h2> 
+            <button style="padding: 10px; border: 1px solid" onclick="getingPets()">Ver Animais para adoção</button>
               <div class="post"">
                 <div class="user-info">
                   <div class="titulo-pet">
@@ -485,7 +474,7 @@ async function getMyInterests() {
                   </div>
       
                   <div class="formulario-do-pet">
-                    <p class="descrição" onclick="perfilUser(${e.IDDoador})"><strong>Dono do pet:</strong> ${e.NomeDoDono}</p>
+                    <p class="descrição" onclick="perfilUser(${e.IDDoador})"><strong>Dono do pet:</strong> <a href ="/UserPerfil"> ${e.NomeDoDono} </a></p>
                     <p class="descrição"><strong>Tipo de Animal:</strong> ${e.TipoAnimal}</p>
                     <p class="descrição"><strong>Linhagem:</strong> ${e.Linhagem}</p>
                     <p class="descrição"><strong>Idade:</strong>  ${e.Idade}</p>
@@ -497,12 +486,16 @@ async function getMyInterests() {
                  
                 </div>
                 <div class="animal-post">
-                  <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%${e.ID}F1.jpg?alt=media" alt="Imagem do animal" class="animal-photo">
+                  <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.ID}.jpg?alt=media" alt="Imagem do animal" class="animal-photo">
                 </div>
               </div>
             `
          
         })
+      }else {
+        document.getElementById('view-animals-content').innerHTML = `
+          <h2>Não possui animais para adoção na proximidade.</h2> 
+            `
       }
     })
 }
@@ -515,5 +508,4 @@ async function perfilUser (userID) {
 }
 
 
-getingPets()
 getingMyContacts()
