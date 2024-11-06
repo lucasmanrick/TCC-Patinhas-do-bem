@@ -41,7 +41,6 @@ class Notificacao {
           e.MensagemVisualizada === 1?e.MensagemVisualizada = "True":e.MensagemVisualizada = "False"
         })
         if(getMyNotifications[0].length >=1) {
-            await this.marcarNotificacoesComoVisualizadasQuery(userID);
             return {success:"retornando as notificações do usuário", notifications: getMyNotifications[0]}
         }else {
           return {error:"não foi identificado notificações pendentes"}

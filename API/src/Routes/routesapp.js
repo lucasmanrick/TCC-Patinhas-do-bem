@@ -172,6 +172,9 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   // rota para receber nossas notificações
   router.get ("/Notificacoes", verificadorDoToken, notificacaoController.MinhasNotificacoes  )
 
+  //rota para marcar todas visualizações do usuário como vistas.
+  router.put("/MarcarNotificacoesVisto", verificadorDoToken, notificacaoController.marcarNotificacoesComoVisualizadas)
+
   //rota para o ADM BLOQUEAR UM USUÁRIO DO SISTEMA
   router.post ("/BloquearUsuario", verificadorDoToken, UsuariosBloqueadosController.bloquearUmUsuario)
 

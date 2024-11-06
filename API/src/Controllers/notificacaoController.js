@@ -15,8 +15,16 @@ const notificacaoController  = {
     }catch(e) {
       res.json({error:e.message})
     }
+  },
+  
+  marcarNotificacoesComoVisualizadas: async (req,res) => {
+    const {ID} = req.dataUser;
+    try {
+      return res.json(await  Notificacao.marcarNotificacoesComoVisualizadasQuery(ID))
+    }catch(e) {
+      res.json({error:e.message})
+    }
   }
-
 }
 
 

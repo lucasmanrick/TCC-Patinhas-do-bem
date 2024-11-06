@@ -283,7 +283,7 @@ async function getingPets() {
     .then(function (myBlob) {
       if (myBlob.success) {
         myBlob.dataResponse.forEach(e => {
-          
+
 
           document.getElementById('view-animals-content').innerHTML = `
            <h2>Animais para adoção</h2> 
@@ -372,8 +372,8 @@ async function getingMyContacts() {
         if (myBlob.contatosDeInteresses.length >= 1) {
           myBlob.contatosDeInteresses.forEach(e => {
             document.getElementById('interestedContent').innerHTML = `
-           <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)">
-              <img class="img1" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt="">
+           <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)" style = "display:flex; align-items:center; gap:5px; cursor:pointer">
+              <div class="img1"><img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt=""></div>
              ${e.Nome}
             </li>`
           })
@@ -382,7 +382,7 @@ async function getingMyContacts() {
         if (myBlob.contatosSemInteresses.length >= 1)
           myBlob.contatosSemInteresses.forEach(e => {
             document.getElementById('listContent').innerHTML = `
-          <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)">
+          <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)" style = "display:flex; align-items:center; gap:5px; cursor:pointer">
              <img class="img1" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt="">
             ${e.Nome}
            </li>`
@@ -436,9 +436,9 @@ async function getMyInterests() {
                 </div>
               </div>
             `
-         
+
         })
-      }else {
+      } else {
         document.getElementById('view-animals-content').innerHTML = `
            <h2>Seus Interesses</h2> 
            <button style="padding: 10px; border: 1px solid" onclick="getingPets()">Ver Animais para adoção</button>
@@ -450,7 +450,7 @@ async function getMyInterests() {
 
 
 // função para salvar o id de quem eu estou tentando ver o perfil, para conseguir acessar na tela meu perfil
- function perfilUser (userID) {
+function perfilUser(userID) {
   Cookies.remove("perfilSendoVisto")
   Cookies.set("perfilSendoVisto", userID)
 }
@@ -459,11 +459,11 @@ async function getMyInterests() {
 
 
 // função para remover o interesse em algum pet do qual ja demonstrei interesse
-async function removeInterest (event) {
+async function removeInterest(event) {
   console.log("clicou")
-  await fetch (`/RemoverInteressePet`, {
+  await fetch(`/RemoverInteressePet`, {
     method: 'DELETE',
-    body: JSON.stringify({"PetID":event.id}),
+    body: JSON.stringify({ "PetID": event.id }),
     headers: {
       'Content-Type': 'application/json'
     }
@@ -483,9 +483,77 @@ async function removeInterest (event) {
 
 
 let countNewNotifies = 0;
+let notifiesOnly = 0;
+let friendInvites = 0;
 
-async function getMyNotifies () {
-  await fetch (`/Notificacoes`, {
+async function getMyNotifies() {
+  await fetch(`/Notificacoes`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      console.log(myBlob)
+      if (myBlob.success) {
+
+        myBlob.notifications.forEach(e => {
+          if (e.MensagemVisualizada == "False") {
+            countNewNotifies = countNewNotifies + 1;
+            notifiesOnly = notifiesOnly + 1;
+          }
+
+          document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
+            ${countNewNotifies}`
+
+          document.getElementById("bodyNotifies").innerHTML = ` <div class="notification">
+                <div class="notification-icon">
+                  <i class="fas fa-comment"></i>
+                </div>
+                <div class="notification-content">
+                  <p><strong></strong></p>
+                  <p>${e.Texto}<a href="#"></a></p>
+                </div>
+              </div>`
+
+          document.getElementById("notifyContent").innerHTML = `Notificações <span style="border-radius:50%;width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${notifiesOnly}</span>`
+
+        })
+      }else {
+        document.getElementById("notifyContent").innerHTML = `Notificações <span style="border-radius:50%;width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${notifiesOnly}</span>`
+      }
+    })
+}
+
+
+async function checkNotifies() {
+  await fetch(`/MarcarNotificacoesVisto`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      console.log(myBlob, "chekNotifies")
+      if (myBlob.success) {
+        countNewNotifies = 0;
+        notifiesOnly = 0;
+        countNewNotifies = friendInvites
+        document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
+ ${countNewNotifies}`
+      }
+    })
+}
+
+
+async function myFriendInvites() {
+  await fetch(`/MinhasSolicitacoes`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
@@ -496,16 +564,58 @@ async function getMyNotifies () {
     })
     .then(function (myBlob) {
       if (myBlob.success) {
-        myBlob.notifications.forEach(e => {
-  
-          if(e.MensagemVisualizada === false) {
-            countNewNotifies = countNewNotifies + 1;
-            
-          }
+        countNewNotifies = countNewNotifies + 1;
+        friendInvites = friendInvites + 1;
+        document.getElementById("friendInviter").innerHTML = `Solicitação de amizade  <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
+        myBlob.invites.forEach(e => {
+          document.getElementById("inviteBody").innerHTML = `<div class="solicitacao-amizade">
+                <div class="d-flex align-items-center">
+                  <!-- Foto de Perfil -->
+                  <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDSolicitante}.jpg?alt=media}" alt="Foto de Perfil" class="rounded-circle me-3">
+                  <!-- Nome do Usuário -->
+                  <div>
+                    <p class="mb-0"><strong>${e.Nome}</strong></p>
+                    ${e.Interessado === true ? '<small>Enviou uma Solicitação e está interessado em um de seus pets</small>' : '<small>Enviou uma Solicitação</small>'}
+                  </div>
+                </div>
+                <!-- Botões de Ação -->
+                <div class="mt-3 d-flex justify-content-around">
+                  <button class="btn btn-primary btn-sm" id="${e.ID}" onclick="acceptInvite(this)">Aceitar</button>
+                  <button class="btn btn-secondary btn-sm" id="${e.ID}" onclick="">Recusar</button>
+                </div>
+              </div>
+              <hr>`
         })
+
+      }else {
+         document.getElementById("friendInviter").innerHTML = `Solicitação de amizade <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
       }
     })
 }
 
 
+async function acceptInvite(event) {
+  await fetch(`/AceitaSolicitacaoAmizade`, {
+    method: 'POST',
+    body:JSON.stringify({"inviteID":event.id}),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      if (myBlob.success) {
+       alert("Solicitação de amizade aceita.")
+       await getingMyContacts()
+      }
+    })
+}
+
+
+
+
+myFriendInvites()
+getMyNotifies()
 getingMyContacts()

@@ -58,7 +58,7 @@ class SolicitacaoContato {
    static async minhasSolicitacoesQuery (UserID) {
     const conn = await connection();
     try {
-     const myInvites = await conn.query("select sc.ID,sc.IDSolicitante,sc.Interessado, u.Nome from solicitacaocontato as sc JOIN usuario as u WHERE IDDestinatario = ? AND u.ID = sc.IDSolicitante",[UserID,])
+     const myInvites = await conn.query("select sc.ID,sc.IDSolicitante,sc.Interessado, u.Nome from solicitacaocontato as sc JOIN usuario as u WHERE IDDestinatario = ? AND u.ID = sc.IDSolicitante",[UserID])
     if(myInvites[0].length >=1) {
       return {success:"retornando todas solicitações de contato enviadas para mim", invites:myInvites[0]}
     }else {

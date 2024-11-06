@@ -44,12 +44,12 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
       <!-- Botão de Notificação -->
       <div class="dropdown" id="notify">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="notificationButton"
-          data-bs-toggle="dropdown" aria-expanded="false">
+          data-bs-toggle="dropdown" aria-expanded="false" >
           <i class="fa-solid fa-bell"></i>
         </button>
         <ul class="dropdown-menu" aria-labelledby="notificationButton">
-          <li><a class="dropdown-item" href="#" onclick="openModal('notificacoesModal')">Notificações</a></li>
-          <li><a class="dropdown-item" href="#" onclick="openModal('amizadeModal')">Solicitação de amizade</a></li>
+          <li onclick="checkNotifies()"><a class="dropdown-item" href="#" onclick="openModal('notificacoesModal')" id="notifyContent">Notificações</a></li>
+          <li><a class="dropdown-item" href="#" onclick="openModal('amizadeModal')" id="friendInviter"></a></li>
         </ul>
       </div>
 
@@ -65,20 +65,11 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
             </div>
 
             <!-- Corpo do Modal -->
-            <div class="modal-body">
+            <div class="modal-body" id="bodyNotifies">
 
 
               <!-- Notificação adicional -->
-              <div class="notification">
-                <div class="notification-icon">
-                  <i class="fas fa-comment"></i>
-                </div>
-                <div class="notification-content">
-                  <p><strong>Comentário em sua postagem</strong></p>
-                  <p>Ana comentou: "Que fofura!" em sua foto. <a href="#">Ver comentário</a></p>
-
-                </div>
-              </div>
+            
             </div>
 
           </div>
@@ -93,39 +84,10 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
               <h5 class="modal-title" id="amizadeModalLabel">Solicitação de Amizade</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" id="inviteBody">
               <!-- Exemplo de Solicitação de Amizade -->
-              <div class="solicitacao-amizade">
-                <div class="d-flex align-items-center">
-                  <!-- Foto de Perfil -->
-                  <img src="../../Public/Image/renato.png" alt="Foto de Perfil" class="rounded-circle me-3">
-                  <!-- Nome do Usuário -->
-                  <div>
-                    <p class="mb-0"><strong>João Pé de feijão</strong></p>
-                    <small>Enviou uma Solicitação</small>
-                  </div>
-                </div>
-                <!-- Botões de Ação -->
-                <div class="mt-3 d-flex justify-content-around">
-                  <button class="btn btn-primary btn-sm">Aceitar</button>
-                  <button class="btn btn-secondary btn-sm">Recusar</button>
-                </div>
-              </div>
+              
               <hr>
-              <!-- Adicione mais solicitações como desejar -->
-              <div class="solicitacao-amizade">
-                <div class="d-flex align-items-center">
-                  <img src="../../Public/Image/Ana.png" alt="Foto de Perfil" class="rounded-circle me-3">
-                  <div>
-                    <p class="mb-0"><strong>Ana Catarina</strong></p>
-                    <small>Enviou uma Solicitação</small>
-                  </div>
-                </div>
-                <div class="mt-3 d-flex justify-content-around">
-                  <button class="btn btn-primary btn-sm">Aceitar</button>
-                  <button class="btn btn-secondary btn-sm">Recusar</button>
-                </div>
-              </div>
             </div>
 
           </div>
