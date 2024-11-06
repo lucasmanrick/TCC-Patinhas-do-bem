@@ -1,4 +1,4 @@
-const { connection } = require(`../../Config/db`);
+const { connection } = require('../../Config/db');
 
 
 

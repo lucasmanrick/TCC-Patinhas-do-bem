@@ -13,12 +13,16 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import axios from "axios"; // Importando axios
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import { ref, uploadBytes } from 'firebase/storage';
+import { storage } from '../../Firebase/FirebaseConfig';
+import Toast from 'react-native-toast-message';
+import axios from "axios";
 import api from "../../Service/tokenService";
 
 class TelaRegistro extends Component {
   state = {
-
     NomeUsuario: '',
     DataNasc: '',
     Email: '',
@@ -33,10 +37,15 @@ class TelaRegistro extends Component {
     dataNascimento: new Date(),
     showDatePicker: false,
     fontLoaded: false,
+    imagemSelecionada: null,
   };
 
   async componentDidMount() {
     await this.loadFonts();
+    const { route } = this.props;
+    if (route.params?.imagemSelecionada) {
+      this.setState({ imagemSelecionada: route.params.imagemSelecionada });
+    }
   }
 
   loadFonts = async () => {
@@ -50,7 +59,6 @@ class TelaRegistro extends Component {
     try {
       const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
       const { logradouro, bairro, localidade, uf } = response.data;
-
       if (logradouro) {
         this.setState({
           Rua: logradouro,
@@ -76,8 +84,18 @@ class TelaRegistro extends Component {
     }
   };
 
-  handleRegister = async () => {
+  selecionarImagem = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.7,
+    });
+    if (!result.canceled) {
+      this.setState({ imagemSelecionada: result.assets[0].uri });
+    }
+  };
 
+  handleRegister = async () => {
     const { NomeUsuario, Email, Senha, confirmarSenha, Cep, Rua, Numero, Bairro, Cidade, Estado, dataNascimento } = this.state;
 
     if (Senha !== confirmarSenha) {
@@ -96,16 +114,25 @@ class TelaRegistro extends Component {
       return;
     }
 
+    if (!this.state.imagemSelecionada) {
+      Toast.show({
+        text1: 'Erro',
+        text2: 'Por favor, selecione uma imagem.',
+        position: 'top',
+        type: 'error',
+        visibilityTime: 3000,
+      });
+      return;
+    }
+
     const numeroFormatado = parseInt(Numero, 10);
     if (isNaN(numeroFormatado)) {
       Alert.alert("Erro", "O campo Número deve ser um valor numérico.");
       return;
     }
 
-
     const formattedDate = dataNascimento.toISOString().split('T')[0];
 
-    // Log dos dados que serão enviados
     console.log("Dados a serem enviados:", {
       NomeUsuario,
       DataNasc: formattedDate,
@@ -113,17 +140,14 @@ class TelaRegistro extends Component {
       Senha,
       Cep,
       Rua,
-      Numero:numeroFormatado ,
+      Numero: numeroFormatado,
       Bairro,
       Cidade,
       Estado,
     });
 
-
-
-
     try {
-      const response = await api.post('/Cadastro', {
+      await api.post('/Cadastro', {
         NomeUsuario,
         DataNasc: formattedDate,
         Email,
@@ -134,68 +158,66 @@ class TelaRegistro extends Component {
         Bairro,
         Cidade,
         Estado,
-      }).then(e => (
-        console.log(e.data),
+      })
+        .then(async (response) => {
+          const IDUsuario = response.data.IDUsuario;
+          const manipResult = await ImageManipulator.manipulateAsync(
+            this.state.imagemSelecionada,
+            [{ resize: { width: 800 } }],
+            { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG }
+          );
 
-        Alert.alert("Sucesso", "Cadastro realizado com sucesso!"),
-        this.props.navigation.navigate('Login')
-      )).catch(error => (
-        console.log(error)
+          const responseImage = await fetch(manipResult.uri);
+          const blob = await responseImage.blob();
 
-      ));
-
-
+          const imageRef = ref(storage, `perfil/${IDUsuario}.jpg`);
+          return uploadBytes(imageRef, blob);
+        })
+        .then(() => {
+          Toast.show({
+            text1: 'Sucesso',
+            text2: 'Cadastro realizado com sucesso!',
+            position: 'top',
+            type: 'success',
+            visibilityTime: 3000,
+          });
+          this.props.navigation.navigate('Login');
+        })
+        .catch((error) => {
+          console.error("Upload Error:", error);
+          Alert.alert("Erro", "Ocorreu um erro ao fazer upload da imagem.");
+        });
     } catch (error) {
-      if (error.response) {
-        console.error("Response Error:", error.response.data);
-        Alert.alert("Erro", error.response.data.message || "Ocorreu um erro ao registrar o usuário.");
-      } else {
-        console.error("Network Error:", error.message);
-        Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário: " + error.message);
-
-      }
+      Alert.alert("Erro", "Ocorreu um erro ao registrar o usuário.");
     }
   };
 
-
-  showDatepicker = () => {
-    this.setState({ showDatePicker: true });
-  };
-
-  onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || this.state.dataNascimento;
-    this.setState({ showDatePicker: false, dataNascimento: currentDate });
-  };
-
-
-  renderInput(title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) {
-    return (
-      <View style={styles.form}>
-        <Text style={styles.inputTitle}>{title}</Text>
-        <View style={styles.inputContainer}>
-          <Ionicons name={iconName} size={20} color="#134973" />
-          <TextInput
-            style={styles.input}
-            keyboardType={keyboardType}
-            secureTextEntry={secureTextEntry}
-            placeholder={placeholder}
-            onChangeText={(value) => {
-              if (stateKey === "Cep") {
-                this.handleCepChange(value);
-              } else {
-                this.setState({ [stateKey]: value });
-              }
-            }}
-            value={this.state[stateKey]}
-            editable={editable}
-          />
-        </View>
+  renderInput = (title, iconName, stateKey, keyboardType = "default", placeholder = "", secureTextEntry = false, editable = true) => (
+    <View style={styles.form}>
+      <Text style={styles.inputTitle}>{title}</Text>
+      <View style={styles.inputContainer}>
+        <Ionicons name={iconName} size={20} color="#134973" />
+        <TextInput
+          style={styles.input}
+          keyboardType={keyboardType}
+          secureTextEntry={secureTextEntry}
+          placeholder={placeholder}
+          onChangeText={(value) => {
+            if (stateKey === "Cep") {
+              this.handleCepChange(value);
+            } else {
+              this.setState({ [stateKey]: value });
+            }
+          }}
+          value={this.state[stateKey]}
+          editable={editable}
+        />
       </View>
-    );
-  }
+    </View>
+  );
 
   render() {
-    const { showDatePicker, dataNascimento } = this.state;
+    const { showDatePicker, dataNascimento, imagemSelecionada } = this.state;
 
     return (
       <View style={styles.container}>
@@ -210,35 +232,34 @@ class TelaRegistro extends Component {
           <Text style={styles.greeting}>{"Bem-vindo ao\nPatinhas do Bem"}</Text>
         )}
 
-        <TouchableOpacity style={styles.avatar}>
-          <Ionicons
-            name="add-outline" //
-            size={40}
-            color="#fff"
-            style={{ marginTop: 6 }}
-          />
+        <TouchableOpacity style={styles.avatar} onPress={this.selecionarImagem}>
+          {imagemSelecionada ? (
+            <Image
+              source={{ uri: imagemSelecionada }}
+              style={{ width: 100, height: 100, borderRadius: 50 }}
+            />
+          ) : (
+            <Ionicons name="add-outline" size={40} color="#fff" style={{ marginTop: 6 }} />
+          )}
         </TouchableOpacity>
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           {this.renderInput("Nome", "person-outline", "NomeUsuario")}
           {this.renderInput("CEP", "pin", "Cep", "numeric")}
-
           {this.renderInput("Rua", "home-outline", "Rua", "default", "", false, false)}
           {this.renderInput("Número", "pin", "Numero", "numeric")}
           {this.renderInput("Bairro", "home", "Bairro", "default", "", false, false)}
           {this.renderInput("Cidade", "location-outline", "Cidade", "default", "", false, false)}
           {this.renderInput("Estado", "flag", "Estado", "default", "", false, false)}
 
-
-          {/* Campo de Data de Nascimento */}
           <View style={styles.form}>
             <Text style={styles.inputTitle}>Data de Nascimento</Text>
             <TouchableOpacity
-              onPress={this.showDatepicker}
               style={styles.inputContainer}
+              onPress={() => this.setState({ showDatePicker: true })}
             >
               <Ionicons name="calendar-outline" size={20} color="#134973" />
-              <Text style={styles.input}>
+              <Text style={[styles.input, { paddingTop: 7 }]}>
                 {dataNascimento.toLocaleDateString()}
               </Text>
             </TouchableOpacity>
@@ -246,18 +267,20 @@ class TelaRegistro extends Component {
               <DateTimePicker
                 value={dataNascimento}
                 mode="date"
-                display="spinner"
-                onChange={this.onChange}
-                style={{ width: "100%" }}
+                display="default"
+                onChange={(event, selectedDate) => {
+                  this.setState({
+                    dataNascimento: selectedDate || dataNascimento,
+                    showDatePicker: false,
+                  });
+                }}
               />
             )}
           </View>
 
-
-          {this.renderInput("Endereço de E-mail", "mail-outline", "Email", "none")}
-          {this.renderInput("Senha", "lock-closed-outline", "Senha", "none", null, true)}
-          {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "none", null, true)}
-
+          {this.renderInput("Email", "mail-outline", "Email", "email-address")}
+          {this.renderInput("Senha", "lock-closed-outline", "Senha", "default", "", true)}
+          {this.renderInput("Confirmar Senha", "lock-closed-outline", "confirmarSenha", "default", "", true)}
 
           <TouchableOpacity style={styles.button} onPress={this.handleRegister}>
             <Text style={{ color: "#fff", fontWeight: "500" }}>Cadastrar</Text>

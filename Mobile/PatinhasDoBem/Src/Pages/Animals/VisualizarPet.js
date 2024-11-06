@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
 import Swiper from "react-native-deck-swiper";
+import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import api from "../../Service/tokenService"; 
+import api from "../../Service/tokenService";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
@@ -21,13 +22,16 @@ const TelaDePets = ({ navigation }) => {
         return;
       }
       setIsLoading(true);
-      const response = await api.post('/PetsAdocao', {gapQuantity:0} ,{
+
+      const response = await api.post('/PetsAdocao', { gapQuantity: 0 }, {
         headers: { authorization: token },
       }).then((e) => {
         console.log(e);
-        
         const petsData = e.data.dataResponse;
-        
+        console.log(petsData);
+        // const petIDs = petsData.map(pet => pet.petID);
+        // console.log(petIDs);
+
         setPetts(petsData);
         setIsLoading(false);
         if (!petsData) {
@@ -43,89 +47,137 @@ const TelaDePets = ({ navigation }) => {
     }
   };
 
+
+  const handleSwipeRight = (petID) => {
+    console.log(petID);
+    AsyncStorage.getItem('token')
+      .then(token => {
+        if (!token) {
+          Alert.alert('Erro', 'Usuário não autenticado. Faça login novamente.');
+          throw new Error('Usuário não autenticado'); // Interrompe o fluxo
+        }
+
+        // Exemplo de endpoint ao swipar para a direita
+        return api.post(`/DemonstrarInteressePet`, { PetID: petID }, {
+          headers: { authorization: token },
+        });
+      })
+      .then(response => {
+        console.log('teste');
+        console.log(response);
+
+        Toast.show({
+          text1: 'Sucesso',
+          text2: 'Você demonstrou interesse neste pet!',
+          position: 'top',
+          type: 'success',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
+      })
+      .catch(error => {
+        console.error("Erro ao marcar interesse no pet:", error);
+        Toast.show({
+          text1: 'Erro',
+          text2: 'Erro ao demostrar interresse no pet!',
+          position: 'top',
+          type: 'error',
+          visibilityTime: 3000, // Tempo em milissegundos para mostrar a notificação
+        });
+      })
+
+  };
+
+
   useEffect(() => {
     fetchPets();
   }, []);
 
   return (
     <View style={styles.container}>
-      {isLoading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#3DAAD9" />
-        </View>
-      ) : (
-        Petts.length > 0 ? (
-          <Swiper
-            cards={Petts}
-            renderCard={(item) => (
-              <View style={styles.card}>
-                {item.petPicture ? (
-                  <Image source={{ uri: item.petPicture }} style={styles.petImage} />
-                ) : (
-                  <Text style={styles.noImageText}>Sem Imagem</Text>
-                )}
-                <View style={styles.overlay}>
-                  <Text style={styles.petName}>{item.TipoAnimal}</Text>
-                  <Text style={styles.petDescription}>{item.Descricao}</Text>
-                </View>
-                <View style={styles.additionalInfo}>
-                  <Text style={styles.petDetail}>Idade: {item.Idade}</Text>
-                  <Text style={styles.petDetail}>Raça: {item.Linhagem}</Text>
-                  <Text style={styles.petDetail}>Cor: {item.Cor}</Text>
-                  <Text style={styles.petDetail}>Sexo: {item.Sexo}</Text>
-                </View>
-              </View>
-            )}
-            stackSize={3}
-            cardIndex={0}
-            backgroundColor="#f0f0f0"
-            onSwipedAll={() => Alert.alert("Fim da lista!")}
-            overlayLabels={{
-              left: {
-                title: "Não tenho interesse",
-                style: {
-                  label: {
-                    backgroundColor: "red",
-                    borderColor: "red",
-                    color: "white",
-                    borderWidth: 1,
-                    fontSize: 24,
-                  },
-                  wrapper: {
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    justifyContent: "center",
-                    marginTop: 20,
-                    marginLeft: -20,
-                  },
-                },
-              },
-              right: {
-                title: "Tenho interesse",
-                style: {
-                  label: {
-                    backgroundColor: "green",
-                    borderColor: "green",
-                    color: "white",
-                    borderWidth: 1,
-                    fontSize: 24,
-                  },
-                  wrapper: {
-                    flexDirection: "column",
-                    alignItems: "flex-start",
-                    justifyContent: "center",
-                    marginTop: 20,
-                    marginLeft: 20,
-                  },
-                },
-              },
-            }}
-          />
-        ) : (
-          <Text style={styles.noPetsText}>Nenhum pet disponível no momento.</Text>
-        )
-      )}
+    
+    {/* Botão com ícone de patinha para navegar para outra tela */}
+    <TouchableOpacity style={styles.navigateButton} onPress={() => navigation.navigate('interesses')}>
+      <Icon name="paw" size={30} color="#3DAAD9" />
+    </TouchableOpacity>
+    
+    {isLoading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3DAAD9" />
       </View>
+    ) : (
+      Petts && Petts.length > 0 ? (
+        <Swiper
+          cards={Petts}
+          renderCard={(item) => (
+            <View style={styles.card}>
+              {item.petPicture ? (
+                <Image source={{ uri: item.petPicture }} style={styles.petImage} />
+              ) : (
+                <Text style={styles.noImageText}>Sem Imagem</Text>
+              )}
+              <View style={styles.overlay}>
+                <Text style={styles.petName}>{item.TipoAnimal}</Text>
+                <Text style={styles.petDescription}>{item.Descricao}</Text>
+              </View>
+              <View style={styles.additionalInfo}>
+                <Text style={styles.petDetail}>Idade: {item.Idade}</Text>
+                <Text style={styles.petDetail}>Raça: {item.Linhagem}</Text>
+                <Text style={styles.petDetail}>Cor: {item.Cor}</Text>
+                <Text style={styles.petDetail}>Sexo: {item.Sexo}</Text>
+              </View>
+            </View>
+          )}
+          stackSize={3}
+          cardIndex={0}
+          backgroundColor="#f0f0f0"
+          onSwipedAll={() => Alert.alert("Fim da lista!")}
+          onSwipedRight={(cardIndex) => handleSwipeRight(Petts[cardIndex]?.petID)}
+          overlayLabels={{
+            left: {
+              title: "Não tenho interesse",
+              style: {
+                label: {
+                  backgroundColor: "red",
+                  borderColor: "red",
+                  color: "white",
+                  borderWidth: 1,
+                  fontSize: 24,
+                },
+                wrapper: {
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  marginTop: 20,
+                  marginLeft: -20,
+                },
+              },
+            },
+            right: {
+              title: "Tenho interesse",
+              style: {
+                label: {
+                  backgroundColor: "green",
+                  borderColor: "green",
+                  color: "white",
+                  borderWidth: 1,
+                  fontSize: 24,
+                },
+                wrapper: {
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                  justifyContent: "center",
+                  marginTop: 20,
+                  marginLeft: 20,
+                },
+              },
+            },
+          }}
+        />
+      ) : (
+        <Text style={styles.noPetsText}>Nenhum pet disponível no momento.</Text>
+      )
+    )}
+  </View>
   );
 };
 
@@ -135,6 +187,23 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     justifyContent: "center",
     alignItems: "center",
+  },
+  navigateButton: {
+    position: 'absolute', // Permite que o botão seja posicionado em relação ao seu pai
+    top: 30, // Ajuste a posição vertical conforme necessário
+    left: '95%', // Centraliza o botão horizontalmente
+    transform: [{ translateX: -50 }], // Ajusta a posição para centralizar corretamente
+    backgroundColor: '#000', // Cor de fundo do botão
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 50,
+    zIndex: 1, // Coloca o botão acima dos cards
+  },
+  buttonText: {
+    color: '#fff', // Cor do texto do botão
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   swiperContainer: {
     flex: 1,
@@ -146,7 +215,7 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: 450,
     borderRadius: 15,
-    marginTop: 50,
+    marginTop: 100,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
