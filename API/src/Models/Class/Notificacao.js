@@ -55,7 +55,9 @@ class Notificacao {
     const conn = await connection();
     try {
       const updatingView = await conn.query("UPDATE notificacao SET Recebimento = ? WHERE IDDestinatario = ? ",[1,userID])
+     if(updatingView[0].affectedRows >= 1) {
       return {success:"notificações marcadas como visualizada"}
+     }return {error:"não foi possivel marcar as notificações como visualizadas, por favor tente novamente."}
     }
     catch(e) {
       return {error:e.message}

@@ -284,63 +284,6 @@ async function getingPets() {
       if (myBlob.success) {
         myBlob.dataResponse.forEach(e => {
           
-          // const mainDiv = document.createElement('div')
-          // mainDiv.className = "post"
-          // mainDiv.id = e.petID
-
-          // const divpetInfo = document.createElement('div')
-          // divpetInfo.className = "user-info"
-
-          // const divTitle = document.createElement('div')
-          // divTitle.className = "titulo-pet"
-
-
-          // const pContext = document.createElement('p');
-          // pContext.innerText = "Informações do pet"
-
-          // const formDiv = document.createElement('div')
-          // formDiv.className = "formulario-do-pet";
-
-          // const pType = document.createElement('p');
-          // pType.className = "descrição"
-          // pType.innerHTML = `<strong>Tipo de Animal:</strong> ${e.TipoAnimal}`
-
-          // const pLine = document.createElement('p');
-          // pLine.className = "descrição"
-          // pLine.innerHTML = `<strong>Linhagem:</strong> ${e.Linhagem}`
-
-          // const pAge = document.createElement('p');
-          // pAge.className = "descrição"
-          // pLine.innerHTML = `<strong>Idade:</strong>  ${e.Idade}`   
-
-          // const pSex = document.createElement('p');
-          // pSex.className = "descrição"
-          // pSex.innerHTML = `<strong>Sexo:</strong> ${e.Sexo}`
-
-          // const pColor = document.createElement('p');
-          // pColor.className = "descrição"
-          // pColor.innerHTML = `<strong>Cor:</strong> ${e.Cor}`
-
-          // const pDescription = document.createElement('p');
-          // pDescription.className = "descrição"
-          // pDescription.innerHTML = `<strong>Descrição:</strong> ${e.Descricao}`
-
-          // const divPhotoContent = document.createElement('div')
-          // divPhotoContent.className = "animal-post"
-
-          // divPhotoContent.innerHTML = `<img src="${e.petPicture}" alt="Imagem do animal" class="animal-photo">`
-
-
-          // const buttonInterest = document.createElement("button")
-          // buttonInterest.className = "btn-interesse"
-          // buttonInterest.id = `${e.petID}`
-          // buttonInterest.onclick = showInterestOnPet(this)
-          // buttonInterest.innerText = "Tenho Interesse"
-          // formDiv.append(pType,pLine,pAge,pSex,pColor,pDescription)
-          // divTitle.append(pContext)
-          // divpetInfo.append(divTitle,formDiv,buttonInterest)
-          // mainDiv.append(divpetInfo,divPhotoContent)
-          // document.getElementById('view-animals-content').append(mainDiv)
 
           document.getElementById('view-animals-content').innerHTML = `
            <h2>Animais para adoção</h2> 
@@ -360,7 +303,7 @@ async function getingPets() {
                 <p class="descrição"><strong>Local:</strong> ${e.Cidade} - ${e.Estado}</p>
                 <p class="descrição"><strong>Descrição:</strong> ${e.Descricao}</p>
               </div>
-              ${e.demonstrouInteresse === true ? `<button class="btn-interesse" style = "background-color:#11212D" id="${e.petID}" onclick = "">Já demonstrou interesse</button>` : ` <button class="btn-interesse" id="${e.petID}" onclick = "showInterestOnPet(this)">Tenho Interesse</button>`}
+              ${e.demonstrouInteresse === true ? `<button class="btn-interesse" style = "background-color: red" id="${e.petID}" onclick = "removeInterest(this)">Remover interesse</button>` : ` <button class="btn-interesse" style = "background-color:#11212D; color:white" id="${e.petID}" onclick = "showInterestOnPet(this)">Tenho Interesse</button>`}
              
             </div>
             <div class="animal-post">
@@ -373,8 +316,9 @@ async function getingPets() {
       } else {
         document.getElementById('view-animals-content').innerHTML = `
               <h2>Pets para adoção</h2> 
-               <h5>não foi identificado pets nas proximidades</h5> 
-         `
+                <button style="padding: 10px; border: 1px solid; background-color:#4A5C6A ; color:white" onclick="getMyInterests()">Meus Interesses</button>
+                <h5>não foi identificado pets nas proximidades</h5> 
+               `
       }
 
     })
@@ -402,7 +346,7 @@ async function showInterestOnPet(PetID) {
     })
     .then(function (myBlob) {
       if (myBlob.success) {
-        return alert("você demonstrou interesse no pet com sucesso, e enviou uma solicitação de amizade para o dono dele")
+        return alert(myBlob.success)
       } else if (myBlob.error) {
         alert(myBlob.error)
       }
@@ -411,7 +355,7 @@ async function showInterestOnPet(PetID) {
 }
 
 
-
+// função para pegar meus contatos
 
 async function getingMyContacts() {
   await fetch(`/MeusContatos`, {
@@ -450,6 +394,8 @@ async function getingMyContacts() {
 }
 
 
+// função para pegar pets que demonstrei interesse
+
 async function getMyInterests() {
   await fetch(`/MeusInteresses`, {
     method: 'GET',
@@ -483,7 +429,7 @@ async function getMyInterests() {
                     <p class="descrição"><strong>Local:</strong> ${e.Cidade} - ${e.Estado}</p>
                     <p class="descrição"><strong>Descrição:</strong> ${e.Descricao}</p>
                   </div>
-                 
+                 '<button class="btn-interesse" style = "background-color:red" id="${e.ID}" onclick = "removeInterest(this)">Remover Interesse no pet</button>'
                 </div>
                 <div class="animal-post">
                   <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.ID}.jpg?alt=media" alt="Imagem do animal" class="animal-photo">
@@ -494,17 +440,71 @@ async function getMyInterests() {
         })
       }else {
         document.getElementById('view-animals-content').innerHTML = `
-          <h2>Não possui animais para adoção na proximidade.</h2> 
-            `
+           <h2>Seus Interesses</h2> 
+           <button style="padding: 10px; border: 1px solid" onclick="getingPets()">Ver Animais para adoção</button>
+            <h5>Você não demonstrou interesse em nenhum pet.</h5> 
+           `
+      }
+    })
+}
+
+
+// função para salvar o id de quem eu estou tentando ver o perfil, para conseguir acessar na tela meu perfil
+ function perfilUser (userID) {
+  Cookies.remove("perfilSendoVisto")
+  Cookies.set("perfilSendoVisto", userID)
+}
+
+
+
+
+// função para remover o interesse em algum pet do qual ja demonstrei interesse
+async function removeInterest (event) {
+  console.log("clicou")
+  await fetch (`/RemoverInteressePet`, {
+    method: 'DELETE',
+    body: JSON.stringify({"PetID":event.id}),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      if (myBlob.success) {
+        alert("retirado interesse em pet com sucesso")
+      } else {
+        alert(myBlob.error)
       }
     })
 }
 
 
 
-async function perfilUser (userID) {
-  Cookies.remove("perfilSendoVisto")
-  Cookies.set("perfilSendoVisto", userID)
+let countNewNotifies = 0;
+
+async function getMyNotifies () {
+  await fetch (`/Notificacoes`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myBlob) {
+      if (myBlob.success) {
+        myBlob.notifications.forEach(e => {
+  
+          if(e.MensagemVisualizada === false) {
+            countNewNotifies = countNewNotifies + 1;
+            
+          }
+        })
+      }
+    })
 }
 
 
