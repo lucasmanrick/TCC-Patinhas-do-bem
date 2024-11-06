@@ -204,6 +204,7 @@ const TelaDePerfil = ({ route, navigation }) => {
               keyExtractor={(item, index) =>
                 item.id ? item.id.toString() : index.toString()
               }
+              
               renderItem={({ item }) => (
                 <View style={styles.petItem}>
                   <View style={styles.petImageContainer}>
@@ -231,7 +232,7 @@ const TelaDePerfil = ({ route, navigation }) => {
                   <Text style={styles.petName}>{item.TipoAnimal}</Text>
                 </View>
               )}
-              horizontal={false}
+              horizontal={true}
             />
           </View>
         </>
@@ -314,36 +315,40 @@ const styles = StyleSheet.create({
     overflow: "hidden", // Esconde partes que excedem o limite
     height: 100, // Definindo uma altura fixa
   },
+  petName:{
+    fontSize: 10,
+
+  },
   postImage: {
     width: "100%", // Largura total do item
     height: "100%", // Altura total do item para garantir que ocupe todo o espaço
   },
   petItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 5,
+    flexDirection: "column", // Muda para coluna para empilhar a imagem e o nome
+    alignItems: "center",     // Alinha ambos (imagem e nome) no centro
+    marginVertical: 10,       // Adiciona espaço entre os pets
   },
   petImageContainer: {
     position: "relative",
-    marginRight: 10,
+    marginRight: 15,
   },
   petImage: {
     width: 60,
     height: 60,
-    borderRadius: 30,
+    borderRadius: 5,
   },
   editIcon: {
     position: "absolute",
-    top: 0,
-    right: 0,
+    top: -7,
+    right: -10,
     backgroundColor: "white",
     borderRadius: 15,
     padding: 5,
   },
   deleteIcon: {
     position: "absolute",
-    top: 0,
-    right: 35,
+    top: -7,
+    right: 38,
     backgroundColor: "white",
     borderRadius: 15,
     padding: 5,

@@ -3,15 +3,16 @@ import {
   View,
   Text,
   Image,
-  Button,
-  FlatList,
   ActivityIndicator,
+  FlatList,
   StyleSheet,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
 } from "react-native";
-import Toast from "react-native-toast-message";
-import Icon from "react-native-vector-icons/FontAwesome";
-import api from "../../Service/tokenService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import api from "../../Service/tokenService";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const UserProfileScreen = ({ route, navigation }) => {
   const [profileData, setProfileData] = useState(null);
@@ -19,108 +20,167 @@ const UserProfileScreen = ({ route, navigation }) => {
   const userID = route.params?.userID;
 
   useEffect(() => {
-    AsyncStorage.getItem("token")
-      .then((token) => {
-        if (!token) {
-          Alert.alert("Erro", "Usuário não autenticado. Faça login novamente.");
-          throw new Error("Usuário não autenticado.");
-        }
+    const fetchProfileData = () => {
+      AsyncStorage.getItem("token")
+        .then((token) => {
+          if (!token) {
+            Alert.alert("Erro", "Usuário não autenticado. Faça login novamente.");
+            return;
+          }
 
-        console.log(userID);
+          setLoading(true);
+          return api.get(`/ProfileUser/${userID}`, {}, {
+            headers: { authorization: token },
+          });
+        })
+        .then((response) => {
+          console.log(response.data);
+          setProfileData(response.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Erro ao visualizar perfil:", error);
+          Alert.alert("Erro", "Ocorreu um erro ao visualizar o usuário.");
+          setLoading(false);
+        });
+    };
 
-        setLoading(true); // Corrige aqui para `setLoading`
-        return api.get(`/ProfileUser/${userID}`,{},
-       {
-         headers: { authorization: token },
-       }
-     );
-      })
-      .then((response) => {
-        console.log("socorro", response);
-
-        setProfileData(response.data); // Ajuste para capturar dados corretamente
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Erro ao visualizar perfil:", error);
-        Alert.alert("Erro", "Ocorreu um erro ao visualizar o usuário.");
-        setLoading(false);
-      });
-  }, [userID]); // Adicione userID como dependência para reexecutar o efeito quando o usuário mudar
+    fetchProfileData();
+  }, [userID]);
 
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#1a73e8" />
       </View>
     );
   }
 
+  const dadosUsuario = profileData.dadosUsuario;
+  const dadosPets = profileData.dadosPetsUsuario;
+  const postagens = profileData.postagensDoUsuario;
+
   return (
-    <View style={styles.container}>
-      {profileData ? (
+    <ScrollView style={styles.container}>
+      {dadosUsuario ? (
         <>
           <View style={styles.header}>
-            <Image
-              source={{
-                uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${userID}.jpg?alt=media`,
-              }}
-              style={styles.profileImage}
-            />
+            <View style={styles.profileImageContainer}>
+              <Image
+                source={{
+                  uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${dadosUsuario.IDUsuario}.jpg?alt=media`,
+                }}
+                style={styles.profileImage}
+              />
+
+            </View>
             <View style={styles.statsContainer}>
-              <Text style={styles.statNumber}>{profileData.posts}</Text>
+              <Text style={styles.statNumber}>
+                {postagens ? postagens.length : 0}
+              </Text>
               <Text style={styles.statLabel}>Posts</Text>
             </View>
             <View style={styles.statsContainer}>
-              <Text style={styles.statNumber}>{profileData.followers}</Text>
-              <Text style={styles.statLabel}>Seguidores</Text>
+              <Text style={styles.statNumber}>
+                {dadosPets ? dadosPets.length : 0}
+              </Text>
+              <Text style={styles.statLabel}>Meus Pets</Text>
             </View>
             <View style={styles.statsContainer}>
-              <Text style={styles.statNumber}>{profileData.following}</Text>
+              <Text style={styles.statNumber}>0</Text>
               <Text style={styles.statLabel}>Seguindo</Text>
             </View>
           </View>
 
           <View style={styles.bioContainer}>
-            <Text style={styles.username}>{profileData.username}</Text>
-            <Text style={styles.bio}>{profileData.bio}</Text>
+            <Text style={styles.username}>
+              {dadosUsuario.Nome ?? "Usuário"}
+            </Text>
           </View>
 
+          {/* Lista de Postagens */}
           <FlatList
-            data={profileData.postsData || []} // Evita erros caso `postsData` não esteja definido
+            data={postagens || []}
+            keyExtractor={(item) => item.ID.toString()}
             numColumns={3}
-            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <Image source={{ uri: item.image }} style={styles.postImage} />
+              <TouchableOpacity
+                style={styles.postItem}
+                onPress={() =>
+                  navigation.navigate("DetalhesPost", { post: item })
+                }
+              >
+                <Image
+                  source={{
+                    uri: item.PostPicture,
+                  }}
+                  style={styles.postImage}
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
             )}
           />
+
+          {/* Lista de Pets */}
+          <View style={styles.petsContainer}>
+            <Text style={styles.petsTitle}>Meus Pets</Text>
+            <FlatList
+              data={dadosPets || []}
+              keyExtractor={(item, index) =>
+                item.ID ? item.ID.toString() : index.toString()
+              }
+              renderItem={({ item }) => (
+                <View style={styles.petItem}>
+                  <View style={styles.petImageContainer}>
+                    <Image
+                      source={{ uri: item.petPicture }}
+                      style={styles.petImage}
+                    />
+                    
+                  </View>
+                  <Text style={styles.petName}>{item.TipoAnimal}</Text>
+                </View>
+              )}
+              horizontal={true}
+            />
+          </View>
         </>
       ) : (
         <Text style={styles.errorText}>
           Não foi possível carregar os dados do perfil.
         </Text>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    padding: 20,
+    backgroundColor: "#f8f8f8",
   },
   header: {
     flexDirection: "row",
-    padding: 15,
     alignItems: "center",
-    justifyContent: "space-around",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#ddd",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  profileImageContainer: {
+    position: "relative",
   },
   profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  editProfileButton: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    backgroundColor: "#ffffff",
+    borderRadius: 15,
+    padding: 5,
   },
   statsContainer: {
     alignItems: "center",
@@ -130,35 +190,74 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   statLabel: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#888",
   },
   bioContainer: {
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    alignItems: "center",
+    marginBottom: 20,
   },
   username: {
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: "bold",
   },
-  bio: {
-    fontSize: 14,
-    color: "#333",
+  petsContainer: {
+    marginBottom: 20,
+  },
+  petsTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  petItem: {
+    marginRight: 10,
+  },
+  petImageContainer: {
+    position: "relative",
+  },
+  petImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  editIcon: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+    backgroundColor: "#ffffff",
+    borderRadius: 15,
+    padding: 5,
+  },
+  deleteIcon: {
+    position: "absolute",
+    bottom: 5,
+    right: 5,
+    backgroundColor: "#ffffff",
+    borderRadius: 15,
+    padding: 5,
+  },
+  petName: {
+    textAlign: "center",
     marginTop: 5,
+    fontSize: 14,
+  },
+  postItem: {
+    margin: 5,
   },
   postImage: {
-    width: "33%",
-    height: 120,
-    margin: 1,
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+  },
+  errorText: {
+    textAlign: "center",
+    fontSize: 16,
+    color: "red",
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  errorText: {
-    color: "red",
-    textAlign: "center",
   },
 });
 

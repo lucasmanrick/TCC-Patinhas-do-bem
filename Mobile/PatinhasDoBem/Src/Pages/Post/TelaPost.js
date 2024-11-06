@@ -139,11 +139,11 @@ const TelaPostagens = () => {
       });
       return;
     }
-
+  
     const descricaoLimpa = descricao.replace(/[^a-zA-Z0-9\s]/g, "");
-
+  
     let imageUrl = null;
-
+  
     AsyncStorage.getItem("token")
       .then((token) => {
         return api.post(
@@ -156,22 +156,26 @@ const TelaPostagens = () => {
       })
       .then(async (response) => {
         console.log(response);
-
+  
         const postID = response.data.idPostagem;
-
+  
         if (imageUri) {
           const response = await fetch(imageUri);
           const blob = await response.blob();
           const storageRef = ref(storage, `postagem/${postID}`);
           await uploadBytes(storageRef, blob);
         }
-
+  
         Toast.show({
           type: "success",
           text1: "Postagem criada com sucesso!",
         });
+  
+        // Limpa os campos e fecha o modal
         setDescricao("");
         setImageUri(null);
+        setShowCreatePostModal(false); // Fecha o modal
+  
         carregarPostagens();
       })
       .catch((error) => {
@@ -182,6 +186,8 @@ const TelaPostagens = () => {
         });
       });
   };
+
+    
 
   const selecionarImagem = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -279,6 +285,7 @@ const TelaPostagens = () => {
             onSubmitEditing={handleSearch}
           />
         </View>
+        
         <TouchableOpacity
           style={styles.iconContainer}
           onPress={() => setShowCreatePostModal(true)}
@@ -484,6 +491,12 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: '#333',
     fontSize: 16,
+  },
+  profileImage: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    marginRight: 10,
   },
 });
 
