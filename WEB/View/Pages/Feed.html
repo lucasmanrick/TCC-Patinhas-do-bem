@@ -162,83 +162,8 @@ https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js
       <!----------------- CONTENT AREA -------------------->
       <div class="content-area" id="content-area">
         <div id="mural-content" style="display:block;">
-          <!-- Botão para abrir o modal -->
-          <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar
-            Publicação</button>
-
-          <!-- Modal para criar uma publicação -->
-          <div id="publish-modal" class="modal" style="display:none;">
-            <div class="modal-content">
-              <span class="close" onclick="closePublishModal()">&times;</span>
-              <h2>Criar Publicação</h2>
-              <input type="text" id="post-title" placeholder="Título da Postagem" required>
-              <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
-              <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-              <button onclick="publishPost()">Publicar</button>
-            </div>
-          </div>
-
-          <!-- Seção de publicações -->
-          <div id="posts-container">
-            <!-- Modelo de Postagem (oculto) -->
-            <div id="post-template" class="post" style="display:none;">
-              <div class="post-header">
-                <img src="" alt="User" class="profile-pic">
-                <!-- Foto do usuário -->
-                <h3>Nome do Usuário</h3>
-              </div>
-              <div class="post-body">
-                <h4 class="post-title"></h4>
-                <p class="post-content"></p>
-                <img src="" alt="Post Image" class="post-image">
-                <!-- Imagem da postagem -->
-              </div>
-            </div>
-          </div>
-
-
-          <div class="feed-post">
-            <div class="post-header">
-              <div class="user-avatar">
-                <a>
-                  <img class="user-photo" src="" alt="Foto do Usuário">
-                </a>
-              </div>
-
-              <div class="user-info">
-                <a class="user-name">Thiago Antonio</a>
-                <p class="post-date">Publicado em 17 de outubro de 2024</p>
-              </div>
-
-              <div class="post-options">
-                <div class="three-dots">
-                  <button class="dots-button" onclick="toggleMenu(event)">&#8230;</button>
-                  <div class="menu" style="display: none;">
-                    <button class="report-button" onclick="reportPost()">Denunciar Postagem</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="post-content">
-              <p class="post-text">Doa-se esses vira-latas</p>
-              <img class="post-image" src="../../Public/Image/telaCadastro.png" alt="Imagem da Postagem">
-            </div>
-
-            <div class="post-actions">
-              <div class="reaction-section">
-                <button class="reaction-button like-button"><i class="fas fa-thumbs-up"></i> Curtir</button>
-                <button class="reaction-button comment-button"><i class="fas fa-comment"></i> Comentar</button>
-              </div>
-
-              <div class="comment-section" style="display: none;">
-                <textarea class="comment-input" placeholder="Escreva um comentário..."></textarea>
-                <button class="submit-comment">Publicar</button>
-              </div>
-
-
-            </div>
-          </div>
+      
+          
 
 
 

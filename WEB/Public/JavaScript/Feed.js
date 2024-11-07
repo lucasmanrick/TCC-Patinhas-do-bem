@@ -25,6 +25,14 @@ function showContent(menuId) {
 
 }
 
+function openPublishModal() {
+  document.getElementById('publish-modal').style.display = 'block';
+}
+
+function closePublishModal() {
+  document.getElementById('publish-modal').style.display = 'none';
+}
+
 
 
 const inputs = document.querySelectorAll('.animal');
@@ -39,31 +47,27 @@ inputs.forEach(input => {
 
 
 
-// Evento para o botão Curtir
-document.querySelector('.like-button').addEventListener('click', function () {
-});
-
-// Evento para o botão Comentar
-document.querySelector('.submit-comment').addEventListener('click', function () {
-  const comment = document.querySelector('.comment-input').value;
-  if (comment) {
-    document.querySelector('.comment-input').value = ''; // Limpa o campo de comentário
-  } else {
-    alert('Por favor, escreva um comentário.');
-  }
-});
+// // Evento para o botão Comentar
+// document.querySelector('.submit-comment').addEventListener('click', function () {
+//   const comment = document.querySelector('.comment-input').value;
+//   if (comment) {
+//     document.querySelector('.comment-input').value = ''; // Limpa o campo de comentário
+//   } else {
+//     alert('Por favor, escreva um comentário.');
+//   }
+// });
 
 
-// Evento para o botão Publicar comentário
-document.querySelector('.submit-comment').addEventListener('click', function () {
-  const comment = document.querySelector('.comment-input').value;
-  if (comment) {
-    alert('Comentário enviado: ' + comment);
-    document.querySelector('.comment-input').value = ''; // Limpa o campo de comentário
-  } else {
-    alert('Por favor, escreva um comentário.');
-  }
-});
+// // Evento para o botão Publicar comentário
+// document.querySelector('.submit-comment').addEventListener('click', function () {
+//   const comment = document.querySelector('.comment-input').value;
+//   if (comment) {
+//     alert('Comentário enviado: ' + comment);
+//     document.querySelector('.comment-input').value = ''; // Limpa o campo de comentário
+//   } else {
+//     alert('Por favor, escreva um comentário.');
+//   }
+// });
 
 
 
@@ -96,9 +100,9 @@ function getMyData() {
         Cookies.set("imagemUsuario", myBlob.meusDados.UserPicture)
 
         document.getElementById("userImage").src = `${myBlob.meusDados.UserPicture}`
-        document.getElementById("userNameContent").innerText = `${myBlob.meusDados.Nome}`
+        document.getElementById("userNameContent").innerHTML = `<a href="/PerfilUser" style ="list-style:none">${myBlob.meusDados.Nome}</a>`
       } else {
-
+        window.location("/LoginPage")
       }
     })
 }
@@ -505,7 +509,7 @@ async function getMyNotifies() {
             countNewNotifies = countNewNotifies + 1;
             notifiesOnly = notifiesOnly + 1;
           }
-          
+
           document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
           ${countNewNotifies}`
           document.getElementById("bodyNotifies").innerHTML = ` <div class="notification">
@@ -566,7 +570,7 @@ async function myFriendInvites() {
       if (myBlob.success) {
         countNewNotifies = countNewNotifies + 1;
         friendInvites = friendInvites + 1;
-        
+
         document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
         ${countNewNotifies}`
         document.getElementById("friendInviter").innerHTML = `Solicitação de amizade  <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
@@ -642,7 +646,141 @@ async function rejectInvite(event) {
 
 
 
+async function getMostRecentPosts() {
+  await fetch(`/VerPostagens`, {
+    method: 'POST',
+    body: JSON.stringify({ "gapQuantity": postGap }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      if (myBlob.success) {
+        document.getElementById("mural-content").innerHTML = `
+                <!-- Botão para abrir o modal -->
+        <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar
+        Publicação</button>
+        <!-- Modal para criar uma publicação -->
+        <div id="publish-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+          <span class="close" onclick="closePublishModal()">&times;</span>
+          <h2>Criar Publicação</h2>
+          <input type="text" id="post-title" placeholder="Título da Postagem" required>
+          <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
+          <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+          <button onclick="publishPost()">Publicar</button>
+        </div>
+        </div>
+        <!-- Seção de publicações -->
+          <div id="posts-container">
+            <!-- Modelo de Postagem (oculto) -->
+            <div id="post-template" class="post" style="display:none;">
+              <div class="post-header">
+                <img src="" alt="User" class="profile-pic">
+                <!-- Foto do usuário -->
+                <h3>Nome do Usuário</h3>
+              </div>
+              <div class="post-body">
+                <h4 class="post-title"></h4>
+                <p class="post-content"></p>
+                <img src="" alt="Post Image" class="post-image">
+                <!-- Imagem da postagem -->
+              </div>
+            </div>
+          </div>
+        `
+        myBlob.posts.forEach(e => {
+          const dataObj = new Date(e.dataPublicacao)
+          const dataAmigavel = dataObj.toLocaleString('pt-BR');
 
+
+          document.getElementById("mural-content").innerHTML += `
+          <div class="feed-post">
+            <div class="post-header">
+              <div class="user-avatar">
+                <a>
+                  <img class="user-photo" src="${e.UserPicture}" alt="Foto do Usuário">
+                </a>
+              </div>
+
+              <div class="user-info">
+                 <a href="/PerfilUsuario" onclick="perfilUser(${e.IDUsuario})" class="user-name">${e.NomeUsuario}</a> 
+                <p class="post-date">${dataAmigavel}</p>
+              </div>
+
+              <div class="post-options">
+                <div class="three-dots">
+                  <button class="dots-button" onclick="toggleMenu(event)">&#8230;</button>
+                  <div class="menu" style="display: none;">
+                    <button class="report-button" onclick="reportPost()">Denunciar Postagem</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="post-content">
+              <p class="post-text">${e.Descricao}</p>
+              <img class="post-image" src="${e.PostPicture}" alt="Imagem da Postagem">
+            </div>
+
+            <div class="post-actions">
+              <div class="reaction-section">
+                <button class="reaction-button like-button"><i class="fas fa-thumbs-up"></i> Curtir</button>
+                <button class="reaction-button comment-button"><i class="fas fa-comment"></i> Comentar</button>
+              </div>
+
+              <div class="comment-section" style="display: none;">
+                <textarea class="comment-input" placeholder="Escreva um comentário..."></textarea>
+                <button class="submit-comment">Publicar</button>
+              </div>
+            </div>
+          </div>
+          `
+        })
+      } else {
+            document.getElementById("mural-content").innerHTML = `
+                <!-- Botão para abrir o modal -->
+          <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar
+          Publicação</button>
+          <!-- Modal para criar uma publicação -->
+          <div id="publish-modal" class="modal" style="display:none;">
+          <div class="modal-content">
+          <span class="close" onclick="closePublishModal()">&times;</span>
+          <h2>Criar Publicação</h2>
+          <input type="text" id="post-title" placeholder="Título da Postagem" required>
+          <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
+          <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+          <button onclick="publishPost()">Publicar</button>
+        </div>
+        </div>
+        <!-- Seção de publicações -->
+          <div id="posts-container">
+            <!-- Modelo de Postagem (oculto) -->
+            <div id="post-template" class="post" style="display:none;">
+              <div class="post-header">
+                <img src="" alt="User" class="profile-pic">
+                <!-- Foto do usuário -->
+                <h3>Nome do Usuário</h3>
+              </div>
+              <div class="post-body">
+                <h4 class="post-title"></h4>
+                <p class="post-content"></p>
+                <img src="" alt="Post Image" class="post-image">
+                <!-- Imagem da postagem -->
+              </div>
+            </div>
+          </div>
+    `
+      }
+    })
+}
+
+
+
+getMostRecentPosts()
 myFriendInvites()
 getMyNotifies()
 getingMyContacts()
