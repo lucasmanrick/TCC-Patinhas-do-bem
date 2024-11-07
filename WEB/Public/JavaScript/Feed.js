@@ -374,18 +374,19 @@ async function getingMyContacts() {
     .then(function (myBlob) {
       if (myBlob.success) {
         if (myBlob.contatosDeInteresses.length >= 1) {
+          document.getElementById('interestedContent').innerHTML = ``
           myBlob.contatosDeInteresses.forEach(e => {
-            document.getElementById('interestedContent').innerHTML = `
+            document.getElementById('interestedContent').innerHTML += `
            <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)" style = "display:flex; align-items:center; gap:5px; cursor:pointer">
               <div class="img1"><img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt=""></div>
              ${e.Nome}
             </li>`
           })
         }
-
+        document.getElementById('listContent').innerHTML = ``
         if (myBlob.contatosSemInteresses.length >= 1)
           myBlob.contatosSemInteresses.forEach(e => {
-            document.getElementById('listContent').innerHTML = `
+            document.getElementById('listContent').innerHTML += `
           <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)" style = "display:flex; align-items:center; gap:5px; cursor:pointer">
              <img class="img1" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt="">
             ${e.Nome}
@@ -503,7 +504,7 @@ async function getMyNotifies() {
     .then(function (myBlob) {
       console.log(myBlob)
       if (myBlob.success) {
-
+        document.getElementById("bodyNotifies").innerHTML = ``
         myBlob.notifications.forEach(e => {
           if (e.MensagemVisualizada == "False") {
             countNewNotifies = countNewNotifies + 1;
@@ -512,7 +513,7 @@ async function getMyNotifies() {
 
           document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
           ${countNewNotifies}`
-          document.getElementById("bodyNotifies").innerHTML = ` <div class="notification">
+          document.getElementById("bodyNotifies").innerHTML += ` <div class="notification">
                 <div class="notification-icon">
                   <i class="fas fa-comment"></i>
                 </div>
@@ -543,13 +544,12 @@ async function checkNotifies() {
       return response.json();
     })
     .then(function (myBlob) {
-      console.log(myBlob, "chekNotifies")
       if (myBlob.success) {
         countNewNotifies = 0;
         notifiesOnly = 0;
         countNewNotifies = friendInvites
         document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
- ${countNewNotifies}`
+        ${countNewNotifies}`
       }
     })
 }
@@ -568,14 +568,16 @@ async function myFriendInvites() {
     .then(function (myBlob) {
       console.log(myBlob)
       if (myBlob.success) {
-        countNewNotifies = countNewNotifies + 1;
-        friendInvites = friendInvites + 1;
-
+        countNewNotifies = countNewNotifies + myBlob.invites.length;
+    
         document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
         ${countNewNotifies}`
-        document.getElementById("friendInviter").innerHTML = `Solicitação de amizade  <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
+        document.getElementById("friendInviter").innerHTML = `Solicitação de amizade  <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${myBlob.invites.length}</span>`
+        document.getElementById("inviteBody").innerHTML = `<div class="solicitacao-amizade">`
+        
         myBlob.invites.forEach(e => {
-          document.getElementById("inviteBody").innerHTML = `<div class="solicitacao-amizade">
+        
+          document.getElementById("inviteBody").innerHTML +=`
                 <div class="d-flex align-items-center">
                   <!-- Foto de Perfil -->
                   <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDSolicitante}.jpg?alt=media}" alt="Foto de Perfil" class="rounded-circle me-3">
@@ -596,7 +598,7 @@ async function myFriendInvites() {
         })
 
       } else {
-        document.getElementById("friendInviter").innerHTML = `Solicitação de amizade <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
+        document.getElementById("friendInviter").innerHTML = `Solicitação de amizade <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">0</span>`
       }
     })
 }
