@@ -52,6 +52,14 @@ class Postagem {
           if(i.IDPostagem === e.ID) {checkPostDenuncies = true}
         })
 
+        verifyLikeQuantity[0].forEach(x => {
+          if(x.IDUsuario === UserID ) {
+            e.avaliei = true
+          }else {
+            e.avaliei = false
+          }
+        })
+
         const verifyComments = await Comentario.verComentariosDeUmPostQuery(e.ID)
         
 
