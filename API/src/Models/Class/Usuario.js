@@ -56,8 +56,6 @@ class Usuario {
       if(authResponse[0].length > 0) {
 
         const verifyIfUserBlock = await UsuariosBloqueados.pegaUsuarioBloqueadoPeloIDQuery(authResponse[0][0].ID)
-        console.log(verifyIfUserBlock)
-
         if(verifyIfUserBlock.warning) return {error:"não é possivel entrar nesta conta, pois a mesma se encontra BANIDA de nosso sistema"}
         if(verifyIfUserBlock.error) return {error:"não foi possivel validar se a conta está livre para acessar nosso site, por favor tente novamente"} 
 
@@ -87,7 +85,6 @@ class Usuario {
     const conn = await connection();
     try{                
       const sendToDBRefreshUserData = await conn.query("UPDATE usuario SET Nome = ?, CEP=?, Rua=?, Numero=?, Bairro=?, Estado=?, DataNasc=?, Email=?, Senha=?,Cidade=? WHERE ID=?",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,this.Cidade,this.ID])
-      console.log(sendToDBRefreshUserData)
       if(sendToDBRefreshUserData[0].affectedRows >=1) {
         return{success:"atualizado os dados do usuário com sucesso"}
       }else {

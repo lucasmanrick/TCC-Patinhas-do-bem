@@ -505,10 +505,9 @@ async function getMyNotifies() {
             countNewNotifies = countNewNotifies + 1;
             notifiesOnly = notifiesOnly + 1;
           }
-
+          
           document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
-            ${countNewNotifies}`
-
+          ${countNewNotifies}`
           document.getElementById("bodyNotifies").innerHTML = ` <div class="notification">
                 <div class="notification-icon">
                   <i class="fas fa-comment"></i>
@@ -522,7 +521,7 @@ async function getMyNotifies() {
           document.getElementById("notifyContent").innerHTML = `Notificações <span style="border-radius:50%;width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${notifiesOnly}</span>`
 
         })
-      }else {
+      } else {
         document.getElementById("notifyContent").innerHTML = `Notificações <span style="border-radius:50%;width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${notifiesOnly}</span>`
       }
     })
@@ -566,6 +565,9 @@ async function myFriendInvites() {
       if (myBlob.success) {
         countNewNotifies = countNewNotifies + 1;
         friendInvites = friendInvites + 1;
+        
+        document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
+        ${countNewNotifies}`
         document.getElementById("friendInviter").innerHTML = `Solicitação de amizade  <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
         myBlob.invites.forEach(e => {
           document.getElementById("inviteBody").innerHTML = `<div class="solicitacao-amizade">
@@ -581,14 +583,15 @@ async function myFriendInvites() {
                 <!-- Botões de Ação -->
                 <div class="mt-3 d-flex justify-content-around">
                   <button class="btn btn-primary btn-sm" id="${e.ID}" onclick="acceptInvite(this)">Aceitar</button>
-                  <button class="btn btn-secondary btn-sm" id="${e.ID}" onclick="">Recusar</button>
+                  <button class="btn btn-secondary btn-sm" id="${e.ID}" onclick="rejectInvite(this)">Recusar</button>
                 </div>
               </div>
               <hr>`
+
         })
 
-      }else {
-         document.getElementById("friendInviter").innerHTML = `Solicitação de amizade <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
+      } else {
+        document.getElementById("friendInviter").innerHTML = `Solicitação de amizade <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${friendInvites}</span>`
       }
     })
 }
@@ -597,7 +600,7 @@ async function myFriendInvites() {
 async function acceptInvite(event) {
   await fetch(`/AceitaSolicitacaoAmizade`, {
     method: 'POST',
-    body:JSON.stringify({"inviteID":event.id}),
+    body: JSON.stringify({ "inviteID": event.id }),
     headers: {
       'Content-Type': 'application/json'
     }
@@ -607,8 +610,30 @@ async function acceptInvite(event) {
     })
     .then(async function (myBlob) {
       if (myBlob.success) {
-       alert("Solicitação de amizade aceita.")
-       await getingMyContacts()
+        alert("Solicitação de amizade aceita.")
+        await getingMyContacts()
+      }
+    })
+}
+
+
+
+
+async function rejectInvite(event) {
+  await fetch(`/RemoveSolicitacao`, {
+    method: 'DELETE',
+    body: JSON.stringify({ "inviteID": event.id }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      if (myBlob.success) {
+        alert("Solicitação de amizade recusada com sucesso")
+        await getingMyContacts()
       }
     })
 }
@@ -619,3 +644,5 @@ async function acceptInvite(event) {
 myFriendInvites()
 getMyNotifies()
 getingMyContacts()
+
+

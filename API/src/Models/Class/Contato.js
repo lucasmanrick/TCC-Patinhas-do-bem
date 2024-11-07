@@ -57,7 +57,6 @@ class Contato {
      const returnedMessages =  unifyResultsInterestedsContacts.map(async e => {
         const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
         if(takeLastMessage[0].length >=1) {
-          console.log(e)
           e.ultimaMensagem = takeLastMessage[0][0].Texto
           return e
         }else {

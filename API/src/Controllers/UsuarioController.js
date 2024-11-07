@@ -6,8 +6,6 @@ const bcrypt = require('bcrypt');
 
 const UsuarioController = {
   cadastraUsuario: async (req, res) => {
-    console.log(req.body);
-
 
     try {
       const { NomeUsuario, DataNasc, Email, Senha, Cep, Rua, Numero, Bairro, Estado, Cidade } = req.body

@@ -22,10 +22,11 @@ const solicitacaoContatoController = {
 
   removeSolicitacaoDeAmizade: async (req,res) => {
     try{
+      const {ID} = req.dataUser;
       const {inviteID} = req.body;
 
       if(inviteID) {
-        const sendRemoveRequisition = await SolicitacaoContato.removeSolicitacaoDeAmizadeQuery(inviteID);
+        const sendRemoveRequisition = await SolicitacaoContato.removeSolicitacaoDeAmizadeQuery(ID,inviteID);
         return res.json(sendRemoveRequisition)
       }else {
         return res.json({error:"você não especificou uma solicitação de amizade que há de ser excluida."})
