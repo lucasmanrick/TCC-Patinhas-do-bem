@@ -20,13 +20,10 @@ const userInteractQueries = {
       returnDataCleaned[0].forEach (e => {
          e.UserPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media`
       })
-      console.log("first attempt")
       if(returnDataCleaned[0].length >=1) {
-        console.log("chegou")
-        console.log(myPosts.postagens)
         if(myPosts.postagens === undefined) {
           return {success:"retornando dados do seu perfil para uso" ,meusDados: returnDataCleaned[0][0],dadosMeusPets:returnPetsUser.dataResponse}
-        } console.log("passou")
+        } 
        const getingAnotherInfosAboutPost = await myPosts.postagens.map(async(el,index) => {
           const verifyComments = await Comentario.verComentariosDeUmPostQuery(el.ID);
           const likesQuantity = await Avaliacao.verReacoesPostagemQuery(el.ID)

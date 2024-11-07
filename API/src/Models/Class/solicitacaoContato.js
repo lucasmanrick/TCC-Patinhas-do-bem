@@ -29,6 +29,7 @@ class SolicitacaoContato {
         return { error: "o usuário ou o destinatario já estão com uma solicitação de amizade pendente entre si, ou já estão na lista de contato um dos outros." }
       } else {
         const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)", [UserID, 0, IDDestinatario])
+
         if (sendInviteToNewFriend[0].affectedRows >= 1) {
           const notifyInvite = new Notificacao(null, `Você recebeu uma solicitação de amizade de ${NomeDoSolicitante} `, IDDestinatario);
           await notifyInvite.criarNotificação();

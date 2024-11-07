@@ -562,6 +562,7 @@ async function myFriendInvites() {
       return response.json();
     })
     .then(function (myBlob) {
+      console.log(myBlob)
       if (myBlob.success) {
         countNewNotifies = countNewNotifies + 1;
         friendInvites = friendInvites + 1;
@@ -577,7 +578,7 @@ async function myFriendInvites() {
                   <!-- Nome do Usuário -->
                   <div>
                     <p class="mb-0"><strong>${e.Nome}</strong></p>
-                    ${e.Interessado === true ? '<small>Enviou uma Solicitação e está interessado em um de seus pets</small>' : '<small>Enviou uma Solicitação</small>'}
+                    ${e.Interessado === 1 ? '<small>está interessado em um de seus pets</small>' : '<small>Enviou uma Solicitação</small>'}
                   </div>
                 </div>
                 <!-- Botões de Ação -->
@@ -612,6 +613,7 @@ async function acceptInvite(event) {
       if (myBlob.success) {
         alert("Solicitação de amizade aceita.")
         await getingMyContacts()
+        await friendInvites()
       }
     })
 }
