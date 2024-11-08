@@ -662,6 +662,7 @@ async function getMostRecentPosts() {
       return response.json();
     })
     .then(async function (myBlob) {
+      
       if (myBlob.success) {
         document.getElementById("mural-content").innerHTML = `
                 <!-- Botão para abrir o modal -->
@@ -680,7 +681,9 @@ async function getMostRecentPosts() {
         </div>
         `
         myBlob.posts.forEach(e => {
+
           if(e === true) {return}
+
           const dataObj = new Date(e.dataPublicacao)
           const dataAmigavel = dataObj.toLocaleString('pt-BR');
 
