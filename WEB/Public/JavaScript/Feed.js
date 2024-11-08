@@ -678,25 +678,9 @@ async function getMostRecentPosts() {
           <button onclick="publishPost()">Publicar</button>
         </div>
         </div>
-        <!-- Seção de publicações -->
-          <div id="posts-container">
-            <!-- Modelo de Postagem (oculto) -->
-            <div id="post-template" class="post" style="display:none;">
-              <div class="post-header">
-                <img src="" alt="User" class="profile-pic">
-                <!-- Foto do usuário -->
-                <h3>Nome do Usuário</h3>
-              </div>
-              <div class="post-body">
-                <h4 class="post-title"></h4>
-                <p class="post-content"></p>
-                <img src="" alt="Post Image" class="post-image">
-                <!-- Imagem da postagem -->
-              </div>
-            </div>
-          </div>
         `
         myBlob.posts.forEach(e => {
+          if(e === true) {return}
           const dataObj = new Date(e.dataPublicacao)
           const dataAmigavel = dataObj.toLocaleString('pt-BR');
 
@@ -760,23 +744,6 @@ async function getMostRecentPosts() {
           <button onclick="publishPost()">Publicar</button>
         </div>
         </div>
-        <!-- Seção de publicações -->
-          <div id="posts-container">
-            <!-- Modelo de Postagem (oculto) -->
-            <div id="post-template" class="post" style="display:none;">
-              <div class="post-header">
-                <img src="" alt="User" class="profile-pic">
-            
-                <h3>Nome do Usuário</h3>
-              </div>
-              <div class="post-body">
-                <h4 class="post-title"></h4>
-                <p class="post-content"></p>
-                <img src="" alt="Post Image" class="post-image">
-                <!-- Imagem da postagem -->
-              </div>
-            </div>
-          </div>
     `
       }
     })

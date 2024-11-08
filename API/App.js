@@ -16,10 +16,11 @@ const io = new Server(server);
 
 require("dotenv-safe").config();
 const cookieParser = require('cookie-parser');
+const { Console } = require("node:console");
 
 
 
-const port= 5000;
+const port= process.env.PORT !== undefined? process.env.PORT:5000;
 
 
 io.on('connection', (socket) => {
@@ -39,14 +40,6 @@ io.on('connection', (socket) => {
 })
 
 
-// io.on('connection', (socket) => {
-//   console.log('usuário está vendo mensagens com outro usuário')
-//   socket.broadcast.emit('msg', msg)
-//   socket.join (`${contactID}Message`)
-// })
-
-
-// io.to (`${IDContato}Message`).emit('msg', Texto);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -66,9 +59,7 @@ app.use((req,res,next) => {
  app.use('/', router)
 
 
-
-
-server.listen(port, () => {
+server.listen(port , () => {
     console.log(`Servidor respondendo na porta ${port}`);
 });
 
