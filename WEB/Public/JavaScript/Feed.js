@@ -286,12 +286,12 @@ async function getingPets() {
     })
     .then(function (myBlob) {
       if (myBlob.success) {
+        document.getElementById('view-animals-content').innerHTML = `<h2>Animais para adoção</h2> 
+          <button style="padding: 10px; border: 1px solid; background-color:#4A5C6A ; color:white" onclick="getMyInterests()"><i class="fa-regular fa-heart"></i>  Meus Interesses</button>`
         myBlob.dataResponse.forEach(e => {
 
 
-          document.getElementById('view-animals-content').innerHTML = `
-           <h2>Animais para adoção</h2> 
-          <button style="padding: 10px; border: 1px solid; background-color:#4A5C6A ; color:white" onclick="getMyInterests()">Meus Interesses</button>
+          document.getElementById('view-animals-content').innerHTML += `
           <div class="post"">
             <div class="user-info">
               <div class="titulo-pet">
@@ -350,6 +350,7 @@ async function showInterestOnPet(PetID) {
     })
     .then(function (myBlob) {
       if (myBlob.success) {
+        getingPets()
         return alert(myBlob.success)
       } else if (myBlob.error) {
         alert(myBlob.error)
@@ -417,7 +418,7 @@ async function getMyInterests() {
           console.log(myBlob)
           document.getElementById('view-animals-content').innerHTML = `
           <h2>Animais que você demonstrou interesse</h2> 
-            <button style="padding: 10px; border: 1px solid" onclick="getingPets()">Ver Animais para adoção</button>
+            <button style="padding: 10px; border: 1px solid;background-color:white" onclick="getingPets()"><i class="fa-solid fa-paw"></i> Animais para adoção</button>
               <div class="post"">
                 <div class="user-info">
                   <div class="titulo-pet">
@@ -478,6 +479,7 @@ async function removeInterest(event) {
     })
     .then(function (myBlob) {
       if (myBlob.success) {
+        getingPets()
         alert("retirado interesse em pet com sucesso")
       } else {
         alert(myBlob.error)
@@ -640,7 +642,7 @@ async function rejectInvite(event) {
     })
     .then(async function (myBlob) {
       if (myBlob.success) {
-        alert("Solicitação de amizade recusada com sucesso")
+        await myFriendInvites()
         await getingMyContacts()
       }
     })
@@ -660,6 +662,7 @@ async function getMostRecentPosts() {
       return response.json();
     })
     .then(async function (myBlob) {
+      
       if (myBlob.success) {
         document.getElementById("mural-content").innerHTML = `
                 <!-- Botão para abrir o modal -->
@@ -676,25 +679,11 @@ async function getMostRecentPosts() {
           <button onclick="publishPost()">Publicar</button>
         </div>
         </div>
-        <!-- Seção de publicações -->
-          <div id="posts-container">
-            <!-- Modelo de Postagem (oculto) -->
-            <div id="post-template" class="post" style="display:none;">
-              <div class="post-header">
-                <img src="" alt="User" class="profile-pic">
-                <!-- Foto do usuário -->
-                <h3>Nome do Usuário</h3>
-              </div>
-              <div class="post-body">
-                <h4 class="post-title"></h4>
-                <p class="post-content"></p>
-                <img src="" alt="Post Image" class="post-image">
-                <!-- Imagem da postagem -->
-              </div>
-            </div>
-          </div>
         `
         myBlob.posts.forEach(e => {
+
+          if(e === true) {return}
+
           const dataObj = new Date(e.dataPublicacao)
           const dataAmigavel = dataObj.toLocaleString('pt-BR');
 
@@ -704,7 +693,7 @@ async function getMostRecentPosts() {
             <div class="post-header">
               <div class="user-avatar">
                 <a>
-                  <img class="user-photo" src="${e.UserPicture}" alt="Foto do Usuário">
+                  <img class="user-photo" src="${e.UserPicture}" alt="">
                 </a>
               </div>
 
@@ -725,13 +714,13 @@ async function getMostRecentPosts() {
 
             <div class="post-content">
               <p class="post-text">${e.Descricao}</p>
-              <img class="post-image" src="${e.PostPicture}" alt="Imagem da Postagem">
+              <img class="post-image" src="${e.PostPicture}" alt="">
             </div>
 
             <div class="post-actions">
               <div class="reaction-section">
-                <button class="reaction-button like-button"><i class="fas fa-thumbs-up"></i> Curtir</button>
-                <button class="reaction-button comment-button"><i class="fas fa-comment"></i> Comentar</button>
+                <button class="reaction-button like-button" onclick="likePost(${e.ID},this)"> ${e.avaliei === true? `<i class="fa-solid fa-thumbs-up" id="fa-like-${e.ID}"></i>`: `<i class="fa-regular fa-thumbs-up" id="fa-like-${e.ID}"></i>`} ${e.quantidadeDeLike?`${e.quantidadeDeLike}`:''} </button>
+                <button class="reaction-button comment-button" onclick="openComments(${e.ID})"><i class="fas fa-comment"></i> Comentar</button>
               </div>
 
               <div class="comment-section" style="display: none;">
@@ -758,27 +747,55 @@ async function getMostRecentPosts() {
           <button onclick="publishPost()">Publicar</button>
         </div>
         </div>
-        <!-- Seção de publicações -->
-          <div id="posts-container">
-            <!-- Modelo de Postagem (oculto) -->
-            <div id="post-template" class="post" style="display:none;">
-              <div class="post-header">
-                <img src="" alt="User" class="profile-pic">
-                <!-- Foto do usuário -->
-                <h3>Nome do Usuário</h3>
-              </div>
-              <div class="post-body">
-                <h4 class="post-title"></h4>
-                <p class="post-content"></p>
-                <img src="" alt="Post Image" class="post-image">
-                <!-- Imagem da postagem -->
-              </div>
-            </div>
-          </div>
     `
       }
     })
 }
+
+
+
+async function likePost(postID) {
+  await fetch(`/ReagirPostagem`, {
+    method: 'POST',
+    body: JSON.stringify({ "IDPostagem": postID, "tipo":"like" }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      if (myBlob.success) {
+       document.getElementById(`fa-like-${postID}`).classList = []
+       document.getElementById(`fa-like-${postID}`).classList = ["fa-solid fa-thumbs-up"]
+      }else if (myBlob.error === "você já avaliou este post") {
+        document.getElementById(`fa-like-${postID}`).classList = ["fa-solid fa-thumbs-up"]
+        removeLikePost(postID)
+      }else {
+        console.error(myBlob.error)
+      }
+    })
+}
+
+
+async function removeLikePost(PostID) {
+  await fetch(`/RemoverReacao/${PostID}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      if (myBlob.success) {
+        document.getElementById(`fa-like-${PostID}`).classList = ["fa-regular fa-thumbs-up"]
+      }
+    })
+}
+
 
 
 

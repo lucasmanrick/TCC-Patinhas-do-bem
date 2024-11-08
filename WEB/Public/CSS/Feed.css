@@ -784,7 +784,7 @@ h2 {
     display: none;
     z-index: 1000;
     margin-left: 78%;
-    margin-top: 10px;
+    position: absolute;
 }
 
 #chat-header {

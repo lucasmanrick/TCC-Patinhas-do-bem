@@ -22,7 +22,7 @@ const avaliacaoController = {
 
   removerReacao: async (req,res) => {
     const {ID} = req.dataUser;
-    const {IDPostagem} = req.body;
+    const {IDPostagem} = req.params;
     try {
       if(ID && IDPostagem) {
         const waitingResponse = await Avaliacao.removerReacaoQuery(ID,IDPostagem)

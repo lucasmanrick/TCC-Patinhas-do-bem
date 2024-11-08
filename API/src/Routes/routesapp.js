@@ -194,7 +194,7 @@ router.post("/Cadastro",UsuarioController.cadastraUsuario)
   router.post ("/ReagirPostagem", verificadorDoToken, avaliacaoController.reagirPostagem)
 
   //rota para retirar uma reação de uma postagem
-  router.post ("/RemoverReacao", verificadorDoToken, avaliacaoController.removerReacao)
+  router.delete ("/RemoverReacao/:IDPostagem", verificadorDoToken, avaliacaoController.removerReacao)
 
   //rota para efetuar um comentário em algum post
   router.post ("/comentarPost", verificadorDoToken, comentarioController.comentarEmUmPost)

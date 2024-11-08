@@ -44,12 +44,22 @@ class Postagem {
       const verifyMyPostsDenunces = await conn.query("select * from denuncia where IDUsuario = ?",[UserID]);
       const getingPosts = await conn.query (`select p.*, u.Nome as NomeUsuario from postagem AS p JOIN Usuario AS U on U.ID = p.IDUsuario ORDER BY p.dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
 
+      
+
       const getReturnPosts = await getingPosts[0].map(async(e,index) => {
         let checkPostDenuncies = false; //variavel para verificar se o post sendo analisado já foi denunciado por mim
 
         const verifyLikeQuantity = await Avaliacao.verReacoesPostagemQuery(e.ID) //função para ver a quantidade de likes que tem na postagem sendo analisada
         verifyMyPostsDenunces[0].forEach((i) => { //verifica se os posts retornado não foi denunciado pelo usuário que o solicitou
           if(i.IDPostagem === e.ID) {checkPostDenuncies = true}
+        })
+
+        verifyLikeQuantity[0].forEach(x => {
+          if(x.IDUsuario === UserID ) {
+            e.avaliei = true
+          }else {
+            e.avaliei = false
+          }
         })
 
         const verifyComments = await Comentario.verComentariosDeUmPostQuery(e.ID)
@@ -65,7 +75,7 @@ class Postagem {
         return e
       })
        getingPosts[0] = await Promise.all(getReturnPosts) // faz com que a função aguarde terminar todo o preenchimento/ tratamento de dados do getingPosts sendo feito dentro do for each
-      return{success:"retornando os posts conforme o feed",posts:getingPosts[0]}
+       return{success:"retornando os posts conforme o feed",posts: await getingPosts[0]}
     }catch(e) {
       return {error:e.message}
     }

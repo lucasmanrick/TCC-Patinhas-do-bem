@@ -55,7 +55,7 @@ class Interesse {
             if (verifyContact[0].length >= 1) { //Verificar se o usuário que está demonstrando interesse e o doador do pet já não são contatos um do outro SE FOR fazer: 
               if (verifyContact[0][0].Interessado != '') { //verificar se o contato está registrado como um contato de interesse, se tiver como contato de interesse apenas retorna mensagem de sucesso informando que o usuário já está na lista de contatos.
                 //caso for enviar uma mensagem direta do usuário que demonstra o interesse no pet para o usuário dono do pet, inserir a validação aki.
-                const notifyInterest = new Notificacao(null, `${dataGiver[0][0].Nome} demonstrou interesse no seu pet ${verifyExistencePet[0][0].TipoAnimal}`, dataGiver[0][0].ID);
+                const notifyInterest = new Notificacao(null, `${verifyExistenceUser[0][0].Nome} demonstrou interesse no seu pet ${verifyExistencePet[0][0].TipoAnimal}`, dataGiver[0][0].ID);
                 await notifyInterest.criarNotificação()
                 await conn.commit();
                 return { success: "O Usuário demonstrou interesse no pet e ja tem o dono do mesmo na sua lista de contatos" }
@@ -63,7 +63,7 @@ class Interesse {
              
               const showInterest = await conn.query("UPDATE Contato SET Interessado = ? WHERE ID = ?", [1, verifyContact[0][0].ID])
               if (showInterest[0].affectedRows >= 1) {
-                const notifyInterest = new Notificacao(null, `${dataGiver[0][0].Nome} demonstrou interesse no seu pet ${verifyExistencePet[0][0].TipoAnimal}`, dataGiver[0][0].ID);
+                const notifyInterest = new Notificacao(null, `${verifyExistenceUser[0][0].Nome} demonstrou interesse no seu pet ${verifyExistencePet[0][0].TipoAnimal}`, dataGiver[0][0].ID);
                 await notifyInterest.criarNotificação()
                 await conn.commit();
                 return { success: "O Usuário demonstrou interesse no pet, já possui o dono na lista de contato e agora o contato está na lista de interesse de ambos." }
@@ -79,9 +79,8 @@ class Interesse {
             const sendInviteToGiver = await conn.query("Insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)", [UserID, 1, verifyExistencePet[0][0].IDDoador])
             console.log(sendInviteToGiver)
             if (sendInviteToGiver[0].affectedRows >= 1) {
-              const notifyInvite = new Notificacao(null, `Você recebeu uma solicitação de amizade de ${dataGiver[0][0].Nome} `, dataGiver[0][0].ID)
+              const notifyInvite = new Notificacao(null, `Você recebeu uma solicitação de amizade de ${verifyExistenceUser[0][0].Nome} `, dataGiver[0][0].ID)
               const result = await notifyInvite.criarNotificação()
-              console.log(result)
               await conn.commit();
               return { success: "Usuário demonstrou interesse em um pet novo com sucesso e foi enviado a solicitação de contato para o dono" }
             } else {
