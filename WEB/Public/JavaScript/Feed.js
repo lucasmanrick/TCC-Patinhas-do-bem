@@ -682,13 +682,13 @@ async function getMostRecentPosts() {
         Publicação</button>
         <!-- Modal para criar uma publicação -->
         <div id="publish-modal" class="modal" style="display:none;">
-        <div class="modal-content">
-          <span class="close" onclick="closePublishModal()">&times;</span>
-          <h2>Criar Publicação</h2>
-          <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
-          <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-          <button onclick="createNewPost()">Publicar</button>
-        </div>
+          <div class="modal-content">
+            <span class="close" onclick="closePublishModal()">&times;</span>
+            <h2>Criar Publicação</h2>
+            <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
+            <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+            <button onclick="createNewPost()">Publicar</button>
+          </div>
         </div>
         `
         myBlob.posts.forEach(e => {
@@ -782,7 +782,24 @@ async function getMostRecentPosts() {
 
 
 async function createNewPost() {
-  
+  await fetch(`/CriarPostagem`, {
+    method: 'POST',
+    body: JSON.stringify({ "IDPostagem": postID,
+      "Texto": document.getElementById(`inputComment-${postID}`).value
+     }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      console.log("retorno",myBlob)
+      if (myBlob.success) {
+        
+      }
+    })
 }
 
 
