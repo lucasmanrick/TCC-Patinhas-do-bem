@@ -1,4 +1,14 @@
 
+document.addEventListener('click', function (event) {
+  if (event.target && event.target.classList.contains('comment-button')) {
+    const commentSection = event.target.closest('.feed-post').querySelector('.comment-section');
+    if (commentSection.style.display === 'none' || commentSection.style.display === '') {
+      commentSection.style.display = 'flex';
+    } else {
+      commentSection.style.display = 'none';
+    }
+  }
+});
 
 
 function showContent(menuId) {
@@ -426,7 +436,7 @@ async function getMyInterests() {
                   </div>
       
                   <div class="formulario-do-pet">
-                    <p class="descrição" onclick="perfilUser(${e.IDDoador})"><strong>Dono do pet:</strong> <a href ="/UserPerfil"> ${e.NomeDoDono} </a></p>
+                    <p class="descrição" onclick="perfilUser(${e.IDDoador})"><strong>Dono do pet:</strong> <img src ="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDDoador}.jpg?alt=media" style="border-radius:50%; width:30px;heigth:30px" alt="">"</img>  <a href ="/UserPerfil"> ${e.NomeDoDono} </a></p>
                     <p class="descrição"><strong>Tipo de Animal:</strong> ${e.TipoAnimal}</p>
                     <p class="descrição"><strong>Linhagem:</strong> ${e.Linhagem}</p>
                     <p class="descrição"><strong>Idade:</strong>  ${e.Idade}</p>
@@ -529,6 +539,8 @@ async function getMyNotifies() {
 
         })
       } else {
+        document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
+          ${friendInvites}`
         document.getElementById("notifyContent").innerHTML = `Notificações <span style="border-radius:50%;width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${notifiesOnly}</span>`
       }
     })
@@ -571,15 +583,15 @@ async function myFriendInvites() {
       console.log(myBlob)
       if (myBlob.success) {
         countNewNotifies = countNewNotifies + myBlob.invites.length;
-    
+
         document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
         ${countNewNotifies}`
         document.getElementById("friendInviter").innerHTML = `Solicitação de amizade  <span style="border-radius:50%; width:20px;height:20px;display:flex;justify-content:center;align-items:center; color:white;background-color:red">${myBlob.invites.length}</span>`
         document.getElementById("inviteBody").innerHTML = `<div class="solicitacao-amizade">`
-        
+
         myBlob.invites.forEach(e => {
-        
-          document.getElementById("inviteBody").innerHTML +=`
+
+          document.getElementById("inviteBody").innerHTML += `
                 <div class="d-flex align-items-center">
                   <!-- Foto de Perfil -->
                   <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDSolicitante}.jpg?alt=media}" alt="Foto de Perfil" class="rounded-circle me-3">
@@ -643,7 +655,7 @@ async function rejectInvite(event) {
     .then(async function (myBlob) {
       if (myBlob.success) {
         await myFriendInvites()
-        await getingMyContacts()
+
       }
     })
 }
@@ -662,7 +674,7 @@ async function getMostRecentPosts() {
       return response.json();
     })
     .then(async function (myBlob) {
-      
+
       if (myBlob.success) {
         document.getElementById("mural-content").innerHTML = `
                 <!-- Botão para abrir o modal -->
@@ -673,23 +685,22 @@ async function getMostRecentPosts() {
         <div class="modal-content">
           <span class="close" onclick="closePublishModal()">&times;</span>
           <h2>Criar Publicação</h2>
-          <input type="text" id="post-title" placeholder="Título da Postagem" required>
           <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
           <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-          <button onclick="publishPost()">Publicar</button>
+          <button onclick="createNewPost()">Publicar</button>
         </div>
         </div>
         `
         myBlob.posts.forEach(e => {
 
-          if(e === true) {return}
+          if (e === true) { return }
 
           const dataObj = new Date(e.dataPublicacao)
           const dataAmigavel = dataObj.toLocaleString('pt-BR');
 
 
           document.getElementById("mural-content").innerHTML += `
-          <div class="feed-post">
+          <div class="feed-post" >
             <div class="post-header">
               <div class="user-avatar">
                 <a>
@@ -717,47 +728,73 @@ async function getMostRecentPosts() {
               <img class="post-image" src="${e.PostPicture}" alt="">
             </div>
 
-            <div class="post-actions">
-              <div class="reaction-section">
-                <button class="reaction-button like-button" onclick="likePost(${e.ID},this)"> ${e.avaliei === true? `<i class="fa-solid fa-thumbs-up" id="fa-like-${e.ID}"></i>`: `<i class="fa-regular fa-thumbs-up" id="fa-like-${e.ID}"></i>`} ${e.quantidadeDeLike?`${e.quantidadeDeLike}`:''} </button>
-                <button class="reaction-button comment-button" onclick="openComments(${e.ID})"><i class="fas fa-comment"></i> Comentar</button>
-              </div>
-
-              <div class="comment-section" style="display: none;">
-                <textarea class="comment-input" placeholder="Escreva um comentário..."></textarea>
-                <button class="submit-comment">Publicar</button>
+            <div class="post-actions" id="interactContent-${e.ID}">
+              <div class="reaction-section" >
+                <button class="reaction-button like-button" onclick="likePost(${e.ID},this)"> ${e.avaliei === true ? `<i class="fa-solid fa-thumbs-up" id="fa-like-${e.ID}"></i>` : `<i class="fa-regular fa-thumbs-up" id="fa-like-${e.ID}"></i>`} <div id="manyLikes-${e.ID}">${e.quantidadeDeLike ? `${e.quantidadeDeLike}</div>` : ''} </button>
+                <button class="reaction-button comment-button"><i class="fas fa-comment"></i> Comentarios </button>
               </div>
             </div>
-          </div>
-          `
+          </div >
+            `
+
+          e.comentariosDoPost.forEach(y => {
+            const data = new Date (y.Data)
+            
+
+            document.getElementById(`interactContent-${e.ID}`).innerHTML += `
+              <div>
+                <div class = "userCommentContent" style="display:flex; align-items:center; gap:5px">
+                  <img style ="border-radius:50%;width:30px;height:30px" src = "https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${y.IDUsuario}.jpg?alt=media"
+                  <div> <a href="perfilUser(${y.IDUsuario})" style="text-decoration:none; font-size:13px">${y.Nome}</a></div> 
+                </div>
+               <p style=" display:flex;flex-direction:column"><p style="font-size:14px;color:#808080;">${y.Texto}</<p><p style="font-size:10px">${data.toLocaleString('pt-BR')}</<p></p> 
+              <hr>
+              </div > `
+          })
+
+          document.getElementById(`interactContent-${e.ID}`).innerHTML += `
+               <div class="comment-section" style = "display: flex;">
+                <textarea class="comment-input" id="inputComment-${e.ID}" placeholder="Escreva um comentário..."></textarea>
+                <button class="submit-comment" onclick="sendComment(${e.ID})">Comentar</button>
+              </div> `
+
         })
       } else {
-            document.getElementById("mural-content").innerHTML = `
-                <!-- Botão para abrir o modal -->
+        document.getElementById("mural-content").innerHTML = `
+            < !--Botão para abrir o modal-- >
           <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar
           Publicação</button>
-          <!-- Modal para criar uma publicação -->
-          <div id="publish-modal" class="modal" style="display:none;">
-          <div class="modal-content">
-          <span class="close" onclick="closePublishModal()">&times;</span>
-          <h2>Criar Publicação</h2>
-          <input type="text" id="post-title" placeholder="Título da Postagem" required>
-          <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
-          <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-          <button onclick="publishPost()">Publicar</button>
-        </div>
-        </div>
-    `
+          <!--Modal para criar uma publicação-- >
+            <div id="publish-modal" class="modal" style="display:none;">
+              <div class="modal-content">
+                <span class="close" onclick="closePublishModal()">&times;</span>
+                <h2>Criar Publicação</h2>
+                <input type="text" id="post-title" placeholder="Título da Postagem" required>
+                  <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
+                  <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+                    <button onclick="publishPost()">Publicar</button>
+                  </div>
+              </div>
+              `
       }
     })
 }
 
 
+async function createNewPost() {
+  
+}
 
-async function likePost(postID) {
-  await fetch(`/ReagirPostagem`, {
+
+
+async function sendComment (postID) {
+  console.log("chegou")
+  console.log(document.getElementById(`inputComment-${postID}`).textContent)
+  await fetch(`/comentarPost`, {
     method: 'POST',
-    body: JSON.stringify({ "IDPostagem": postID, "tipo":"like" }),
+    body: JSON.stringify({ "IDPostagem": postID,
+      "Texto": document.getElementById(`inputComment-${postID}`).value
+     }),
     headers: {
       'Content-Type': 'application/json'
     }
@@ -766,13 +803,42 @@ async function likePost(postID) {
       return response.json();
     })
     .then(async function (myBlob) {
+      console.log("retorno",myBlob)
       if (myBlob.success) {
-       document.getElementById(`fa-like-${postID}`).classList = []
-       document.getElementById(`fa-like-${postID}`).classList = ["fa-solid fa-thumbs-up"]
-      }else if (myBlob.error === "você já avaliou este post") {
+        document.getElementById(`inputComment-${postID}`).value = ""
+        alert("comentario efetuado com sucesso")
+      }
+    })
+}
+
+
+
+
+async function likePost(postID) {
+  await fetch(`/ReagirPostagem`, {
+    method: 'POST',
+    body: JSON.stringify({ "IDPostagem": postID, "tipo": "like" }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      let numManyLikes;
+      if (myBlob.success) {
+        document.getElementById(`fa-like-${postID}`).classList = []
+        document.getElementById(`fa-like-${postID}`).classList = ["fa-solid fa-thumbs-up"]
+        numManyLikes = await parseInt(document.getElementById(`manyLikes-${postID}`).textContent) + 1
+        document.getElementById(`manyLikes-${postID}`).innerHTML = numManyLikes
+        console.log("manylikes")
+      } else if (myBlob.error === "você já avaliou este post") {
+        numManyLikes = await parseInt(document.getElementById(`manyLikes-${postID}`).textContent) - 1
+        document.getElementById(`manyLikes-${postID}`).innerHTML = numManyLikes
         document.getElementById(`fa-like-${postID}`).classList = ["fa-solid fa-thumbs-up"]
         removeLikePost(postID)
-      }else {
+      } else {
         console.error(myBlob.error)
       }
     })

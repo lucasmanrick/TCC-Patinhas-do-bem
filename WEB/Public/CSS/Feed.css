@@ -1000,12 +1000,16 @@ img {
     margin-top: 15px;
     border-top: 1px solid #e9e9e9;
     padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
 }
 
 .reaction-section {
     display: flex;
     justify-content: space-around;
     margin-bottom: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .reaction-button {
@@ -1032,6 +1036,7 @@ img {
 .comment-section {
     display: flex;
     margin-top: 10px;
+    overflow: auto;
 }
 
 .comment-input {
