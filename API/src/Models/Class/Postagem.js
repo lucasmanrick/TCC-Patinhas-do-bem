@@ -75,6 +75,7 @@ class Postagem {
         return e
       })
        getingPosts[0] = await Promise.all(getReturnPosts) // faz com que a função aguarde terminar todo o preenchimento/ tratamento de dados do getingPosts sendo feito dentro do for each
+       console.log(getReturnPosts)
        return{success:"retornando os posts conforme o feed",posts: await getingPosts[0]}
     }catch(e) {
       return {error:e.message}
