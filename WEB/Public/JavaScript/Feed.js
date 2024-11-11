@@ -525,6 +525,9 @@ async function getMyNotifies() {
 
           document.getElementById("notificationButton").innerHTML = ` <i class="fa-solid fa-bell"></i>
           ${countNewNotifies}`
+
+    
+
           document.getElementById("bodyNotifies").innerHTML += ` <div class="notification">
                 <div class="notification-icon">
                   <i class="fas fa-comment"></i>
