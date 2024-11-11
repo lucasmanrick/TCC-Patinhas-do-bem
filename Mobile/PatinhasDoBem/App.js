@@ -13,7 +13,7 @@ import TelaDeApresentacao from "./Src/Pages/TelaApresentacao/TelaApresentacao";
 import TelaDeMensagem from "./Src/Pages/Chat/TelaContato";
 import TelaDeNotificacao from "./Src/Pages/Notification/TelaDeNotificacao";
 import TelaDePerfil from "./Src/Pages/Profile/TelaDePerfil";
-import TelaDePost from "./Src/Pages/Post/TelaPost";
+import Mensagem from "./Src/Pages/Contatos/chat";
 import TelaDePets from "./Src/Pages/Animals/VisualizarPet";
 import CadastroPet from "./Src/Pages/CadastroPet/Cadastro";
 import TelaBiblioteca from "./Src/Pages/Biblioteca/telaBiblioteca";
@@ -24,6 +24,7 @@ import TelaDeEdicao from "./Src/Pages/EdicaoPet/TelaPetEdicao";
 import TelaDeEdicaoUsuario from "./Src/Pages/PerfilConfig/TelaConfigPerfil";
 import FeedDePostagens from "./Src/Pages/Post/TelaPost";
 import DetalhesPost from "./Src/Pages/Detalhes/DetalhesPost";
+import IconWithBadge from "./Src/Pages/icon";
 
 // Criando o Stack Navigator
 const Stack = createNativeStackNavigator();
@@ -45,6 +46,7 @@ function HomeTabs() {
             size = 24;
           } else if (route.name === "Mensagem") {
             iconName = "comments";
+
             size = 24;
           } else if (route.name === "Pets") {
             iconName = "paw";
@@ -87,13 +89,19 @@ function HomeTabs() {
         component={FeedDePostagens}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Mensagem" component={TelaDeMensagem} />
+      <Tab.Screen
+        name="Mensagem"
+        component={TelaDeMensagem}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen
         name="Pets"
         component={TelaDePets}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Notificação" component={TelaDeNotificacao} />
+      <Tab.Screen name="Notificação" component={TelaDeNotificacao}
+      options={{ headerShown: false }} 
+       />
       <Tab.Screen name="Perfil" component={TelaDePerfil} />
     </Tab.Navigator>
   );
@@ -170,6 +178,12 @@ export default function App() {
         <Stack.Screen
           name="DetalhesPost"
           component={DetalhesPost}
+          options={{ headerShown: false }} // Oculta o header
+        />
+
+        <Stack.Screen
+          name="Mensagens"
+          component={Mensagem}
           options={{ headerShown: false }} // Oculta o header
         />
 

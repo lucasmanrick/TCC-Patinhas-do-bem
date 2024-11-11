@@ -17,6 +17,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 const UserProfileScreen = ({ route, navigation }) => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [numColumns, setNumColumns] = useState(3); // Estado para o número de colunas
   const userID = route.params?.userID;
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const UserProfileScreen = ({ route, navigation }) => {
           });
         })
         .then((response) => {
-          console.log(response.data);
+          console.log(response);
           setProfileData(response.data);
           setLoading(false);
         })
@@ -59,20 +60,21 @@ const UserProfileScreen = ({ route, navigation }) => {
   const dadosUsuario = profileData.dadosUsuario;
   const dadosPets = profileData.dadosPetsUsuario;
   const postagens = profileData.postagensDoUsuario;
+  console.log(postagens);
+  
 
   return (
     <ScrollView style={styles.container}>
-      {dadosUsuario ? (
+      {profileData || postagens? (
         <>
           <View style={styles.header}>
             <View style={styles.profileImageContainer}>
               <Image
                 source={{
-                  uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${dadosUsuario.IDUsuario}.jpg?alt=media`,
+                  uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${postagens.IDUsuario}.jpg?alt=media`,
                 }}
                 style={styles.profileImage}
               />
-
             </View>
             <View style={styles.statsContainer}>
               <Text style={styles.statNumber}>
@@ -87,22 +89,24 @@ const UserProfileScreen = ({ route, navigation }) => {
               <Text style={styles.statLabel}>Meus Pets</Text>
             </View>
             <View style={styles.statsContainer}>
-              <Text style={styles.statNumber}>0</Text>
+              <Text style={styles.statNumber}>
+                {profileData.following ?? 0}
+              </Text>
               <Text style={styles.statLabel}>Seguindo</Text>
             </View>
           </View>
 
           <View style={styles.bioContainer}>
             <Text style={styles.username}>
-              {dadosUsuario.Nome ?? "Usuário"}
+              {dadosUsuario?.Nome ?? "Usuário"}
             </Text>
           </View>
 
-          {/* Lista de Postagens */}
+          {/* Lista de Posts */}
           <FlatList
             data={postagens || []}
             keyExtractor={(item) => item.ID.toString()}
-            numColumns={3}
+            numColumns={numColumns}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.postItem}
@@ -112,15 +116,15 @@ const UserProfileScreen = ({ route, navigation }) => {
               >
                 <Image
                   source={{
-                    uri: item.PostPicture,
+                    uri: `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${item.ID}?alt=media`,
                   }}
                   style={styles.postImage}
                   resizeMode="cover"
                 />
               </TouchableOpacity>
             )}
+            key={numColumns}
           />
-
           {/* Lista de Pets */}
           <View style={styles.petsContainer}>
             <Text style={styles.petsTitle}>Meus Pets</Text>
@@ -157,30 +161,23 @@ const UserProfileScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
+    padding: 15,
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 20,
+    justifyContent: "space-around",
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#ddd",
   },
   profileImageContainer: {
     position: "relative",
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  editProfileButton: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    backgroundColor: "#ffffff",
-    borderRadius: 15,
-    padding: 5,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
   },
   statsContainer: {
     alignItems: "center",
@@ -190,74 +187,79 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   statLabel: {
-    fontSize: 12,
+    fontSize: 14,
     color: "#888",
   },
   bioContainer: {
-    alignItems: "center",
-    marginBottom: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
   username: {
-    fontSize: 22,
+    fontSize: 16,
     fontWeight: "bold",
   },
   petsContainer: {
-    marginBottom: 20,
+    padding: 15,
   },
   petsTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
+  postItem: {
+    flex: 1,
+    margin: 5,
+    aspectRatio: 1, // Mantém a proporção quadrada
+    backgroundColor: "#f0f0f0", // Cor de fundo opcional
+    borderRadius: 10, // Arredondamento dos cantos
+    overflow: "hidden", // Esconde partes que excedem o limite
+    height: 100, // Definindo uma altura fixa
+  },
+  postImage: {
+    width: "100%", // Largura total do item
+    height: "100%", // Altura total do item para garantir que ocupe todo o espaço
+  },
   petItem: {
-    marginRight: 10,
+    flexDirection: "column", // Muda para coluna para empilhar a imagem e o nome
+    alignItems: "center",     // Alinha ambos (imagem e nome) no centro
+    marginVertical: 10,       // Adiciona espaço entre os pets
   },
   petImageContainer: {
     position: "relative",
+    marginRight: 15,
   },
   petImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
+    width: 60,
+    height: 60,
+    borderRadius: 5,
+  },
+  petName: {
+    fontSize: 12,
   },
   editIcon: {
     position: "absolute",
-    top: 5,
-    right: 5,
-    backgroundColor: "#ffffff",
+    top: -7,
+    right: -10,
+    backgroundColor: "white",
     borderRadius: 15,
     padding: 5,
   },
   deleteIcon: {
     position: "absolute",
-    bottom: 5,
-    right: 5,
-    backgroundColor: "#ffffff",
+    top: -7,
+    right: 38,
+    backgroundColor: "white",
     borderRadius: 15,
     padding: 5,
-  },
-  petName: {
-    textAlign: "center",
-    marginTop: 5,
-    fontSize: 14,
-  },
-  postItem: {
-    margin: 5,
-  },
-  postImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-  },
-  errorText: {
-    textAlign: "center",
-    fontSize: 16,
-    color: "red",
   },
   centered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  errorText: {
+    textAlign: "center",
+    margin: 20,
   },
 });
 
