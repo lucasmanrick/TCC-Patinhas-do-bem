@@ -881,10 +881,22 @@ async function removeLikePost(PostID) {
 
 
 
+async function finalSession() {
+  await fetch(`/Out`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(e => {
+    console.log(e)
+    alert("você deslogou com sucesso")
+  })
+}
+
+
 
 getMostRecentPosts()
 myFriendInvites()
 getMyNotifies()
 getingMyContacts()
-
 

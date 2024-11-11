@@ -16,9 +16,9 @@ const io = new Server(server);
 
 require("dotenv-safe").config();
 const cookieParser = require('cookie-parser');
-const { Console } = require("node:console");
 
 
+app.use(cors())
 
 const port= process.env.PORT !== undefined? process.env.PORT:5000;
 
