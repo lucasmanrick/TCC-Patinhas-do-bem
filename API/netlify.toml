@@ -1,6 +1,6 @@
 [build]
 command = "node app.js"  # Comando para iniciar seu servidor
-publish = "public"       # Diretório de publicação (pode ser um diretório vazio)
+publish = "WEB/Public"       # Diretório de publicação (pode ser um diretório vazio)
 
 [build.environment]
 NODE_VERSION = "18"      # Versão do Node.js que você deseja usar
