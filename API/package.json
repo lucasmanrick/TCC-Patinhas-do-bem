@@ -17,7 +17,8 @@
   "version": "1.0.0",
   "main": "App.js",
   "scripts": {
-    "devStart": "nodemon App.js"
+    "devStart": "nodemon App.js",
+    "start": "node App.js"
   },
   "author": "lucas manrick",
   "license": "ISC",
