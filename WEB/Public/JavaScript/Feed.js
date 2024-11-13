@@ -1,4 +1,5 @@
 
+
 document.addEventListener('click', function (event) {
   if (event.target && event.target.classList.contains('comment-button')) {
     const commentSection = event.target.closest('.feed-post').querySelector('.comment-section');
@@ -690,6 +691,10 @@ async function getMostRecentPosts() {
             <h2>Criar Publicação</h2>
             <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
             <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
+             <label for="post-image" class="upload-icon">
+                            <img src="../../Public/Image/simbolo-de-interface-de-camera-fotografica-para-botao.png"
+                                alt="Upload" class="icon">
+                        </label>
             <button onclick="createNewPost()">Publicar</button>
           </div>
         </div>
@@ -775,7 +780,11 @@ async function getMostRecentPosts() {
                 <input type="text" id="post-title" placeholder="Título da Postagem" required>
                   <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
                   <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-                    <button onclick="publishPost()">Publicar</button>
+                     <label for="post-image" class="upload-icon">
+                            <img src="../../Public/Image/simbolo-de-interface-de-camera-fotografica-para-botao.png"
+                                alt="Upload" class="icon">
+                        </label>
+                  <button onclick="publishPost()">Publicar</button>
                   </div>
               </div>
               `
@@ -787,8 +796,8 @@ async function getMostRecentPosts() {
 async function createNewPost() {
   await fetch(`/CriarPostagem`, {
     method: 'POST',
-    body: JSON.stringify({ "IDPostagem": postID,
-      "Texto": document.getElementById(`inputComment-${postID}`).value
+    body: JSON.stringify({ 
+      "Descricao": document.getElementById(`post-content`).value
      }),
     headers: {
       'Content-Type': 'application/json'
@@ -800,7 +809,15 @@ async function createNewPost() {
     .then(async function (myBlob) {
       console.log("retorno",myBlob)
       if (myBlob.success) {
-        
+        const file = document.getElementById("post-image").files[0];
+        if (file) {
+          const storageRef = storage.ref().child(`postagem/${myBlob.idPostagem}`);
+          return storageRef.put(file)
+            .then((snapshot) => {
+              console.log("Upload concluído com sucesso!", snapshot);
+              alert("Cadastro realizado com sucesso e imagem enviada!");
+            })
+          }
       }
     })
 }
