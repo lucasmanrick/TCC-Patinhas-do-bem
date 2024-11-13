@@ -1,4 +1,4 @@
-const SolicitacaoContato = require("../Models/Class/solicitacaoContato");
+const SolicitacaoContato = require("../Models/Class/solicitacaocontato");
 
 
 const solicitacaoContatoController = {

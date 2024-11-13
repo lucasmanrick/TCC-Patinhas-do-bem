@@ -1,5 +1,4 @@
 
-
 document.addEventListener('click', function (event) {
   if (event.target && event.target.classList.contains('comment-button')) {
     const commentSection = event.target.closest('.feed-post').querySelector('.comment-section');
@@ -81,6 +80,12 @@ inputs.forEach(input => {
 // });
 
 
+function toggleMenu(event) {
+  const menu = event.target.nextElementSibling;
+  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+
+
 
 //CONSUMO DE APIS 
 
@@ -94,11 +99,14 @@ function getMyData() {
     }
   })
     .then(function (response) {
+      
       return response.json();
     })
     .then(function (myBlob) {
 
       if (myBlob.success) {
+        console.log(myBlob);
+        
         Cookies.remove('usuarioLogado')
         Cookies.remove('imagemUsuario')
         Cookies.remove("usuarioID")
@@ -110,7 +118,7 @@ function getMyData() {
 
         Cookies.set("imagemUsuario", myBlob.meusDados.UserPicture)
 
-        document.getElementById("userImage").src = `${myBlob.meusDados.UserPicture}`
+        document.getElementById("userImage").src = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${myBlob.meusDados.ID}?alt=media`
         document.getElementById("userNameContent").innerHTML = `<a href="/PerfilUser" style ="list-style:none">${myBlob.meusDados.Nome}</a>`
       } else {
         window.location("/LoginPage")
@@ -390,7 +398,7 @@ async function getingMyContacts() {
           myBlob.contatosDeInteresses.forEach(e => {
             document.getElementById('interestedContent').innerHTML += `
            <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)" style = "display:flex; align-items:center; gap:5px; cursor:pointer">
-              <div class="img1"><img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt=""></div>
+              <div class="img1"><img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}?alt=media" alt=""></div>
              ${e.Nome}
             </li>`
           })
@@ -400,7 +408,7 @@ async function getingMyContacts() {
           myBlob.contatosSemInteresses.forEach(e => {
             document.getElementById('listContent').innerHTML += `
           <li id="${e.contatoID}" class="${e.Nome}" onclick="abrirChat(this)" style = "display:flex; align-items:center; gap:5px; cursor:pointer">
-             <img class="img1" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}.jpg?alt=media" alt="">
+             <img class="img1" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDUsuario}?alt=media" alt="">
             ${e.Nome}
            </li>`
           })
@@ -437,7 +445,7 @@ async function getMyInterests() {
                   </div>
       
                   <div class="formulario-do-pet">
-                    <p class="descrição" onclick="perfilUser(${e.IDDoador})"><strong>Dono do pet:</strong> <img src ="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDDoador}.jpg?alt=media" style="border-radius:50%; width:30px;heigth:30px" alt="">"</img>  <a href ="/UserPerfil"> ${e.NomeDoDono} </a></p>
+                    <p class="descrição" onclick="perfilUser(${e.IDDoador})"><strong>Dono do pet:</strong> <img src ="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDDoador}?alt=media" style="border-radius:50%; width:30px;heigth:30px" alt="">"</img>  <a href ="/UserPerfil"> ${e.NomeDoDono} </a></p>
                     <p class="descrição"><strong>Tipo de Animal:</strong> ${e.TipoAnimal}</p>
                     <p class="descrição"><strong>Linhagem:</strong> ${e.Linhagem}</p>
                     <p class="descrição"><strong>Idade:</strong>  ${e.Idade}</p>
@@ -449,7 +457,7 @@ async function getMyInterests() {
                  '<button class="btn-interesse" style = "background-color:red" id="${e.ID}" onclick = "removeInterest(this)">Remover Interesse no pet</button>'
                 </div>
                 <div class="animal-post">
-                  <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.ID}.jpg?alt=media" alt="Imagem do animal" class="animal-photo">
+                  <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.ID}?alt=media" alt="Imagem do animal" class="animal-photo">
                 </div>
               </div>
             `
@@ -584,7 +592,6 @@ async function myFriendInvites() {
       return response.json();
     })
     .then(function (myBlob) {
-      console.log(myBlob)
       if (myBlob.success) {
         countNewNotifies = countNewNotifies + myBlob.invites.length;
 
@@ -598,7 +605,7 @@ async function myFriendInvites() {
           document.getElementById("inviteBody").innerHTML += `
                 <div class="d-flex align-items-center">
                   <!-- Foto de Perfil -->
-                  <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDSolicitante}.jpg?alt=media}" alt="Foto de Perfil" class="rounded-circle me-3">
+                  <img src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${e.IDSolicitante}?alt=media}" alt="Foto de Perfil" class="rounded-circle me-3">
                   <!-- Nome do Usuário -->
                   <div>
                     <p class="mb-0"><strong>${e.Nome}</strong></p>
@@ -676,10 +683,12 @@ async function getMostRecentPosts() {
   })
     .then(function (response) {
       return response.json();
+      
     })
     .then(async function (myBlob) {
 
       if (myBlob.success) {
+        
         document.getElementById("mural-content").innerHTML = `
                 <!-- Botão para abrir o modal -->
         <button id="open-modal" class="btn btn-primary" onclick="openPublishModal()">Criar
@@ -691,19 +700,17 @@ async function getMostRecentPosts() {
             <h2>Criar Publicação</h2>
             <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
             <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-             <label for="post-image" class="upload-icon">
-                            <img src="../../Public/Image/simbolo-de-interface-de-camera-fotografica-para-botao.png"
-                                alt="Upload" class="icon">
-                        </label>
             <button onclick="createNewPost()">Publicar</button>
           </div>
         </div>
         `
         myBlob.posts.forEach(e => {
+          
 
           if (e === true) { return }
 
           const dataObj = new Date(e.dataPublicacao)
+          
           const dataAmigavel = dataObj.toLocaleString('pt-BR');
 
 
@@ -725,7 +732,7 @@ async function getMostRecentPosts() {
                 <div class="three-dots">
                   <button class="dots-button" onclick="toggleMenu(event)">&#8230;</button>
                   <div class="menu" style="display: none;">
-                    <button class="report-button" onclick="reportPost()">Denunciar Postagem</button>
+                    <button class="report-button" onclick="reportPost(${e.ID})">Denunciar Postagem</button>
                   </div>
                 </div>
               </div>
@@ -733,7 +740,7 @@ async function getMostRecentPosts() {
 
             <div class="post-content">
               <p class="post-text">${e.Descricao}</p>
-              <img class="post-image" src="${e.PostPicture}" alt="">
+              <img class="post-image" src="https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${e.ID}?alt=media" alt="">
             </div>
 
             <div class="post-actions" id="interactContent-${e.ID}">
@@ -752,7 +759,7 @@ async function getMostRecentPosts() {
             document.getElementById(`interactContent-${e.ID}`).innerHTML += `
               <div>
                 <div class = "userCommentContent" style="display:flex; align-items:center; gap:5px">
-                  <img style ="border-radius:50%;width:30px;height:30px" src = "https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${y.IDUsuario}.jpg?alt=media"
+                  <img style ="border-radius:50%;width:40px;height:40px" src = "https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/perfil%2F${y.IDUsuario}?alt=media"
                   <div> <a href="perfilUser(${y.IDUsuario})" style="text-decoration:none; font-size:13px">${y.Nome}</a></div> 
                 </div>
                <p style=" display:flex;flex-direction:column"><p style="font-size:14px;color:#808080;">${y.Texto}</<p><p style="font-size:10px">${data.toLocaleString('pt-BR')}</<p></p> 
@@ -780,11 +787,7 @@ async function getMostRecentPosts() {
                 <input type="text" id="post-title" placeholder="Título da Postagem" required>
                   <textarea id="post-content" placeholder="Conteúdo da Postagem" required></textarea>
                   <input type="file" id="post-image" accept="image/*"> <!-- Campo para imagem -->
-                     <label for="post-image" class="upload-icon">
-                            <img src="../../Public/Image/simbolo-de-interface-de-camera-fotografica-para-botao.png"
-                                alt="Upload" class="icon">
-                        </label>
-                  <button onclick="publishPost()">Publicar</button>
+                    <button onclick="publishPost()">Publicar</button>
                   </div>
               </div>
               `
@@ -823,10 +826,31 @@ async function createNewPost() {
 }
 
 
+async function reportPost(postID) {
+  await fetch(`/DenunciarPostagem`, {
+    method: 'POST',
+    body: JSON.stringify({ 
+      "Causa": "nao me interessou",
+      "IDPostagem": postID
+     }),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async function (myBlob) {
+      if(myBlob.success) {
+        alert("você denunciou esta postagem e a mesma não tornará a aparecer em seu feed")
+      }
+    })
+}
+
+
+
 
 async function sendComment (postID) {
-  console.log("chegou")
-  console.log(document.getElementById(`inputComment-${postID}`).textContent)
   await fetch(`/comentarPost`, {
     method: 'POST',
     body: JSON.stringify({ "IDPostagem": postID,
@@ -912,6 +936,7 @@ async function finalSession() {
     alert("você deslogou com sucesso")
   })
 }
+
 
 
 
