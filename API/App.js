@@ -4,6 +4,8 @@ const cors = require("cors");
 const { createServer } = require('node:http');
 const path = require ('node:path')
 const { Server } = require("socket.io");
+const serverless = require('serverless-http');
+
 
 
 const app = express();
@@ -63,4 +65,4 @@ server.listen(port , () => {
     console.log(`Servidor respondendo na porta ${port}`);
 });
 
-module.exports = server
+module.exports.handler = serverless(server);
