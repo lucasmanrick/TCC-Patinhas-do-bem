@@ -19,7 +19,8 @@
   "main": "App.js",
   "scripts": {
     "devStart": "nodemon App.js",
-    "start": "node App.js"
+    "start": "node App.js",
+    "vercel-build": "npm run migrate"
   },
   "author": "lucas manrick",
   "license": "ISC",
