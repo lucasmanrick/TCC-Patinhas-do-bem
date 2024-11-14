@@ -18,10 +18,9 @@
   "version": "1.0.0",
   "main": "App.js",
   "scripts": {
-    "migrate": "sequelize db:migrate",
     "devStart": "nodemon App.js",
     "start": "node App.js",
-    "vercel-build": "npm run migrate"
+    "vercel-build": "npx prisma migrate deploy"
   },
   "author": "lucas manrick",
   "license": "ISC",
