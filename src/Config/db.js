@@ -7,11 +7,11 @@ const connection = async () => {
         return global.connection;
     }
     const con = await mysql2.createConnection({
-        host: 'localhost',
-        port: '3306',
-        database: 'db_patinhasdobem',
+        host: 'junction.proxy.rlwy.net',
+        port: '49382',
+        database: 'railway',
         user: 'root',
-        password: '1234',
+        password: 'kIZkzIsRtAmzBOmNouTqTPhsMiXtUhYH',
         multipleStatements:true
     });
     console.log("Conectou no MySQL!");
