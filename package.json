@@ -19,8 +19,7 @@
   "main": "App.js",
   "scripts": {
     "devStart": "nodemon App.js",
-    "start": "node App.js",
-    "vercel-build": "npx prisma migrate deploy"
+    "start": "node App.js"
   },
   "author": "lucas manrick",
   "license": "ISC",
