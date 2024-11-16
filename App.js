@@ -61,8 +61,8 @@ app.use((req,res,next) => {
  app.use('/', router)
 
 
-server.listen(port , () => {
-    console.log(`Servidor respondendo na porta ${port}`);
-});
+// server.listen(port , () => {
+//     console.log(`Servidor respondendo na porta ${port}`);
+// });
 
 module.exports.handler = serverless(server);
