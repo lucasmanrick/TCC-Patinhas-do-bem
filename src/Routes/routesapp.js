@@ -52,6 +52,9 @@ function verificadorDoToken(req, res, next){
   });
 }
 
+router.get('/teste', (req, res) => {
+  return res.json({teste:"testando"})
+});
 
 router.get('/', (req, res) => {
   res.sendFile(path.join(newDirName, 'home.html'));
