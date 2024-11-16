@@ -53,7 +53,7 @@ function verificadorDoToken(req, res, next){
 }
 
 router.get('/teste', (req, res) => {
-  return res.json({teste:"testando"})
+   res.write("testado")
 });
 
 router.get('/', (req, res) => {
