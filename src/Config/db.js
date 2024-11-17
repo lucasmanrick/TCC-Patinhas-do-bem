@@ -9,9 +9,9 @@ const connection = async () => {
     const con = await mysql2.createConnection({
         host: 'junction.proxy.rlwy.net',
         port: '49382',
-        database: 'railway',
+        database: 'dbpatinhasdobem',
         user: 'root',
-        password: 'kIZkzIsRtAmzBOmNouTqTPhsMiXtUhYH',
+        password:process.env.BDPASSWORD,
         multipleStatements:true
     });
     console.log("Conectou no MySQL!");

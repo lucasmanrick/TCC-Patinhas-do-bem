@@ -57,32 +57,37 @@ router.get('/teste', (req, res) => {
    res.end();
 });
 
-router.get('/', (req, res) => {
-  res.sendFile(path.join(newDirName, 'home.html'));
+router.get('/teste', (req, res) => {
+   res.write("testado")
+   res.end();
 });
 
-router.get('/Home', (req, res) => {
-  res.sendFile(path.join(newDirName, 'home.html'));
-});
+// router.get('/', (req, res) => {
+//   res.sendFile(path.join(newDirName, 'home.html'));
+// });
+
+// router.get('/Home', (req, res) => {
+//   res.sendFile(path.join(newDirName, 'home.html'));
+// });
 
 
-router.get('/LoginPage', (req, res) => {
-  res.sendFile(path.join(newDirName, 'Login.html'));
-});
+// router.get('/LoginPage', (req, res) => {
+//   res.sendFile(path.join(newDirName, 'Login.html'));
+// });
 
 
-router.get('/FeedDeNoticias',verificadorDoToken, (req, res) => {
-  res.sendFile(path.join(newDirName, 'Feed.html'));
-});
+// router.get('/FeedDeNoticias',verificadorDoToken, (req, res) => {
+//   res.sendFile(path.join(newDirName, 'Feed.html'));
+// });
 
-router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
-  res.sendFile(path.join(newDirName, 'Perfil.html'));
-});
+// router.get('/MeuPerfil',verificadorDoToken, (req, res) => {
+//   res.sendFile(path.join(newDirName, 'Perfil.html'));
+// });
 
 
-router.get('/PerfilUser',verificadorDoToken, (req, res) => {
-  res.sendFile(path.join(newDirName, 'Perfil.html'));
-});
+// router.get('/PerfilUser',verificadorDoToken, (req, res) => {
+//   res.sendFile(path.join(newDirName, 'Perfil.html'));
+// });
 
 
 
