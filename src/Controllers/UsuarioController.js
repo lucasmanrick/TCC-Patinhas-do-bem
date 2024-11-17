@@ -57,7 +57,7 @@ const UsuarioController = {
     }
 
     catch (e) {
-      return res.json({ error: e.message})
+      return res.json({ error: e.message, local:"controller de cadastro"})
 
     }
 

@@ -44,7 +44,7 @@ class Usuario {
         return {success: "Usuário apto a prosseguir com cadastro."}
       }
     }catch(e) {
-      return{error:e.message}
+      return{error:e.message, local:"verificando existencia query"}
     }
   }
 
