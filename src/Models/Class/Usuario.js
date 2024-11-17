@@ -57,7 +57,6 @@ class Usuario {
 
         const verifyIfUserBlock = await UsuariosBloqueados.pegaUsuarioBloqueadoPeloIDQuery(authResponse[0][0].ID)
         if(verifyIfUserBlock.warning) return {error:"não é possivel entrar nesta conta, pois a mesma se encontra BANIDA de nosso sistema"}
-        if(verifyIfUserBlock.error) return {error:"não foi possivel validar se a conta está livre para acessar nosso site, por favor tente novamente"} 
 
         const authVerify = await bcrypt.compare(this.Senha,authResponse[0][0].Senha)
         if(authVerify === true) {
