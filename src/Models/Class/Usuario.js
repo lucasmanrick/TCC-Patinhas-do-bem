@@ -36,7 +36,7 @@ class Usuario {
  static async verificaExistenciaUsuarioQuery (Email) {
     const conn = await connection();
     try{
-      const existenceReturn = await conn.query("Select Email from Usuario Where Email = ?", [Email])
+      const existenceReturn = await conn.query("Select Email from usuario Where Email = ?", [Email])
 
       if(existenceReturn[0].length > 0) {
         return {error:"Um usuário com esse Email já está registrado em nosso sistema, tente utilizar outro!"}
