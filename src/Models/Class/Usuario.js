@@ -21,7 +21,7 @@ class Usuario {
   async cadastraUsuarioQuery () {
     const conn = await connection();
       try {                                                                                                                                                                               
-        const uRes = await conn.query("INSERT INTO Usuario (Nome, CEP, Rua, Numero, Bairro, Estado, DataNasc, Email, Senha, Administrador,Cidade) VALUES (?,?,?,?,?,?,?,?,?,?,?)",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,0,this.Cidade]);
+        const uRes = await conn.query("INSERT INTO usuario (Nome, CEP, Rua, Numero, Bairro, Estado, DataNasc, Email, Senha, Administrador,Cidade) VALUES (?,?,?,?,?,?,?,?,?,?,?)",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,0,this.Cidade]);
         if(uRes[0].affectedRows >=1) {
           return {success: "você conseguiu se cadastrar com sucesso!!", IDUsuario: uRes[0].insertId}
         }else {
