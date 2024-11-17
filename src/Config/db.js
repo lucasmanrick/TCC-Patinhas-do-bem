@@ -9,7 +9,7 @@ const connection = async () => {
     const con = await mysql2.createConnection({
         host: 'junction.proxy.rlwy.net',
         port: '49382',
-        database: 'dbpatinhasdobem',
+        database: 'railway',
         user: 'root',
         password:process.env.BDPASSWORD,
         multipleStatements:true
