@@ -52,7 +52,7 @@ class Usuario {
     const conn = await connection();
 
     try {
-      const authResponse = await conn.query("Select * from Usuario where Email = ?",[this.Email])
+      const authResponse = await conn.query("Select * from usuario where Email = ?",[this.Email])
       if(authResponse[0].length > 0) {
 
         const verifyIfUserBlock = await UsuariosBloqueados.pegaUsuarioBloqueadoPeloIDQuery(authResponse[0][0].ID)
@@ -119,7 +119,7 @@ class Usuario {
    static async verificaPermissaoAdmQuery (UserID) {
     const conn = await connection();
     try {
-       const checkPermissionUser = await conn.query("SELECT * FROM USUARIO WHERE ID=? && Administrador=?",[UserID,1])
+       const checkPermissionUser = await conn.query("SELECT * FROM usuario WHERE ID=? && Administrador=?",[UserID,1])
       if(checkPermissionUser[0].length >=1) return {success:"o usuário é administrador"}
       return {error:"o usuário não é administrador"}
       }catch (e) {
@@ -134,7 +134,7 @@ class Usuario {
     if (UserID && IDBloqueado) {
       const checkPermissionUser = await  Usuario.verificaPermissaoAdmQuery(UserID);
       if(checkPermissionUser.success) {
-        const blockUser = await conn.query("INSERT INTO UsuariosBloqueados (dataBloqueio,IDBloqueado,IDBloqueador) VALUES (?,?,?)",[new Date(),IDBloqueado,UserID])
+        const blockUser = await conn.query("INSERT INTO usuariosbloqueados (dataBloqueio,IDBloqueado,IDBloqueador) VALUES (?,?,?)",[new Date(),IDBloqueado,UserID])
         if (blockUser[0].affectedRows>= 1) return {success:"usuário bloqueado com sucesso, agora o mesmo não tem mais acesso ao site"}
         return {error:"houve um erro no processo de bloqueio, por favor tente novamente 404"}
       }else {
