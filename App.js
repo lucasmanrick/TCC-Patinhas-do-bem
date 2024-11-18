@@ -20,6 +20,8 @@ require("dotenv-safe").config();
 const cookieParser = require('cookie-parser');
 
 
+
+app.use(cookieParser())
 app.use(cors())
 
 const port= process.env.PORT !== undefined? process.env.PORT:5000;

@@ -89,6 +89,7 @@ const UsuarioController = {
                   httpOnly: true, // O cookie não será acessível via JavaScript no navegador
                   maxAge: 3600000 // Tempo de vida do cookie em milissegundos (1 hora)
                 })
+                console.log("gerado token", req.cookies.token)
                return res.json({sucess:verifyExistence.success,auth:verifyExistence.auth, Administrador:verifyExistence.Administrador})
               }
               
