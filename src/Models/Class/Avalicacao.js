@@ -1,7 +1,7 @@
 const { connection } = require(`../../Config/db`);
 const Notificacao = require("./Notificacao");
 
-
+console.log("me remova")
 class Avaliacao {
   constructor (ID,tipo,IDPostagem,IDUsuario) {
     this.ID = ID;
@@ -32,7 +32,6 @@ class Avaliacao {
       return {error:e.message}
     }
   }
-
 
   static async removerReacaoQuery (UserID,IDPostagem) {
     const conn = await connection();
