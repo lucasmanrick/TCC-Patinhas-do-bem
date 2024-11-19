@@ -37,7 +37,7 @@ class Avaliacao {
   static async removerReacaoQuery (UserID,IDPostagem) {
     const conn = await connection();
     try {
-     const deletingPost = await conn.query("DELETE FROM AVALIACAO where IDPostagem=? AND IDUsuario=?",[IDPostagem,UserID]);
+     const deletingPost = await conn.query("DELETE FROM avaliacao where IDPostagem=? AND IDUsuario=?",[IDPostagem,UserID]);
      if(deletingPost[0].affectedRows >=1) {
       return {success:"você deixou de avaliar a postagem com sucesso"}
      }else {
@@ -52,7 +52,7 @@ class Avaliacao {
     const conn = await connection();
     try{
       if(!IDPostagem) {return{error:"você não informou o id da postagem"}}
-      const bdRequesting = await conn.query("SELECT * FROM AVALIACAO WHERE IDPostagem = ?",[IDPostagem]);
+      const bdRequesting = await conn.query("SELECT * FROM avaliacao WHERE IDPostagem = ?",[IDPostagem]);
       return bdRequesting
     }catch(e) {
       return {error:e.message}

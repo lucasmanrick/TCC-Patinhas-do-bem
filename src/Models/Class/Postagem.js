@@ -14,7 +14,7 @@ class Postagem {
   async criarPostagemQuery () {
     const conn = await connection();
     try {
-      const creatingPost = await conn.query("INSERT INTO Postagem (Descricao,dataPublicacao,IDUsuario) VALUES (?,?,?)", [this.Descricao,this.dataPublicacao,this.IDUsuario])
+      const creatingPost = await conn.query("INSERT INTO postagem (Descricao,dataPublicacao,IDUsuario) VALUES (?,?,?)", [this.Descricao,this.dataPublicacao,this.IDUsuario])
       if(creatingPost[0].affectedRows >=1) {
         return {success:"você fez sua postagem com sucesso", idPostagem: creatingPost[0].insertId}
       } return {error:"não foi possivel criar sua postagem por favor tente novamente 404"}
@@ -112,7 +112,7 @@ class Postagem {
   static async postagensDeUmUsuarioQuery (UserID) {  // função de uso interno, ou seja o usuário não terá acesso direto a essa funcionalidade
     const conn = await connection();
     try {
-      const getingPosts = await conn.query("select * from Postagem WHERE IDUsuario =?", [UserID])
+      const getingPosts = await conn.query("select * from postagem WHERE IDUsuario =?", [UserID])
       getingPosts[0].forEach (e => {
        e.PostPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${e.ID}?alt=media`
       })
