@@ -17,9 +17,9 @@ class Interesse {
     try {
       await conn.beginTransaction();
       const verifyExistencePet = await conn.query("SELECT * FROM PET WHERE ID = ? AND status=? LIMIT 1", [PetID, 1]); //select para verificar se o pet esta registrado em nosso banco de dados.
-      const verifyExistenceUser = await conn.query("SELECT * FROM Usuario WHERE ID = ? LIMIT 1", [UserID]); // select para verificar se o usuário existe no banco de dados.
-      const verifyExistenceIntrest = await conn.query("SELECT * FROM INTERESSE where IDInteressado = ? AND IDPet = ? LIMIT 1", [UserID, PetID]) //select para verificar se o usuário já não demonstrou interesse no pet especificado.
-      const dataGiver = await conn.query("SELECT * FROM USUARIO WHERE ID = ?",[verifyExistencePet[0][0].IDDoador])
+      const verifyExistenceUser = await conn.query("SELECT * FROM usuario WHERE ID = ? LIMIT 1", [UserID]); // select para verificar se o usuário existe no banco de dados.
+      const verifyExistenceIntrest = await conn.query("SELECT * FROM interesse where IDInteressado = ? AND IDPet = ? LIMIT 1", [UserID, PetID]) //select para verificar se o usuário já não demonstrou interesse no pet especificado.
+      const dataGiver = await conn.query("SELECT * FROM usuario WHERE ID = ?",[verifyExistencePet[0][0].IDDoador])
 
 
       if (verifyExistencePet[0][0].IDDoador === UserID) { // se existir o pet especificado e o dono deste pet for o proprio usuário demonstrando interesse.
@@ -138,7 +138,7 @@ class Interesse {
     const conn = await connection();
     try {
       await conn.beginTransaction();
-      const analyzeToRemove = await conn.query("DELETE FROM INTERESSE WHERE IDInteressado=? AND IDPet = ?", [UserID, PetID])
+      const analyzeToRemove = await conn.query("DELETE FROM interesse WHERE IDInteressado=? AND IDPet = ?", [UserID, PetID])
       if (analyzeToRemove[0].affectedRows >= 1) {
       return { success: "interesse ao pet retirada com sucesso, mas a solicitação de amizade ao dono permanece!" }
         } else {

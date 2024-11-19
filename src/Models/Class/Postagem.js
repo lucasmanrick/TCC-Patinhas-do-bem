@@ -42,7 +42,7 @@ class Postagem {
     const conn = await connection();
     try{
       const verifyMyPostsDenunces = await conn.query("select * from denuncia where IDUsuario = ?",[UserID]);
-      const getingPosts = await conn.query (`select p.*, u.Nome as NomeUsuario from postagem AS p JOIN Usuario AS U on U.ID = p.IDUsuario ORDER BY p.dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
+      const getingPosts = await conn.query (`select p.*, u.Nome as NomeUsuario from postagem AS p JOIN usuario AS U on U.ID = p.IDUsuario ORDER BY p.dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
 
       
 
