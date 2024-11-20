@@ -10,7 +10,7 @@ const connection = async () => {
         host: 'patinhasdobem.cx64gskaw6rm.sa-east-1.rds.amazonaws.com',
         port: '3306',
         database: 'DB_PatinhasDoBem',
-        user: 'admin',
+        user: 'Admin',
         password:process.env.BDPASSWORD,
         multipleStatements:true
     });
