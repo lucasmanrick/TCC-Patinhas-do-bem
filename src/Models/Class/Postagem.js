@@ -14,7 +14,7 @@ class Postagem {
   async criarPostagemQuery () {
     const conn = await connection();
     try {
-      const creatingPost = await conn.query("INSERT INTO postagem (Descricao,dataPublicacao,IDUsuario) VALUES (?,?,?)", [this.Descricao,this.dataPublicacao,this.IDUsuario])
+      const creatingPost = await conn.query("INSERT INTO Postagem (Descricao,dataPublicacao,IDUsuario) VALUES (?,?,?)", [this.Descricao,this.dataPublicacao,this.IDUsuario])
       if(creatingPost[0].affectedRows >=1) {
         return {success:"você fez sua postagem com sucesso", idPostagem: creatingPost[0].insertId}
       } return {error:"não foi possivel criar sua postagem por favor tente novamente 404"}
@@ -28,7 +28,7 @@ class Postagem {
   async editarPostagemQuery () {
     const conn = await connection();
     try {
-      const editingPost = await conn.query("UPDATE postagem SET Descricao = ? IDUsuario =? WHERE ID = ? AND IDUsuario = ?" [this.Descricao,this.IDUsuario,this.ID,this.IDUsuario])
+      const editingPost = await conn.query("UPDATE Postagem SET Descricao = ? IDUsuario =? WHERE ID = ? AND IDUsuario = ?" [this.Descricao,this.IDUsuario,this.ID,this.IDUsuario])
       if(editingPost[0].affectedRows >=1) {
         return {success:"dados atualizados com sucesso"}
       }return {error:"não foi possivel atualizar os dados erro 404"}
@@ -41,8 +41,8 @@ class Postagem {
   static async verPostagensQuery (gapQuantity,UserID) {
     const conn = await connection();
     try{
-      const verifyMyPostsDenunces = await conn.query("select * from denuncia where IDUsuario = ?",[UserID]);
-      const getingPosts = await conn.query (`select p.*, U.Nome as NomeUsuario from postagem AS p JOIN usuario AS U on U.ID = p.IDUsuario ORDER BY p.dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
+      const verifyMyPostsDenunces = await conn.query("select * from Denuncia where IDUsuario = ?",[UserID]);
+      const getingPosts = await conn.query (`select p.*, U.Nome as NomeUsuario from Postagem AS p JOIN Usuario AS U on U.ID = p.IDUsuario ORDER BY p.dataPublicacao DESC LIMIT 50 OFFSET ${50 * gapQuantity}`,[UserID,UserID]);
 
       
 
@@ -86,16 +86,16 @@ class Postagem {
   static async deletarPostagemQuery (UserID,PostID,Administrator) {
     const conn = await connection();
     try {
-    const receivePostToDelete = await  conn.query('SELECT * from postagem where id=?',[PostID])
+    const receivePostToDelete = await  conn.query('SELECT * from Postagem where id=?',[PostID])
 
     if(receivePostToDelete[0].length >= 1) {
       if(receivePostToDelete[0][0].IDUsuario === UserID) {
-        const deletingPost = await conn.query('delete from postagem where id=?',[PostID])
+        const deletingPost = await conn.query('delete from Postagem where id=?',[PostID])
         if(deletingPost[0].length>=1) return {success:"você deletou sua postagem com sucesso"}
         return {error:"não foi possivel deletar a postagem, houve um erro durante o processo (404)"}
       }else {
         if(Administrator === 1) {
-          const deletingPost = await conn.query('delete from postagem where id=?',[PostID])
+          const deletingPost = await conn.query('delete from Postagem where id=?',[PostID])
           if(deletingPost[0].affectedRows >=1) return {success:"você deletou a postagem do usuário solicitado, com sucesso"} 
           return {error:"não foi possivel deletar a postagem, houve um erro no processo (404)"}
         }else {
@@ -112,7 +112,7 @@ class Postagem {
   static async postagensDeUmUsuarioQuery (UserID) {  // função de uso interno, ou seja o usuário não terá acesso direto a essa funcionalidade
     const conn = await connection();
     try {
-      const getingPosts = await conn.query("select * from postagem WHERE IDUsuario =?", [UserID])
+      const getingPosts = await conn.query("select * from Postagem WHERE IDUsuario =?", [UserID])
       getingPosts[0].forEach (e => {
        e.PostPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/postagem%2F${e.ID}?alt=media`
       })

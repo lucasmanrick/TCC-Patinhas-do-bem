@@ -16,7 +16,7 @@ class Interesse {
 
     try {
       await conn.beginTransaction();
-      const verifyExistencePet = await conn.query("SELECT * FROM PET WHERE ID = ? AND status=? LIMIT 1", [PetID, 1]); //select para verificar se o pet esta registrado em nosso banco de dados.
+      const verifyExistencePet = await conn.query("SELECT * FROM Pet WHERE ID = ? AND status=? LIMIT 1", [PetID, 1]); //select para verificar se o pet esta registrado em nosso banco de dados.
       const verifyExistenceUser = await conn.query("SELECT * FROM Usuario WHERE ID = ? LIMIT 1", [UserID]); // select para verificar se o usuário existe no banco de dados.
       const verifyExistenceIntrest = await conn.query("SELECT * FROM Interesse where IDInteressado = ? AND IDPet = ? LIMIT 1", [UserID, PetID]) //select para verificar se o usuário já não demonstrou interesse no pet especificado.
       const dataGiver = await conn.query("SELECT * FROM Usuario WHERE ID = ?",[verifyExistencePet[0][0].IDDoador])
