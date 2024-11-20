@@ -7,10 +7,10 @@ const connection = async () => {
         return global.connection;
     }
     const con = await mysql2.createConnection({
-        host: 'junction.proxy.rlwy.net',
-        port: '49382',
-        database: 'railway',
-        user: 'root',
+        host: 'patinhasdobem.cx64gskaw6rm.sa-east-1.rds.amazonaws.com',
+        port: '3306',
+        database: 'DB_PatinhasDoBem',
+        user: 'admin',
         password:process.env.BDPASSWORD,
         multipleStatements:true
     });
