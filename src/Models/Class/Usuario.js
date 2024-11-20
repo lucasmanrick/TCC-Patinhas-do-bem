@@ -20,8 +20,10 @@ class Usuario {
 
   async cadastraUsuarioQuery () {
     const conn = await connection();
-      try {                                                                                                                                                                               
-        const uRes = await conn.query("INSERT INTO usuario (Nome, CEP, Rua, Numero, Bairro, Estado, DataNasc, Email, Senha, Administrador,Cidade) VALUES (?,?,?,?,?,?,?,?,?,?,?)",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,0,this.Cidade]);
+      try {    
+        console.log("chegou 2")                                                                                                                                                                          
+        const uRes = await conn.query("INSERT INTO Usuario (Nome, CEP, Rua, Numero, Bairro, Estado, DataNasc, Email, Senha, Administrador,Cidade) VALUES (?,?,?,?,?,?,?,?,?,?,?)",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,0,this.Cidade]);
+        console.log(uRes)
         if(uRes[0].affectedRows >=1) {
           return {success: "você conseguiu se cadastrar com sucesso!!", IDUsuario: uRes[0].insertId}
         }else {
@@ -36,8 +38,8 @@ class Usuario {
  static async verificaExistenciaUsuarioQuery (Email) {
     const conn = await connection();
     try{
-      const existenceReturn = await conn.query("Select Email from usuario Where Email = ?", [Email])
-
+      const existenceReturn = await conn.query("Select Email from Usuario Where Email = ?", [Email])
+      console.log(existenceReturn)
       if(existenceReturn[0].length > 0) {
         return {error:"Um usuário com esse Email já está registrado em nosso sistema, tente utilizar outro!"}
       }else {
@@ -52,7 +54,7 @@ class Usuario {
     const conn = await connection();
 
     try {
-      const authResponse = await conn.query("Select * from usuario where Email = ?",[this.Email])
+      const authResponse = await conn.query("Select * from Usuario where Email = ?",[this.Email])
       if(authResponse[0].length > 0) {
 
         const verifyIfUserBlock = await UsuariosBloqueados.pegaUsuarioBloqueadoPeloIDQuery(authResponse[0][0].ID)
@@ -84,7 +86,7 @@ class Usuario {
   async editaDadosCadastraisQuery () {
     const conn = await connection();
     try{                
-      const sendToDBRefreshUserData = await conn.query("UPDATE usuario SET Nome = ?, CEP=?, Rua=?, Numero=?, Bairro=?, Estado=?, DataNasc=?, Email=?, Senha=?,Cidade=? WHERE ID=?",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,this.Cidade,this.ID])
+      const sendToDBRefreshUserData = await conn.query("UPDATE Usuario SET Nome = ?, CEP=?, Rua=?, Numero=?, Bairro=?, Estado=?, DataNasc=?, Email=?, Senha=?,Cidade=? WHERE ID=?",[this.NomeUsuario,this.Cep,this.Rua,this.Numero,this.Bairro,this.Estado,this.DataNasc,this.Email,this.Senha,this.Cidade,this.ID])
       if(sendToDBRefreshUserData[0].affectedRows >=1) {
         return{success:"atualizado os dados do usuário com sucesso"}
       }else {
@@ -100,13 +102,13 @@ class Usuario {
     const conn = await connection();
     try{
       if(UsuarioRequisitorID && UsuarioASerRemovido) {
-        const deletingSomeUser = await conn.query("DELETE FROM usuario WHERE ID=?",[UsuarioASerRemovido]);
+        const deletingSomeUser = await conn.query("DELETE FROM Usuario WHERE ID=?",[UsuarioASerRemovido]);
        
         if(deletingSomeUser[0].affectedRows >=1) {
           return {success:"usuário removido por completo do sistema"}
         }
       } else if (UsuarioRequisitorID && !UsuarioASerRemovido) {
-        const deletingYourselfProfile = await conn.query("DELETE FROM usuario WHERE id=?",[UsuarioRequisitorID])
+        const deletingYourselfProfile = await conn.query("DELETE FROM Usuario WHERE id=?",[UsuarioRequisitorID])
         if(deletingYourselfProfile[0].affectedRows >=1) {
           return {success:"seu perfil foi deletado com sucesso de nosso sistema!."}
         }
@@ -119,7 +121,7 @@ class Usuario {
    static async verificaPermissaoAdmQuery (UserID) {
     const conn = await connection();
     try {
-       const checkPermissionUser = await conn.query("SELECT * FROM usuario WHERE ID=? && Administrador=?",[UserID,1])
+       const checkPermissionUser = await conn.query("SELECT * FROM Usuario WHERE ID=? && Administrador=?",[UserID,1])
       if(checkPermissionUser[0].length >=1) return {success:"o usuário é administrador"}
       return {error:"o usuário não é administrador"}
       }catch (e) {
@@ -134,7 +136,7 @@ class Usuario {
     if (UserID && IDBloqueado) {
       const checkPermissionUser = await  Usuario.verificaPermissaoAdmQuery(UserID);
       if(checkPermissionUser.success) {
-        const blockUser = await conn.query("INSERT INTO usuariosbloqueados (dataBloqueio,IDBloqueado,IDBloqueador) VALUES (?,?,?)",[new Date(),IDBloqueado,UserID])
+        const blockUser = await conn.query("INSERT INTO UsuariosBloqueados (dataBloqueio,IDBloqueado,IDBloqueador) VALUES (?,?,?)",[new Date(),IDBloqueado,UserID])
         if (blockUser[0].affectedRows>= 1) return {success:"usuário bloqueado com sucesso, agora o mesmo não tem mais acesso ao site"}
         return {error:"houve um erro no processo de bloqueio, por favor tente novamente 404"}
       }else {

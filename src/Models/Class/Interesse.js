@@ -17,9 +17,9 @@ class Interesse {
     try {
       await conn.beginTransaction();
       const verifyExistencePet = await conn.query("SELECT * FROM PET WHERE ID = ? AND status=? LIMIT 1", [PetID, 1]); //select para verificar se o pet esta registrado em nosso banco de dados.
-      const verifyExistenceUser = await conn.query("SELECT * FROM usuario WHERE ID = ? LIMIT 1", [UserID]); // select para verificar se o usuário existe no banco de dados.
-      const verifyExistenceIntrest = await conn.query("SELECT * FROM interesse where IDInteressado = ? AND IDPet = ? LIMIT 1", [UserID, PetID]) //select para verificar se o usuário já não demonstrou interesse no pet especificado.
-      const dataGiver = await conn.query("SELECT * FROM usuario WHERE ID = ?",[verifyExistencePet[0][0].IDDoador])
+      const verifyExistenceUser = await conn.query("SELECT * FROM Usuario WHERE ID = ? LIMIT 1", [UserID]); // select para verificar se o usuário existe no banco de dados.
+      const verifyExistenceIntrest = await conn.query("SELECT * FROM Interesse where IDInteressado = ? AND IDPet = ? LIMIT 1", [UserID, PetID]) //select para verificar se o usuário já não demonstrou interesse no pet especificado.
+      const dataGiver = await conn.query("SELECT * FROM Usuario WHERE ID = ?",[verifyExistencePet[0][0].IDDoador])
 
 
       if (verifyExistencePet[0][0].IDDoador === UserID) { // se existir o pet especificado e o dono deste pet for o proprio usuário demonstrando interesse.
@@ -30,11 +30,11 @@ class Interesse {
         return { error: "O Usuário já demonstrou interesse neste pet!" }
       } else {
         if (verifyExistencePet[0].length >= 1 && verifyExistenceUser[0].length >= 1) { // se o usuário e o pet não estiverem em um vinculo de interesse fazer:
-          const intrestSendRequest = await conn.query("Insert into interesse (IDInteressado,IDPet) values (?,?)", [UserID, PetID]) // insert que faz um vinculo entre o usuário e o pet.
+          const intrestSendRequest = await conn.query("Insert into Interesse (IDInteressado,IDPet) values (?,?)", [UserID, PetID]) // insert que faz um vinculo entre o usuário e o pet.
 
 
-          const verifyFriendInvite = await conn.query("Select * from solicitacaocontato where IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=? ", [UserID, verifyExistencePet[0][0].IDDoador, verifyExistencePet[0][0].IDDoador, UserID]) //select para verificar se o usuário que demonstrou interesse no pet e o dono do pet já não tem uma solicitação de amizade pendente.
-          const verifyContact = await conn.query("Select * from contato where IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=?", [UserID, verifyExistencePet[0][0].IDDoador, verifyExistencePet[0][0].IDDoador, UserID]) // select para verificar se o usuário que está demonstrando interesse já não tem um vinculo de contato com o dono do pet. 
+          const verifyFriendInvite = await conn.query("Select * from SolicitacaoContato where IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=? ", [UserID, verifyExistencePet[0][0].IDDoador, verifyExistencePet[0][0].IDDoador, UserID]) //select para verificar se o usuário que demonstrou interesse no pet e o dono do pet já não tem uma solicitação de amizade pendente.
+          const verifyContact = await conn.query("Select * from Contato where IDSolicitante=? AND IDDestinatario = ? OR IDSolicitante=? AND IDDestinatario=?", [UserID, verifyExistencePet[0][0].IDDoador, verifyExistencePet[0][0].IDDoador, UserID]) // select para verificar se o usuário que está demonstrando interesse já não tem um vinculo de contato com o dono do pet. 
           if (verifyFriendInvite[0].length >= 1) {  // SE O USUÁRIO QUE TA DEMONSTRANDO INTERESSE JÁ TIVER ENVIADO UMA SOLICITAÇÃO DE AMIZADE PARA O DONO DO PET FAZER:
 
             if (verifyFriendInvite[0][0].Interessado != '') { // VERIFICAR SE A SOLICITAÇÃO DE AMIZADE QUE JA POSSUI ESTÁ COM O INTERESSE EM UM DOS ANIMAIS SENDO DECLARADO.
@@ -42,7 +42,7 @@ class Interesse {
               return { success: "O Usuário demonstrou interesse no pet com sucesso e já possui uma solicitação de contato demonstrando o interesse" }
             }
             // SE NÃO TIVER MOSTRADO O INTERESSE NO PET NA SOLICITAÇÃO DE AMIZADE JÁ EXISTENTE, NÓS DEMONSTRAMOS O INTERESSE MUDANDO O CAMPO INTERESSADO PARA 1 AO INVÉS DE 0
-            const sendToFriendInviteInterest = await conn.query("UPDATE solicitacaocontato SET Interessado = ? WHERE ID=?", [1, verifyFriendInvite[0][0].ID])
+            const sendToFriendInviteInterest = await conn.query("UPDATE SolicitacaoContato SET Interessado = ? WHERE ID=?", [1, verifyFriendInvite[0][0].ID])
             if (sendToFriendInviteInterest[0].affectedRows >= 1) {
               await conn.commit();
               return { success: "O Usuário demonstrou interesse no pet com sucesso, já possuia uma solicitação de contato com o doador porém agora foi demonstrado que a solicitação trata-se de interesse a um pet" }
@@ -76,7 +76,7 @@ class Interesse {
 
 
           if (intrestSendRequest[0].affectedRows >= 1) { // SE O USUÁRIO NÃO TIVER SOLICITAÇÃO DE CONTATO JÁ ENVIADA AO DONO DO PET E NÃO TIVER O DONO DO PET NA LISTA DE CONTATOS, ENVIA A SOLICITAÇÃO DE AMIZADE DEMONSTRANDO O INTERESSE EM UM DOS PETS DO OUTRO USUÁRIO.
-            const sendInviteToGiver = await conn.query("Insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)", [UserID, 1, verifyExistencePet[0][0].IDDoador])
+            const sendInviteToGiver = await conn.query("Insert into SolicitacaoContato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)", [UserID, 1, verifyExistencePet[0][0].IDDoador])
             console.log(sendInviteToGiver)
             if (sendInviteToGiver[0].affectedRows >= 1) {
               const notifyInvite = new Notificacao(null, `Você recebeu uma solicitação de amizade de ${verifyExistenceUser[0][0].Nome} `, dataGiver[0][0].ID)
@@ -107,7 +107,7 @@ class Interesse {
     try {
       const myPetChecking = await conn.query("SELECT * FROM Pet WHERE IDDoador=? AND ID=?",[MeuID,MeuPetID]);
       if(myPetChecking[0].length < 1) return {error:"o pet do qual você quer saber informações não te pertence ou não existe."}
-      const interested = await conn.query("SELECT I.IDInteressado, U.Nome FROM interesse As I INNER JOIN usuario As U on U.ID = I.IDInteressado WHERE IDPet = ? ", [MeuPetID]);
+      const interested = await conn.query("SELECT I.IDInteressado, U.Nome FROM Interesse As I INNER JOIN Usuario As U on U.ID = I.IDInteressado WHERE IDPet = ? ", [MeuPetID]);
       if (interested[0].length >= 1) {
         return { success: "retornando o nome de todos usuários que demonstraram interesse em seu pet", returnInteresteds: interested[0] }
       } else {
@@ -122,7 +122,7 @@ class Interesse {
   static async meusInteressesQuery(MeuID) { //retorna todos pets que demonstrei interesse
     const conn = await connection();
     try {
-      const verifyMyInterests = await conn.query("select p.ID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade,p.Sexo,p.Cor,p.Descricao,u.Cidade, u.Estado , u.Nome as NomeDoDono, u.ID AS IDDoador FROM Pet as p JOIN interesse as I on I.IDPet = p.ID JOIN usuario As u WHERE I.IDInteressado = ? AND u.ID = p.IDDoador", [MeuID])
+      const verifyMyInterests = await conn.query("select p.ID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade,p.Sexo,p.Cor,p.Descricao,u.Cidade, u.Estado , u.Nome as NomeDoDono, u.ID AS IDDoador FROM Pet as p JOIN Interesse as I on I.IDPet = p.ID JOIN Usuario As u WHERE I.IDInteressado = ? AND u.ID = p.IDDoador", [MeuID])
       if (verifyMyInterests[0].length >= 1) {
         return { success: "retornando pets no quais demonstrei interesse!", myInterests: verifyMyInterests[0] }
       } else {
@@ -138,7 +138,7 @@ class Interesse {
     const conn = await connection();
     try {
       await conn.beginTransaction();
-      const analyzeToRemove = await conn.query("DELETE FROM interesse WHERE IDInteressado=? AND IDPet = ?", [UserID, PetID])
+      const analyzeToRemove = await conn.query("DELETE FROM Interesse WHERE IDInteressado=? AND IDPet = ?", [UserID, PetID])
       if (analyzeToRemove[0].affectedRows >= 1) {
       return { success: "interesse ao pet retirada com sucesso, mas a solicitação de amizade ao dono permanece!" }
         } else {
