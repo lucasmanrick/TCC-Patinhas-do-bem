@@ -7,7 +7,7 @@ const connection = async () => {
         return global.connection;
     }
     const con = await mysql2.createConnection({
-        host:'patinhasdobem.cx64gskaw6rm.sa-east-1.rds.amazonaws.com',
+        host:'tccpatinhasdobem.cnkw4m4ie2o4.us-west-2.rds.amazonaws.com',
         port: '3306',
         database: 'DB_PatinhasDoBem',
         user:'admin',
