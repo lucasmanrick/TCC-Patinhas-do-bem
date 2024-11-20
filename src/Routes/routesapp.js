@@ -54,7 +54,6 @@ function verificadorDoToken(req, res, next){
 }
 
 router.get('/teste',async (req, res) => {
-    await connection()
    res.write("testado")
    res.end();
 });
