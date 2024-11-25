@@ -14,7 +14,7 @@ class UsuariosBloqueados {
     const conn = await connection();
     try{
       if(!UserID) return {error:"você não informou o ID do usuário"}
-      const verifyUserBlockQuery = await conn.query ("select * from usuariosbloqueados WHERE IDBloqueado = ?", [UserID]);
+      const verifyUserBlockQuery = await conn.query ("select * from UsuariosBloqueados WHERE IDBloqueado = ?", [UserID]);
       if (verifyUserBlockQuery[0].length >=1) return {warning:"o usuário que você inseriu se encontra bloqueado"}
       return {success:"o usuário que você inseriu não está bloqueado"}
     }catch(e) {
@@ -28,7 +28,7 @@ class UsuariosBloqueados {
     try {
       const checkPermissionUser = await  Usuario.verificaPermissaoAdmQuery(UserID);
       if(checkPermissionUser.success) {
-        const removingBlockUser = await conn.query("DELETE FROM usuariosbloqueados WHERE IDBloqueado = ?",[IDBloqueado])
+        const removingBlockUser = await conn.query("DELETE FROM UsuariosBloqueados WHERE IDBloqueado = ?",[IDBloqueado])
         if(removingBlockUser[0].length >=1) {
           return {success: "bloqueio removido com sucesso"}
         }

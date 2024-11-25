@@ -19,7 +19,7 @@ class Pet {
   async cadastraPetQuery() {
     const conn = await connection()
     try {
-      const insertNewPet = await conn.query('insert into pet (dataRegistro,TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador) VALUES (?,?,?,?,?,?,?,?,?)', [this.dataRegistro, this.TipoAnimal, this.Linhagem, this.Status, this.Idade, this.Sexo, this.Cor, this.Descricao, this.IDDoador])
+      const insertNewPet = await conn.query('insert into Pet (dataRegistro,TipoAnimal,Linhagem,Status,Idade,Sexo,Cor,Descricao,IDDoador) VALUES (?,?,?,?,?,?,?,?,?)', [this.dataRegistro, this.TipoAnimal, this.Linhagem, this.Status, this.Idade, this.Sexo, this.Cor, this.Descricao, this.IDDoador])
       if (insertNewPet[0].insertId) {
 
         return { success: "pet cadastrado com sucesso", idDoPet: insertNewPet[0].insertId }
@@ -35,7 +35,7 @@ class Pet {
   async editPetInfoQuery() {
     const conn = await connection();
     try {
-      const responseForEditRequest = await conn.query("UPDATE pet SET TipoAnimal=?, Linhagem=?, Idade=?,Sexo=?,Cor=?,Descricao =? WHERE ID = ? && IDDoador = ?", [this.TipoAnimal, this.Linhagem, this.Idade, this.Sexo, this.Cor, this.Descricao, this.PetID, this.IDDoador])
+      const responseForEditRequest = await conn.query("UPDATE Pet SET TipoAnimal=?, Linhagem=?, Idade=?,Sexo=?,Cor=?,Descricao =? WHERE ID = ? && IDDoador = ?", [this.TipoAnimal, this.Linhagem, this.Idade, this.Sexo, this.Cor, this.Descricao, this.PetID, this.IDDoador])
       if (responseForEditRequest[0].affectedRows >= 1) {
         return { success: "Editado informações do pet solicitado" }
       } else {
@@ -51,14 +51,14 @@ class Pet {
 
     try {
       if (VerifyForm.weHelp == true && VerifyForm.wallCheck == true) {
-        const inactivatePet = await conn.query("UPDATE pet SET status = ? WHERE ID = ? AND IDDoador = ?", [0, PetID, IDDoador])
+        const inactivatePet = await conn.query("UPDATE Pet SET status = ? WHERE ID = ? AND IDDoador = ?", [0, PetID, IDDoador])
         if (inactivatePet[0].affectedRows >= 1) {
           return { success: "O pet foi inativado e vai para nosso mural de pets adotados graças a rede social" }
         } else {
           return { error: "não foi modificado nenhum registro verifique as informações e tente novamente" }
         }
       } else {
-        const removePet = await conn.query("DELETE FROM pet WHERE ID=? AND IDDoador = ?", [PetID, IDDoador])
+        const removePet = await conn.query("DELETE FROM Pet WHERE ID=? AND IDDoador = ?", [PetID, IDDoador])
         if (removePet[0].affectedRows >= 1) {
           return { success: "Todos dados a respeito do pet foram removidos de nosso sistema." }
         } else {
@@ -75,7 +75,7 @@ class Pet {
   static async petsDeUmUsuarioQuery(UserID) { // pega todos pets de um determinado usuário
     const conn = await connection();
     try {
-      const getUserPets = await conn.query("SELECT * FROM PET where IDDoador = ?", [UserID]);
+      const getUserPets = await conn.query("SELECT * FROM Pet where IDDoador = ?", [UserID]);
       if (getUserPets[0].length >= 1) {
 
         getUserPets[0].forEach((e,index) => {
@@ -100,7 +100,7 @@ class Pet {
 
     try {
       const myInterests = await Interesse.meusInteressesQuery(ID);
-      const verifyUsersClose = await conn.query(`select u.Estado, u.Cidade, p.IDDoador as IDDoador , p.ID as petID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade, p.Sexo, p.Cor, p.Descricao from pet as p join usuario as u on u.ID = p.IDDoador WHERE u.estado = ? AND u.ID <> ? AND p.Status = 1 LIMIT 50 OFFSET ${50 * gapQuantity}`, [Estado, ID]);
+      const verifyUsersClose = await conn.query(`select u.Estado, u.Cidade, p.IDDoador as IDDoador , p.ID as petID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade, p.Sexo, p.Cor, p.Descricao from pet as p join Usuario as u on u.ID = p.IDDoador WHERE u.estado = ? AND u.ID <> ? AND p.Status = 1 LIMIT 50 OFFSET ${50 * gapQuantity}`, [Estado, ID]);
      verifyUsersClose[0].forEach((e,index) => {
       if(myInterests.success) {
         myInterests.myInterests.forEach(j => {

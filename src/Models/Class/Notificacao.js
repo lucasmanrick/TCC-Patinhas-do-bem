@@ -22,7 +22,7 @@ class Notificacao {
     try {
       if(this.#Texto,this.#IDDestinatario) {
 
-        const sendingNotify = await conn.query("INSERT INTO notificacao (Texto,IDDestinatario,IDComentario,IDPostagem,Recebimento) VALUES (?,?,?,?,?)", [this.#Texto,this.#IDDestinatario,this.#IDComentario,this.#IDPostagem,this.#Recebimento])
+        const sendingNotify = await conn.query("INSERT INTO Notificacao (Texto,IDDestinatario,IDComentario,IDPostagem,Recebimento) VALUES (?,?,?,?,?)", [this.#Texto,this.#IDDestinatario,this.#IDComentario,this.#IDPostagem,this.#Recebimento])
         if(sendingNotify[0].affectedRows >=1) return {success:"notificação registrada com sucesso"}
         return {error:"não foi feito a inserção da notificação por favor tente novamente."}
       }
@@ -36,7 +36,7 @@ class Notificacao {
  static async minhasNotificacoesQuery (userID) {
     const conn = await connection();
     try {
-        const getMyNotifications = await conn.query("select ID as IDNotificacao, Texto, IDComentario, IDPostagem, Recebimento as MensagemVisualizada from notificacao WHERE IDDestinatario = ? LIMIT 10",[userID])
+        const getMyNotifications = await conn.query("select ID as IDNotificacao, Texto, IDComentario, IDPostagem, Recebimento as MensagemVisualizada from Notificacao WHERE IDDestinatario = ? LIMIT 10",[userID])
         getMyNotifications[0].forEach (e => {
           e.MensagemVisualizada === 1?e.MensagemVisualizada = "True":e.MensagemVisualizada = "False"
         })
@@ -53,7 +53,7 @@ class Notificacao {
   static async marcarNotificacoesComoVisualizadasQuery (userID) {
     const conn = await connection();
     try {
-      const updatingView = await conn.query("UPDATE notificacao SET Recebimento = ? WHERE IDDestinatario = ? ",[1,userID])
+      const updatingView = await conn.query("UPDATE Notificacao SET Recebimento = ? WHERE IDDestinatario = ? ",[1,userID])
      if(updatingView[0].affectedRows >= 1) {
       return {success:"notificações marcadas como visualizada"}
      }return {error:"não foi possivel marcar as notificações como visualizadas, por favor tente novamente."}

@@ -46,8 +46,9 @@ const UsuarioController = {
         if (validaCadastroAnterior.error) {
           return res.json(validaCadastroAnterior)
         } else {
-
+          console.log("chegou aki")
           const sendingData = await newUser.cadastraUsuarioQuery()
+
           return res.json(sendingData)
         }
 

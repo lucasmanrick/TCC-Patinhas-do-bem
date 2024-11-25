@@ -18,6 +18,7 @@ const { join } = require('node:path');
 const path = require('node:path');
 const avaliacaoController = require("../Controllers/avaliacaoController");
 const comentarioController = require("../Controllers/comentarioController");
+const { connection } = require("../Config/db");
 
 
 const newDirName = path.resolve(__dirname, '..','..', '..' ,'WEB', 'View','Pages');
@@ -52,10 +53,6 @@ function verificadorDoToken(req, res, next){
   });
 }
 
-router.get('/teste', (req, res) => {
-   res.write("testado")
-   res.end();
-});
 
 router.get('/teste', (req, res) => {
    res.write("testado")

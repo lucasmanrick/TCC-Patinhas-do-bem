@@ -13,9 +13,9 @@ class Contato {
  static async removeUsuarioDaListaDeContatosQuery (contactID,userID) {
     const conn = await connection();
     try{
-      const verifyIfUserAreInContact = await conn.query("select * from contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
+      const verifyIfUserAreInContact = await conn.query("select * from Contato where ID=? AND IDSolicitante=? OR ID=? AND IDDestinatario=?",[contactID,userID,contactID,userID])
       if(verifyIfUserAreInContact[0].length >=1) {
-        const removingContact = await conn.query("delete from contato WHERE ID=?",[contactID])
+        const removingContact = await conn.query("delete from Contato WHERE ID=?",[contactID])
         if(removingContact[0].affectedRows >=1) {
           return{success:"contato removido da sua lista de contatos com sucesso."}
         }else {
@@ -34,7 +34,7 @@ class Contato {
  
 
     try{
-      const getingMyContacts = await conn.query("SELECT u.ID as IDUsuario, u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = c.IDDestinatario OR  c.IDDestinatario=? AND c.Interessado = ? AND u.ID= c.IDSolicitante ",[userID ,0,userID ,0])
+      const getingMyContacts = await conn.query("SELECT u.ID as IDUsuario, u.Nome, c.ID as contatoID FROM Usuario as u JOIN Contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = c.IDDestinatario OR  c.IDDestinatario=? AND c.Interessado = ? AND u.ID= c.IDSolicitante ",[userID ,0,userID ,0])
 
       console.log(getingMyContacts)
       let unifyResultsNotInterest = []
@@ -44,7 +44,7 @@ class Contato {
          unifyResultsNotInterest.push(e)
          })
       }
-      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.ID as IDUsuario,u.Nome, c.ID as contatoID FROM usuario as u JOIN contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = c.IDDestinatario OR c.IDDestinatario=? AND c.Interessado = ? AND u.ID = c.IDSolicitante",[userID ,1,userID ,1])
+      const getingMyContactsInterestedsInMyPet = await conn.query("SELECT u.ID as IDUsuario,u.Nome, c.ID as contatoID FROM Usuario as u JOIN Contato as c WHERE c.IDSolicitante=? AND c.Interessado = ? AND u.ID = c.IDDestinatario OR c.IDDestinatario=? AND c.Interessado = ? AND u.ID = c.IDSolicitante",[userID ,1,userID ,1])
       
       let unifyResultsInterestedsContacts = []
 
@@ -56,7 +56,7 @@ class Contato {
       }
 
      const returnedMessages =  unifyResultsInterestedsContacts.map(async e => {
-        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
+        const takeLastMessage = await conn.query("select * from Mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
         if(takeLastMessage[0].length >=1) {
           e.ultimaMensagem = takeLastMessage[0][0].Texto
           return e
@@ -67,7 +67,7 @@ class Contato {
       })
 
       const returnedMessagesNotInterest = unifyResultsNotInterest.map(async e => {
-        const takeLastMessage = await conn.query("select * from mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
+        const takeLastMessage = await conn.query("select * from Mensagem where IDContato=? order by DataDeEnvio desc limit 1;",[e.contatoID])
         if(takeLastMessage[0].length >=1) {
           e.ultimaMensagem = takeLastMessage[0][0].Texto
           return e

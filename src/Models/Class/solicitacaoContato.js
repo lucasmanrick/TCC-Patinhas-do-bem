@@ -17,8 +17,8 @@ class SolicitacaoContato {
       if (UserID === IDDestinatario) {
         return { error: "você não pode enviar solicitação de contato para si mesmo" }
       }
-      const verifyFriendExistence = await conn.query("select * from usuario WHERE ID =?", [IDDestinatario]);
-      const existenceInvite = await conn.query("select * from solicitacaocontato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID, IDDestinatario, IDDestinatario, UserID]);
+      const verifyFriendExistence = await conn.query("select * from Usuario WHERE ID =?", [IDDestinatario]);
+      const existenceInvite = await conn.query("select * from SolicitacaoContato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID, IDDestinatario, IDDestinatario, UserID]);
       const existenceContact = await conn.query("SELECT * from contato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID, IDDestinatario, IDDestinatario, UserID])
 
       if (verifyFriendExistence[0].length < 1) {
@@ -28,7 +28,7 @@ class SolicitacaoContato {
       if (existenceInvite[0].length >= 1 || existenceContact[0].length >= 1) {
         return { error: "o usuário ou o destinatario já estão com uma solicitação de amizade pendente entre si, ou já estão na lista de contato um dos outros." }
       } else {
-        const sendInviteToNewFriend = await conn.query("insert into solicitacaocontato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)", [UserID, 0, IDDestinatario])
+        const sendInviteToNewFriend = await conn.query("insert into SolicitacaoContato (IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?)", [UserID, 0, IDDestinatario])
 
         if (sendInviteToNewFriend[0].affectedRows >= 1) {
           const notifyInvite = new Notificacao(null, `Você recebeu uma solicitação de amizade de ${NomeDoSolicitante} `, IDDestinatario);
@@ -45,10 +45,10 @@ class SolicitacaoContato {
   static async removeSolicitacaoDeAmizadeQuery(UserID, solicitacaoID) {
     const conn = await connection();
     try {
-      const verifyContato = await conn.query("select * from solicitacaocontato where id = ?", [solicitacaoID]);
+      const verifyContato = await conn.query("select * from SolicitacaoContato where id = ?", [solicitacaoID]);
 
       if (verifyContato[0][0].IDDestinatario === UserID) {
-        const removingInvite = await conn.query("delete from solicitacaocontato where id=?", [solicitacaoID])
+        const removingInvite = await conn.query("delete from SolicitacaoContato where id=?", [solicitacaoID])
         if (removingInvite[0].affectedRows >= 1) {
           return { success: "solicitação de amizade removida com sucesso, se o usuário tem interesse em algum pet desse usuário o interesse irá permanecer." }
         }
@@ -63,7 +63,7 @@ class SolicitacaoContato {
   static async minhasSolicitacoesQuery(UserID) {
     const conn = await connection();
     try {
-      const myInvites = await conn.query("select sc.ID,sc.IDSolicitante,sc.Interessado, u.Nome from solicitacaocontato as sc JOIN usuario as u WHERE IDDestinatario = ? AND u.ID = sc.IDSolicitante", [UserID])
+      const myInvites = await conn.query("select sc.ID,sc.IDSolicitante,sc.Interessado, u.Nome from SolicitacaoContato as sc JOIN Usuario as u WHERE IDDestinatario = ? AND u.ID = sc.IDSolicitante", [UserID])
       if (myInvites[0].length >= 1) {
         return { success: "retornando todas solicitações de contato enviadas para mim", invites: myInvites[0] }
       } else {
@@ -79,11 +79,11 @@ class SolicitacaoContato {
     try {
 
       if (userID && inviteID) {
-        const verifyExistenceInvite = await conn.query("select * from solicitacaocontato WHERE IDDestinatario = ? && ID=?", [userID, inviteID]);
+        const verifyExistenceInvite = await conn.query("select * from SolicitacaoContato WHERE IDDestinatario = ? && ID=?", [userID, inviteID]);
         if (verifyExistenceInvite[0].length >= 1) {
           const acceptInvite = await conn.query("insert into contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)", [new Date(), verifyExistenceInvite[0][0].IDSolicitante, verifyExistenceInvite[0][0].Interessado, verifyExistenceInvite[0][0].IDDestinatario])
           if (acceptInvite[0].affectedRows >= 1) {
-            const deleteInviteExistence = await conn.query("DELETE from solicitacaocontato WHERE ID=?", [verifyExistenceInvite[0][0].ID])
+            const deleteInviteExistence = await conn.query("DELETE from SolicitacaoContato WHERE ID=?", [verifyExistenceInvite[0][0].ID])
             if (deleteInviteExistence[0].affectedRows >= 1) {
               return { success: "você aceitou a solicitação de amizade com sucesso!" }
             } else {
