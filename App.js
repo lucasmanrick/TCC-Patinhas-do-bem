@@ -1,28 +1,28 @@
 const express = require("express");
 const router = require('./src/Routes/routesapp');
 const cors = require("cors");
-const { createServer } = require('node:http');
 const path = require ('node:path')
 const { Server } = require("socket.io");
-const serverless = require('serverless-http');
-
+const http = require('http')
+const cookieParser = require('cookie-parser');
+require("dotenv-safe").config();
 
 
 const app = express();
+const server = http.createServer(app);
 
 const newDirName = path.resolve(__dirname, '..','WEB');;
 app.use(express.static(newDirName))
 
-const server = createServer(app);
 const io = new Server(server);
 
-require("dotenv-safe").config();
-const cookieParser = require('cookie-parser');
+
 
 
 
 app.use(cookieParser())
 app.use(cors())
+app.use(express.json());
 
 const port= process.env.PORT !== undefined? process.env.PORT:5000;
 
@@ -45,8 +45,7 @@ io.on('connection', (socket) => {
 
 
 
-app.use(cookieParser());
-app.use(express.json());
+
 
 
 // const corsOptions = {
@@ -66,5 +65,3 @@ app.use((req,res,next) => {
 server.listen(port , () => {
     console.log(`Servidor respondendo na porta ${port}`);
 });
-
-module.exports.handler = serverless(server);

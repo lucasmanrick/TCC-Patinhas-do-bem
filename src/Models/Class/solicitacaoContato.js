@@ -19,7 +19,7 @@ class SolicitacaoContato {
       }
       const verifyFriendExistence = await conn.query("select * from Usuario WHERE ID =?", [IDDestinatario]);
       const existenceInvite = await conn.query("select * from SolicitacaoContato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID, IDDestinatario, IDDestinatario, UserID]);
-      const existenceContact = await conn.query("SELECT * from contato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID, IDDestinatario, IDDestinatario, UserID])
+      const existenceContact = await conn.query("SELECT * from Contato WHERE IDSolicitante =? AND IDDestinatario = ? OR IDSolicitante = ? AND IDDestinatario = ?", [UserID, IDDestinatario, IDDestinatario, UserID])
 
       if (verifyFriendExistence[0].length < 1) {
         return { error: "o usuário com quem você está tentando fazer amizade não existe ou não foi identificado tente novamente." }
