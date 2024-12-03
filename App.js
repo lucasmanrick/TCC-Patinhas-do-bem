@@ -29,7 +29,9 @@ const port= process.env.PORT !== undefined? process.env.PORT:5000;
 
 io.on('connection', (socket) => {
   // Verifique o token aqui, se necessário
+  console.log("novo usuário conectado ao server")
   socket.on('chatInject', (contatoID) => {
+    console.log("usuário conectouse a sala " + contatoID)
     if (contatoID) {
       socket.join(`${contatoID}Message`); 
     }
