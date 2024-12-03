@@ -81,7 +81,7 @@ class SolicitacaoContato {
       if (userID && inviteID) {
         const verifyExistenceInvite = await conn.query("select * from SolicitacaoContato WHERE IDDestinatario = ? && ID=?", [userID, inviteID]);
         if (verifyExistenceInvite[0].length >= 1) {
-          const acceptInvite = await conn.query("insert into contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)", [new Date(), verifyExistenceInvite[0][0].IDSolicitante, verifyExistenceInvite[0][0].Interessado, verifyExistenceInvite[0][0].IDDestinatario])
+          const acceptInvite = await conn.query("insert into Contato (Data,IDSolicitante,Interessado,IDDestinatario) VALUES (?,?,?,?)", [new Date(), verifyExistenceInvite[0][0].IDSolicitante, verifyExistenceInvite[0][0].Interessado, verifyExistenceInvite[0][0].IDDestinatario])
           if (acceptInvite[0].affectedRows >= 1) {
             const deleteInviteExistence = await conn.query("DELETE from SolicitacaoContato WHERE ID=?", [verifyExistenceInvite[0][0].ID])
             if (deleteInviteExistence[0].affectedRows >= 1) {
