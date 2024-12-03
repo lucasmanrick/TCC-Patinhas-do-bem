@@ -91,12 +91,12 @@ router.get('/teste', (req, res) => {
 
 
 router.get("/Out", verificadorDoToken, (req, res) => {
-  res.cookie('perfilSendoVisto', undefined, {
-    secure: true, // O cookie só será enviado em conexões HTTP
-  })
-  res.cookie('usuarioLogado', undefined, {
-    secure: true, // O cookie só será enviado em conexões HTTP
-  })
+  res.cookie('perfilSendoVisto', undefined)
+  res.cookie('usuarioLogado', undefined)
+  res.cookie('usuarioID', undefined)
+  res.cookie('imagemUsuario', undefined)
+  res.cookie('perfilSendoVisto', undefined)
+  res.cookie('usuarioLogado', undefined)
   res.cookie('token', undefined, {
     secure: true, // O cookie só será enviado em conexões HTTP
     httpOnly: true, // O cookie não será acessível via JavaScript no navegador
