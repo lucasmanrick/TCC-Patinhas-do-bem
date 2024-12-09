@@ -79,7 +79,7 @@ class Pet {
       if (getUserPets[0].length >= 1) {
 
         getUserPets[0].forEach((e,index) => {
-          e.petPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.ID}.jpg?alt=media`
+          e.petPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.ID}?alt=media`
           delete e.IDDoador
         })
 
