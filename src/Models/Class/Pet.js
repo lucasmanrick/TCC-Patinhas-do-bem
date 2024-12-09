@@ -110,7 +110,7 @@ class Pet {
         })
       }
      
-      e.petPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.petID}.jpg?alt=media`
+      e.petPicture = `https://firebasestorage.googleapis.com/v0/b/patinhasdobem-f25f8.appspot.com/o/pets%2F${e.petID}?alt=media`
      })
       if(verifyUsersClose[0].length >= 1)  return { success: "retornando todos pets da proximidade do usuário, disponiveis para adoção.", dataResponse: verifyUsersClose[0] }
       
