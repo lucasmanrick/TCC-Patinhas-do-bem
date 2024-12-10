@@ -101,12 +101,12 @@ class Pet {
     try {
       const myInterests = await Interesse.meusInteressesQuery(ID);
       const verifyUsersClose = await conn.query(`select u.Estado, u.Cidade, p.IDDoador as IDDoador , p.ID as petID, p.dataRegistro, p.TipoAnimal, p.Linhagem, p.Idade, p.Sexo, p.Cor, p.Descricao from Pet as p join Usuario as u on u.ID = p.IDDoador WHERE u.estado = ? AND u.ID <> ? AND p.Status = 1 LIMIT 50 OFFSET ${50 * gapQuantity}`, [Estado, ID]);
-     verifyUsersClose[0].forEach((e,index) => {
+       verifyUsersClose[0].forEach(async (e,index) => {
       if(myInterests.success) {
-        myInterests.myInterests.forEach(j => {
+       await myInterests.myInterests.forEach(j => {
           if(j.IDDoador === e.IDDoador) {
             e.demonstrouInteresse = true
-          }
+          } 
         })
       }
      
