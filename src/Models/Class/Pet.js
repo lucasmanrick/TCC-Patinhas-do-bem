@@ -104,7 +104,7 @@ class Pet {
        verifyUsersClose[0].forEach(async (e,index) => {
       if(myInterests.success) {
        await myInterests.myInterests.forEach(j => {
-          if(j.IDDoador === e.IDDoador) {
+          if(j.ID === e.petID) {
             e.demonstrouInteresse = true
           } 
         })
